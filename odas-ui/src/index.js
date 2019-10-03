@@ -1,46 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Navbar, NavbarBrand, NavDropdown, Nav, NavItem, Container} from "react-bootstrap";
-import DropdownMenu from "react-bootstrap/DropdownMenu";
-import NavLink from "react-bootstrap/NavLink";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Styles from './Layout/Styles.css'
+import React from "react";
+import ReactDOM from "react-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 
+import Header from "./Layout/Header";
+import Main from "./Pages/Main";
+import AboutPage from "./Pages/AboutPage";
+import QueryData from "./Pages/QueryData";
+import GenerateData from "./Pages/GenerateData";
+import UploadData from "./Pages/UploadData";
+import {Container} from "react-bootstrap";
+
+// TODO consider putting the router in its own file
+// TODO Consider turning into a nested route
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
-            //page container
-            <Navbar fixed={'top'} variant={'light'}>
-                <NavbarBrand href={"#index"}>Operations Data and Management System</NavbarBrand>
-                <Container className={'justify-content-end'}>
-                    <NavDropdown title={"Generate a Report"}>
-                        <NavDropdown.Item>
-                            <NavLink>Dataset</NavLink>
-                        </NavDropdown.Item>
-                        <NavDropdown.Item>
-                            <NavLink>
-                                Query a Dataset
-                            </NavLink>
-                        </NavDropdown.Item>
-                        <NavDropdown.Item>
-                            <NavLink>
-                                Generate a Dataset w/ COSMOS
-                            </NavLink>
-                        </NavDropdown.Item>
-                    </NavDropdown>
-                    <NavItem className={'justify-content-end'}>
-                        <NavLink>
-                            About
-                        </NavLink>
-                    </NavItem>
-                </Container>
-            </Navbar>
-        )
+            <div>
+                <Router>
+                    <Header />
+                    <div id={"Paths container"}>
+                        <Route path={"/main"} exact component={Main} />
+                        <Route path={"/about"} component={AboutPage} />
+                        <Route path={"/query"} component={QueryData} />
+                        <Route path={"/generate"} component={GenerateData} />
+                        <Route path={"/upload"} component={UploadData} />
+                    </div>
+                </Router>
+            </div>
+        );
     }
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<App />, document.querySelector("#root"));
