@@ -5,11 +5,10 @@ import React from "react";
 import "./Styles.css";
 
 export default class Header extends React.Component {
-
     render() {
         return (
             <Navbar expand={"lg"} variant={"light"} className={"nav-bar"}>
-                <NavbarBrand href={"/main"} className={"title-text"}>Operations Data and Management System</NavbarBrand>
+                <NavbarBrand href={"/"} className={"title-text"}>Operations Data and Management System</NavbarBrand>
                 <Container className={"justify-content-end"}>
                     <NavDropdown title={"Generate a Report"}>
                         <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
@@ -19,11 +18,6 @@ export default class Header extends React.Component {
                         <NavItem>
                             <Link to={"/documentation"}>
                                 Documentation
-                            </Link>
-                        </NavItem>
-                        <NavItem>
-                            <Link to={"/about"}>
-                                About
                             </Link>
                         </NavItem>
                 </Container>
