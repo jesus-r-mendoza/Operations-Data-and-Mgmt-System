@@ -1,0 +1,85 @@
+-- ODAS SQL ----
+
+DROP DATABASE if exists ODAS;
+CREATE DATABASE ODAS;
+use ODAS;
+
+-- SATELLITE TABLE  #1--
+
+CREATE TABLE SATELLITE (
+    Sid INT(9) UNIQUE,
+	Sname VARCHAR(15),
+    Smodel VARCHAR(15),
+    Ybuild DATE,
+    Sweight INT(3),
+    Ssize VARCHAR(30),
+    PRIMARY KEY (Sid)
+   
+);
+
+-- POSITION TABLE #2---
+
+CREATE TABLE POSITION (
+    Pid INT(9) UNIQUE,
+    Sid INT(9),
+    Altitude VARCHAR(9),
+    Latitude VARCHAR(9),
+    Longtitude VARCHAR(9),
+	PosTime TIME,
+PRIMARY KEY (Pid)
+);
+
+-- CPU TABLE #3 --
+
+CREATE TABLE CPU( 
+	Camid INT(9) UNIQUE,
+	Sid INT(9),
+    CPUModel VARCHAR(15),
+	CPUTemp INT(5),
+	CPUTime DATE,
+PRIMARY KEY (Camid)
+);
+
+-- POWERSUPPLY TABLE #4 ---
+
+CREATE TABLE POWERSUPPLY(
+	PowId INT(9) UNIQUE,
+ 	Sid INT(9),
+	PowTemp INT(9),
+	PowModel VARCHAR(15),
+	PowTime DATE,
+PRIMARY KEY (PowId)
+);
+
+-- THERMOMETER TABLE #5 ---
+
+CREATE TABLE THERMOMETER(
+	TherId CHAR(9) UNIQUE,
+	Sid INT(9),
+	TherTemp INT(9),
+	TherModel VARCHAR(15),
+	TherTime DATE,
+PRIMARY KEY (TherId)
+);
+
+-- PROPULSION TABLE #6---
+
+CREATE TABLE PROPULSION(
+	PropId INT(9) UNIQUE,
+	Sid INT(9),
+	PropTemp INT(9),
+	PropTime DATE,
+	PropModel VARCHAR(8),
+PRIMARY KEY (PropId)
+);
+
+-- CAMERA TABLE #7---
+
+CREATE TABLE CAMERA(
+	CamId INT(9) UNIQUE,
+	Sid INT(9),
+	CamTemp INT(9),
+	CamTime DATE,
+	CamModel VARCHAR(8),
+PRIMARY KEY (CamId)
+);
