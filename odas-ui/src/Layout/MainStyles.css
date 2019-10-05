@@ -43,14 +43,14 @@
 
 .main-image {
     display: block;
-    margin-top: auto;
+    margin-top: 7%;
     margin-bottom: auto;
 }
 
 .main-text {
     display: flex;
     flex-direction: column;
-    margin-top: 40%;
+    margin-top: 30%;
     margin-bottom: auto;
     font-size: 40px;
     color: white;

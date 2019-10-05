@@ -5,18 +5,12 @@ import {Container, Navbar, NavbarBrand, NavDropdown, NavItem} from "react-bootst
 import "./MainStyles.css";
 
 export default class Header extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isMainPage: true
-        }
-    }
-
     render() {
         return (
             <Navbar expand={"lg"} variant={"light"} className={"nav-bar"}>
-                <NavbarBrand href={"/"} className={"title-text"}>Operations Data and Management System</NavbarBrand>
+                <NavbarBrand href={"/"}>
+                    <span className={"title-text"}>Operations Data and Management System</span>
+                </NavbarBrand>
                 <Container className={"justify-content-end"}>
                     {/*If user is not on the main page dropdown will render*/}
                     {/*{this.renderDropdown()}*/}
