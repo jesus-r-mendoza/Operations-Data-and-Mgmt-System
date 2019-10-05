@@ -12,8 +12,6 @@ export default class Header extends React.Component {
                     <span className={"title-text"}>Operations Data and Management System</span>
                 </NavbarBrand>
                 <Container className={"justify-content-end"}>
-                    {/*If user is not on the main page dropdown will render*/}
-                    {/*{this.renderDropdown()}*/}
                     <NavDropdown title={"Generate a Report"}>
                         <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                         <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
