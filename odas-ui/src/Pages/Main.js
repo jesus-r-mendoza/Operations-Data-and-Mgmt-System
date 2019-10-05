@@ -2,8 +2,9 @@ import React from 'react';
 import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Badge, Button, FormControl} from "react-bootstrap";
+import {Button, FormControl} from "react-bootstrap";
 import "../Layout/MainStyles.css"
+
 
 export default class Main extends React.Component {
     render() {
@@ -25,7 +26,7 @@ export default class Main extends React.Component {
                         </div>
                         <div className={"email-input"}>
                             <div className={"email-header"}>
-                                <span className={"email-header"}>Input an email to receive reports</span>
+                                <span className={"email-header"}>Sign up to receive email reports</span>
                                 <Button size={"sm"} variant={"outline-info"} type={"submit"}>Info</Button>
                             </div>
                             <FormControl type={"text"} placeholder={"Email"} />
