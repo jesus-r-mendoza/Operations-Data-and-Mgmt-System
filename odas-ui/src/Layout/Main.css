@@ -17,13 +17,16 @@
     color: lightgray;
 }
 
+.paths-container{
+    width: 100%;
+}
+
 /*Main page*/
 .main-page {
     display: flex;
     background-color: #141e28;
     /*background-image: linear-gradient(to bottom, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 1));*/
     justify-content: center;
-    margin: auto;
     height: 95vh;
 }
 
