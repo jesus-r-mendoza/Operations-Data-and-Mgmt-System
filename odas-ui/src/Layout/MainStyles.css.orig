@@ -2,20 +2,17 @@
 .nav-bar {
     display: flex;
     justify-content: space-around;
-    /*background: silver;*/
-    background: #141e28;
+    background: silver;
     opacity: 100%;
     border: 0;
-    font-size: large;
-    box-shadow: 1px 1px 1px black;
+    /*box-shadow: 3px 3px 1px black;*/
 }
 
 .title-text {
-    /*text-shadow: 1px 2px lightgray;*/
+    text-shadow: 1px 2px lightgray;
     font-weight: bold;
     font-size: xx-large;
     padding-right: 10%;
-    color: lightgray;
 }
 
 /*Main page*/
@@ -34,13 +31,9 @@
 
 .main-button {
     display: flex;
-    /*justify-content: space-between;*/
+    justify-content: space-between;
     padding-top: 40px;
     padding-right: 20px;
-}
-
-.query-button {
-    margin-right: 15px;
 }
 
 .main-container {
@@ -48,14 +41,12 @@
     flex-flow: row nowrap;
     justify-content: space-around;
     width: 100%;
-    padding-right: 5%;
-    padding-left: 5%;
     /*border: 3px solid white;*/
 }
 
 .main-image {
     display: block;
-    margin-top: 10%;
+    margin-top: 7%;
     margin-bottom: auto;
 }
 
@@ -72,8 +63,8 @@
     display: flex;
     flex-direction: column;
     width: auto;
-    padding-top: 30%;
-    padding-right: 25%;
+    padding-top: 20%;
+    padding-right: 40%;
     color: white;
     font-size: large;
 }
@@ -81,16 +72,12 @@
 .email-button {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     padding-top: 10px;
 }
 
 .email-header {
-    padding-bottom: 12px;
+    padding-bottom: 10px;
     padding-right: 8px;
-}
-
-.email-form {
-    padding-top: 4%;
-    width: 30%
 }
 

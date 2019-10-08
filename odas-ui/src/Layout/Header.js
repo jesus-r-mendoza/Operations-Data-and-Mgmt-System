@@ -7,7 +7,7 @@ import "./MainStyles.css";
 export default class Header extends React.Component {
     render() {
         return (
-            <Navbar expand={"lg"} variant={"light"} className={"nav-bar"}>
+            <Navbar expand={"lg"} className={"nav-bar"}>
                 <NavbarBrand href={"/"}>
                     <span className={"title-text"}>Operations Data and Management System</span>
                 </NavbarBrand>
