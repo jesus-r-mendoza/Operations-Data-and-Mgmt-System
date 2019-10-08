@@ -1,0 +1,77 @@
+/*Container*/
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    /*position: fixed;*/
+}
+
+/*Sidebar formatting*/
+.sidebar {
+    height: 95vh;
+    width: 250px;
+    z-index: auto;
+    left: 0;
+    background-color: #f4f3f1;
+    box-shadow: 1px 0 1px lightgray;
+    border-top: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.sidebar-title {
+    display: flex;
+    justify-content: space-around;
+    color: #606060;
+    font-size: x-large;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    box-shadow: 1px 0 1px lightgray;
+    padding-bottom: 10px;
+}
+
+.gen-button-container {
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 0 1px lightgray;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.gen-button {
+    display: flex;
+    justify-content: space-around;
+    width: 90%;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    font-size: x-large;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10%;
+    font-size: large;
+    color: #606060;
+}
+
+.sidebar-info {
+    display: flex;
+    justify-content: center;
+    font-size: large;
+    color: #606060;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/*Card formatting*/
+.card-container {
+    width: 90%;
+    height: 30%;
+    box-shadow: 1px 1px 1px lightgray;
+    border: 3px black;
+}

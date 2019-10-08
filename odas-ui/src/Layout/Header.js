@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 // Stylesheets
 import {Container, Navbar, NavbarBrand, NavDropdown, NavItem} from "react-bootstrap";
-import "./MainStyles.css";
+import "./Main.css";
 
 export default class Header extends React.Component {
     render() {

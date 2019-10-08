@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, FormControl, Popover, OverlayTrigger, PopoverContent} from "react-bootstrap";
-import "../Layout/MainStyles.css"
+import "../Layout/Main.css"
 
 
 export default class Main extends React.Component {
