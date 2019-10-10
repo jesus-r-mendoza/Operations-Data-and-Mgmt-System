@@ -1,18 +1,26 @@
 -- ODAS SQL ----
 
-DROP DATABASE if exists ODAS;
-CREATE DATABASE ODAS;
-use ODAS;
+-- DROP DATABASE if exists ODAS;
+-- CREATE DATABASE ODAS;
+-- use ODAS;
+
+DROP table if exists SATELLITE;
+DROP table if exists POSITION;
+DROP table if exists CPU;
+DROP table if exists POWERSUPPLY;
+DROP table if exists THERMOMETER;
+DROP table if exists PROPPULSION;
+DROP table if exists CAMERA;
+DROP table if exists SOLARPANEL;
+
 
 -- SATELLITE TABLE  #1--
 
 CREATE TABLE SATELLITE (
-    Sid INT(9) UNIQUE,
+    Sid INT UNIQUE,
 	Sname VARCHAR(15),
-    Smodel VARCHAR(15),
     Ybuild DATE,
-    Sweight INT(3),
-    Ssize VARCHAR(30),
+    Sweight INT(5),
     PRIMARY KEY (Sid)
    
 );
@@ -20,11 +28,12 @@ CREATE TABLE SATELLITE (
 -- POSITION TABLE #2---
 
 CREATE TABLE POSITION (
-    Pid INT(9) UNIQUE,
-    Sid INT(9),
+    Pid INT UNIQUE,
+    Sid INT,
     Altitude VARCHAR(9),
     Latitude VARCHAR(9),
     Longtitude VARCHAR(9),
+	Velocity INT,
 	PosTime TIME,
 PRIMARY KEY (Pid)
 );
@@ -32,10 +41,10 @@ PRIMARY KEY (Pid)
 -- CPU TABLE #3 --
 
 CREATE TABLE CPU( 
-	Camid INT(9) UNIQUE,
-	Sid INT(9),
+	Camid INT UNIQUE,
+	Sid INT,
     CPUModel VARCHAR(15),
-	CPUTemp INT(5),
+	CPUTemp INT(9),
 	CPUTime DATE,
 PRIMARY KEY (Camid)
 );
@@ -43,9 +52,8 @@ PRIMARY KEY (Camid)
 -- POWERSUPPLY TABLE #4 ---
 
 CREATE TABLE POWERSUPPLY(
-	PowId INT(9) UNIQUE,
- 	Sid INT(9),
-	PowTemp INT(9),
+	PowId INT UNIQUE,
+ 	Sid INT,
 	PowModel VARCHAR(15),
 	PowTime DATE,
 PRIMARY KEY (PowId)
@@ -54,10 +62,8 @@ PRIMARY KEY (PowId)
 -- THERMOMETER TABLE #5 ---
 
 CREATE TABLE THERMOMETER(
-	TherId CHAR(9) UNIQUE,
-	Sid INT(9),
-	TherTemp INT(9),
-	TherModel VARCHAR(15),
+	TherId INT UNIQUE,
+	Sid INT,
 	TherTime DATE,
 PRIMARY KEY (TherId)
 );
@@ -65,21 +71,31 @@ PRIMARY KEY (TherId)
 -- PROPULSION TABLE #6---
 
 CREATE TABLE PROPULSION(
-	PropId INT(9) UNIQUE,
-	Sid INT(9),
+	PropId INT UNIQUE,
+	Sid INT,
 	PropTemp INT(9),
 	PropTime DATE,
-	PropModel VARCHAR(8),
 PRIMARY KEY (PropId)
 );
 
 -- CAMERA TABLE #7---
 
 CREATE TABLE CAMERA(
-	CamId INT(9) UNIQUE,
-	Sid INT(9),
+	CamId INT UNIQUE,
+	Sid INT,
 	CamTemp INT(9),
 	CamTime DATE,
 	CamModel VARCHAR(8),
 PRIMARY KEY (CamId)
+);
+
+-- SOLARPANEL TABLE #8---
+
+CREATE TABLE SOLARPANEL(
+	SPId INT UNIQUE,
+	Sid INT,
+	Volt INT,
+	SPCurrent INT,
+	SPTime DATE,
+PRIMARY KEY (SPId)
 );
