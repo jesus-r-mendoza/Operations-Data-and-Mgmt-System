@@ -9,6 +9,11 @@ export default class QueryData extends React.Component {
 // TODO Implement the checkbox selections
 // TODO Make generate report button adaptive to all screens
     render() {
+
+        function handleSubmit() {
+            console.log("chicken")
+        }
+
         return(
               <div className={"query-container"}>
                   <div className={"sidebar"}>
@@ -20,17 +25,17 @@ export default class QueryData extends React.Component {
                             <span>Select data to be reported</span>
                           </div>
                           <div>
-                              <Form className={"checkbox-container"}>
-                                  <FormCheck custom label={"Stuff"}/>
-                                  <FormCheck custom label={"Stuff"}/>
-                                  <FormCheck custom label={"Stuff"}/>
-                                  <FormCheck custom label={"Stuff"}/>
-                                  <FormCheck custom label={"Stuff"}/>
-                                  <FormCheck custom label={"Stuff"}/>
+                              <Form onSubmit={handleSubmit()} className={"checkbox-container"}>
+                                  <FormCheck label={"Stuff"}/>
+                                  <FormCheck label={"Stuff"}/>
+                                  <FormCheck label={"Stuff"}/>
+                                  <FormCheck label={"Stuff"}/>
+                                  <FormCheck label={"Stuff"}/>
+                                  <FormCheck label={"Stuff"}/>
                               </Form>
                           </div>
                           <div className={"gen-button-container"}>
-                              <Button variant={"info"} className={"gen-button"}>
+                              <Button type={"submit"} variant={"info"} className={"gen-button"}>
                                   Generate Report
                               </Button>
                           </div>
