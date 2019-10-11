@@ -7,6 +7,7 @@ import {Button, Form, FormCheck} from "react-bootstrap";
 
 export default class QueryData extends React.Component {
 // TODO Implement the checkbox selections
+// TODO Extra maybe. Pull checkbox labels from the database
 // TODO Make generate report button adaptive to all screens
     render() {
 
@@ -24,8 +25,8 @@ export default class QueryData extends React.Component {
                           <div className={"sidebar-info"}>
                             <span>Select data to be reported</span>
                           </div>
-                          <div>
-                              <Form onSubmit={handleSubmit()} className={"checkbox-container"}>
+                          <div className={"checkbox-container"}>
+                              <Form onSubmit={handleSubmit()} >
                                   <FormCheck label={"Stuff"}/>
                                   <FormCheck label={"Stuff"}/>
                                   <FormCheck label={"Stuff"}/>
@@ -42,9 +43,6 @@ export default class QueryData extends React.Component {
                       </div>
                  </div>
                   <div className={"card-container"}>
-                      <ReportCard/>
-                      <ReportCard/>
-                      <ReportCard/>
                       <ReportCard/>
                   </div>
               </div>
