@@ -13,6 +13,7 @@ import "./Layout/Main.css";
 
 // TODO consider putting the router in its own file
 // TODO Consider turning into a nested route
+// TODO Reuse QueryData in GenerateData
 class App extends React.Component {
     render() {
         return (

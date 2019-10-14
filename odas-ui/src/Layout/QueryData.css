@@ -11,7 +11,7 @@
 /*Sidebar formatting*/
 .sidebar {
     height: 95vh;
-    width: 250px;
+    width: 20em;
     z-index: auto;
     left: 0;
     background-color: #f4f3f1;
