@@ -1,52 +1,42 @@
 import React from 'react';
-
+//Components
 import ReportCard from "../Components/ReportCard";
 // Stylesheets
-import'../Layout/QueryData.css'
-import {Button, Form, FormCheck} from "react-bootstrap";
+import '../Layout/Reports.css'
+import LoadSpinner from "../Components/LoadSpinner";
+import Sidebar from "../Components/Sidebar";
 
 export default class QueryData extends React.Component {
-// TODO Implement the checkbox selections
-// TODO Extra maybe. Pull checkbox labels from the database
-// TODO Make generate report button adaptive to all screens
-    render() {
 
-        function handleSubmit() {
-            console.log("chicken")
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+        };
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        });
+    }
+
+    render() {
+        if (this.state.isLoading) {
+            return (
+                <LoadSpinner/>
+            );
         }
 
-        return(
-              <div className={"query-container"}>
-                  <div className={"sidebar"}>
-                      <div className={"sidebar-title"}>
-                          <span>Query Data</span>
-                      </div>
-                      <div>
-                          <div className={"sidebar-info"}>
-                            <span>Select data to be reported</span>
-                          </div>
-                          <div className={"checkbox-container"}>
-                              <Form onSubmit={handleSubmit()} >
-                                  <FormCheck label={"Stuff"}/>
-                                  <FormCheck label={"Stuff"}/>
-                                  <FormCheck label={"Stuff"}/>
-                                  <FormCheck label={"Stuff"}/>
-                                  <FormCheck label={"Stuff"}/>
-                                  <FormCheck label={"Stuff"}/>
-                              </Form>
-                          </div>
-                          <div className={"gen-button-container"}>
-                              <Button type={"submit"} variant={"info"} className={"gen-button"}>
-                                  Generate Report
-                              </Button>
-                          </div>
-                      </div>
-                 </div>
-                  <div className={"card-container"}>
-                      <ReportCard/>
-                  </div>
-              </div>
-
-        );
+        if (!this.state.isLoading) {
+            return (
+                <div className={"report-container"}>
+                    <Sidebar>Query a Dataset</Sidebar>
+                    <div className={"card-container"}>
+                        <ReportCard/>
+                    </div>
+                </div>
+            );
+        }
     }
 }

@@ -15,7 +15,7 @@ export default class Header extends React.Component {
                     <NavDropdown title={"Generate a Report"}>
                         <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                         <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
-                        <NavDropdown.Item href={"/generate"}>Generate a Dataset</NavDropdown.Item>
+                        {/*<NavDropdown.Item href={"/generate"}>Generate a Dataset</NavDropdown.Item>*/}
                     </NavDropdown>
                     <NavItem>
                         <Link to={"/documentation"}>

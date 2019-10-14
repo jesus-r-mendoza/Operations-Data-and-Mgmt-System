@@ -1,8 +1,7 @@
 import React from 'react';
-
 import Plot from 'react-plotly.js';
-
-import "../Layout/QueryData.css"
+//Stylesheets
+import "../Layout/Reports.css"
 
 export default class ReportCard extends React.Component {
     render() {
