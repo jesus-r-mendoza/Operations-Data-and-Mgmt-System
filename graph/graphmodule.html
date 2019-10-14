@@ -2,22 +2,12 @@
 <html>
 	<head>
     <meta http-equiv="content-type" content = "text/html; charset= UTF-8"/>
-	<script src="jquery-2.1.4.js"></script>
+
 	<script src="plotly.min.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+	
 	<script>
-	window.onload = function(){
-		var iframe = document.createElement('iframe');
-		iframe.id = 'iframe';
-		iframe.style.display = 'none';
-		document.body.appendChild(iframe);
-		iframe.src = 'testgraphmodule.csv';
-		setTimeout(function(){
-			var text = document.getElementById('iframe').contentDocument.body.firstChild.innerHTML;
-			alert(text);
-		}, 1000);
-	}
+
 	</script>
 	</head>
 	<body>
@@ -25,27 +15,188 @@
 	<div class="wrapper">
 		<div id="chart"></div>
 		<script>	
-		
-			function getData(){
-				return Math.random();
+			console.log('start');
+			var done = false;
+			var keys = [];
+			var numKeys = 0;
+			var rawvalues = [];
+			var keysValues = [];
+			//var myList = document.querySelector('ul');
+			var request = new Request('https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
+			fetch(request)//, {mode: "same-origin"})//no-cors"})
+				.then(res => res.json())
+				.then((out) => {
+					console.log('Status Code: ', out.Result.StatusCode);
+					console.log('Status Sub Code: ', out.Result.StatusSubCode);
+					keys = Object.keys(out.Result.Data[1][0]);
+					console.log('keys = ', keys);
+					numKeys = keys.length;
+					console.log('numKeys = ', numKeys);
+					rawvalues = Object.values(out.Result.Data[1][0]);
+					console.log('values = ',rawvalues);
+					for(var i=0;i<numKeys;i++){
+						var currentrawvalue = rawvalues[i];
+						var datarawvalue = [];
+						if(keys[i]!="Id"){
+							datarawvalue = currentrawvalue[currentrawvalue.length-1];
+						}
+						else{
+							datarawvalue = currentrawvalue;
+						}
+						keysValues.push([keys[i], datarawvalue]);
+					}
+					console.log('KeysValues', keysValues);
+					//console.log('Output: ', out);
+					//myList = JSON.parse(out);
+					//return res.json();
+	//			})
+	//			.catch(err => console.error(err));				
+			console.log('testc');
+			var totalxlength = 0;//500;
+			var data = [];//[{y:[getData()], type: 'line'}, {y: [getData()],type: 'line'}, {y: [getData()],type: 'line'}];
+			var finalKeyValues = [];
+			var finalKeyValuesNum = 0;
+			console.log('testd', keysValues[3][1][0]);
+			for(var q=0;q<numKeys;q++){
+				if(typeof keysValues[q][1][0]==='number'){ //must be numeric type
+					if(keysValues[q][1].length>totalxlength){
+						totalxlength = keysValues[q][1].length;
+					}
+					finalKeyValuesNum++;
+					finalKeyValues.push(keysValues[q]);
+					var counting = 0;
+					//data array is initial points
+					//for(int y=0;y<totalxlength;y++){ //<17 times
+						var dataAdd = {y:[keysValues[q][1][0]], type: 'line'};
+						data.push(dataAdd);
+					//}
+				}
+				//if "Coordinates" special case
 			}
-			var data = [{y:[getData()], type: 'line'}, {y: [getData()],type: 'line'}, {y: [getData()],type: 'line'}];
+				
 			Plotly.plot('chart', data);
 			var cnt=0;
+			var dataindex = 0;
+			var multipleTraces = [];
+			console.log('finalKeyValuesNum', finalKeyValuesNum);
+			
+			var indices = [];
+			for (var w=0;w<finalKeyValuesNum;w++){
+				indices.push(w);
+			}
+			console.log('indices', indices);
 			setInterval(function(){
-				Plotly.extendTraces('chart',{y:[[getData()]]},[0])
-				Plotly.extendTraces('chart',{y:[[getData()]]},[1])
-				Plotly.extendTraces('chart',{y:[[getData()]]},[2])
+				multipleTraces = []; //clear
+				for(var r=0;r<finalKeyValuesNum;r++){//<17 times down by column
+					multipleTraces.push([getData(r, dataindex)]);
+				}	
+				//console.log('dataindex', dataindex);
+				//console.log('multipleTraces',multipleTraces);
+				Plotly.extendTraces('chart',{y:multipleTraces},indices)
+				//Plotly.extendTraces('chart',{y:[[getData()]]},[0])
+				//Plotly.extendTraces('chart',{y:[[getData()]]},[1])
+				//Plotly.extendTraces('chart',{y:[[getData()]]},[2])
+				dataindex++;
 				cnt++;
-				if(cnt>500){
+				if(cnt>totalxlength){
 					Plotly.relayout('chart', {
 						xaxis: {
-							range: [cnt-500, cnt]
+							range: [cnt-totalxlength, cnt]
 						}
 					});
 				}
-			},200);
+			},200); //update every 200 seconds.
+			var keyIndex = 0;
+			var valueIndex = 0;
+			function getData(r, dataindex){//keyIndex, valueIndex){
+				//for(int r=0;r<totalxlength;r++){ //30 times
+					return finalKeyValues[r][1][dataindex];
+					//var dataAdd = {y:[getData(q, keysValues[q][1][r])], type: 'line'};
+					//data.push(dataAdd);
+				//}
+				//return Math.random();
+			}			
+/*			
+			let items = [
+				'Blue',
+				'Red',
+				'White',
+				'Green',
+				'Black',
+				'Orange'
+			],
+			ul = document.createElement('ul');
+			document.getElementById('myItemList').appendChild(ul);
+			items.forEach(function (item) {
+				let li = document.createElement('li');
+				ul.appendChild(li);
+					li.innerHTML += item;
+				});
+			
+			Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/Mining-BTC-180.csv", function(err, rows){
+			function unpack(rows, key) {
+			return rows.map(function(row) { return row[key]; });
+			}
+			var headerNames = Plotly.d3.keys(rows[0]);
+			var headerValues = [];
+			var cellValues = [];
+			for (i = 0; i < headerNames.length; i++) {
+				headerValue = [headerNames[i]];
+				headerValues[i] = headerValue;
+				cellValue = unpack(rows, headerNames[i]);
+				cellValues[i] = cellValue;
+			}
+			// clean date
+			for (i = 0; i < cellValues[1].length; i++) {
+				var dateValue = cellValues[1][i].split(' ')[0]
+				cellValues[1][i] = dateValue
+			}
+			var data = [{
+				type: 'table',
+				columnwidth: [200,500,600,600,400,400,600,600,600],
+				columnorder: [0,1,2,3,4,5,6,7,8,9],
+				header: {
+					values: headerValues,
+					align: "center",
+					line: {width: 1, color: 'rgb(50, 50, 50)'},
+					fill: {color: ['rgb(235, 100, 230)']},
+					font: {family: "Arial", size: 11, color: "white"}
+				},
+				cells: {
+					values: cellValues,
+					align: ["center", "center"],
+					line: {color: "black", width: 1},
+					fill: {color: ['rgba(228, 222, 249, 0.65)','rgb(235, 193, 238)', 'rgba(228, 222, 249, 0.65)']},
+					font: {family: "Arial", size: 10, color: ["black"]}
+				}
+			}]
+			var layout = {
+				title: "Bitcoin mining stats for 180 days"
+			}
+			Plotly.plot('graph', data, layout);
+
+		});*/
+		})
+				.catch(err => console.error(err));	
 		</script>
+		<table style="width:100%">
+			<tr>
+			<td>trace 0</td>
+			<td>trace 1</td>
+			<td>trace 2</td>
+			</tr>
+			<tr>
+			<td>55577854</td>
+			<td>555777899</td>
+			<td>54446786</td>
+			</tr>
+			<tr>
+			<td>55577855</td>
+			<td>55578868</td>
+			<td>4567566</td>
+			</tr>
+		</table>
 	</div>
 	</body>
 </html>
