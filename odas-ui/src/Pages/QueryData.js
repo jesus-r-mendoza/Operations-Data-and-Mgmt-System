@@ -1,13 +1,42 @@
 import React from 'react';
+//Components
+import ReportCard from "../Components/ReportCard";
+// Stylesheets
+import '../Layout/Reports.css'
+import LoadSpinner from "../Components/LoadSpinner";
+import Sidebar from "../Components/Sidebar";
 
 export default class QueryData extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+        };
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        });
+    }
+
     render() {
-        return(
-          <div>
-              <h1>QUERY A DATASET</h1>
-              <i className="fas fa-satellite"/>
-          </div>
-        );
+        if (this.state.isLoading) {
+            return (
+                <LoadSpinner/>
+            );
+        }
+
+        if (!this.state.isLoading) {
+            return (
+                <div className={"report-container"}>
+                    <Sidebar>Query a Dataset</Sidebar>
+                    <div className={"card-container"}>
+                        <ReportCard/>
+                    </div>
+                </div>
+            );
+        }
     }
 }

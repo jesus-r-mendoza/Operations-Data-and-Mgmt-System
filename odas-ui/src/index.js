@@ -9,23 +9,23 @@ import GenerateData from "./Pages/GenerateData";
 import UploadData from "./Pages/UploadData";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./Layout/Main.css";
 
 // TODO consider putting the router in its own file
 // TODO Consider turning into a nested route
+// TODO Reuse QueryData in GenerateData
 class App extends React.Component {
     render() {
         return (
-            <div>
-                <Router>
-                    <Header />
-                    <div id={"Paths container"}>
-                        <Route path={"/"} exact component={Main} />
-                        <Route path={"/query"} component={QueryData} />
-                        <Route path={"/generate"} component={GenerateData} />
-                        <Route path={"/upload"} component={UploadData} />
-                    </div>
-                </Router>
-            </div>
+            <Router>
+                <Header />
+                <div>
+                    <Route path={"/"} exact component={Main} />
+                    <Route path={"/query"} component={QueryData} />
+                    <Route path={"/generate"} component={GenerateData} />
+                    <Route path={"/upload"} component={UploadData} />
+                </div>
+            </Router>
         );
     }
 }

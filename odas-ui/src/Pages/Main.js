@@ -3,9 +3,9 @@ import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, FormControl, Popover, OverlayTrigger, PopoverContent} from "react-bootstrap";
-import "../Layout/MainStyles.css"
+import "../Layout/Main.css"
 
-
+// TODO Check for correct email format
 export default class Main extends React.Component {
     render() {
 
@@ -48,12 +48,25 @@ export default class Main extends React.Component {
                                     placement={"top"}
                                     overlay={infoPop}
                                 >
-                                    <Button size={"sm"} variant={"outline-info"} type={"submit"}>Info</Button>
+                                    <Button
+                                        size={"sm"}
+                                        variant={"outline-info"}
+                                        type={"submit"}
+                                    >
+                                        Info
+                                    </Button>
                                 </OverlayTrigger>
                             </div>
                             <FormControl type={"text"} placeholder={"Email"} />
                             <div className={"email-button"}>
-                                <Button size={"sm"} variant={"info"} type={"submit"}>Sign Up</Button>
+                                <Button
+                                    size={"sm"}
+                                    variant={"info"}
+                                    type={"submit"}
+                                    onClick={() => console.log("Sign up")}
+                                >
+                                    Sign Up
+                                </Button>
                             </div>
                         </div>
                     </div>

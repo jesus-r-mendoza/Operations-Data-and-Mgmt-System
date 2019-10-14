@@ -1,31 +1,40 @@
+/*Loading*/
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /*Navigation*/
 .nav-bar {
     display: flex;
-    justify-content: space-around;
-    /*background: silver;*/
+    justify-content: flex-end;
     background: #141e28;
     opacity: 100%;
+    z-index: 1;
     border: 0;
     font-size: large;
     box-shadow: 1px 1px 1px black;
 }
 
 .title-text {
-    /*text-shadow: 1px 2px lightgray;*/
     font-weight: bold;
     font-size: xx-large;
     padding-right: 10%;
     color: lightgray;
 }
 
+.paths-container{
+    width: 100%;
+}
+
 /*Main page*/
 .main-page {
-    display: flex;
+    /*display: flex;*/
     background-color: #141e28;
     /*background-image: linear-gradient(to bottom, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 1));*/
     justify-content: center;
-    margin: auto;
-    height: 100vh;
+    height: 95vh;
 }
 
 .main-text {
