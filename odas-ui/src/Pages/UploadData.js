@@ -43,28 +43,67 @@ export default class UploadData extends React.Component {
                     <div className={"file-input"}>
                         <label htmlFor={"logFile"} className={"file-label"}>Choose a log file</label>
                         <div className={"input-container"}>
-                            <FormControl disabled type={"text"} placeholder={"File name"} className={"input-box"} />
-                            <input type="file" name="logFile" data-multiple-caption="{count} files selected" multiple />
+                            <FormControl
+                                disabled
+                                type={"text"}
+                                placeholder={"File name"}
+                                className={"input-box"}
+                            />
+                            <div className={"upload-btn-wrapper"}>
+                                <Button
+                                    variant={"info"}
+                                    type={"submit"}
+                                    className={"browse-btn"}
+                                >
+                                    Browse...
+                                </Button>
+                                <input
+                                    type="file"
+                                    name="logFile"
+                                    data-multiple-caption="{count} files selected"
+                                    multiple
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className={"file-input"}>
                         <label htmlFor={"configFile"} className={"file-label"}>Choose a configuration file (Optional)</label>
                         <div className={"input-container"}>
-                            <FormControl disabled type={"text"} placeholder={"File name"} className={"input-box"} />
-                            <input type="file" name="logFile" data-multiple-caption="{count} files selected" multiple />
+                            <FormControl
+                                disabled
+                                type={"text"}
+                                placeholder={"File name"}
+                                className={"input-box"}
+                            />
+                            <div className={"upload-btn-wrapper"}>
+                                <Button
+                                    variant={"info"}
+                                    type={"submit"}
+                                    className={"browse-btn"}
+                                >
+                                    Browse...
+                                </Button>
+                                <input
+                                    type={"file"}
+                                    name={"logFile"}
+                                    data-multiple-caption="{count} files selected"
+                                    multiple
+                                />
+                            </div>
                         </div>
                     </div>
                     <Button
-                        primary
+                        variant={"primary"}
                         className={"submit-btn"}
-                        type={"submit"}
-                        onClick={() => this.handleClick()}
+                        onClick={() => this.goToReport()}
                     >
                         Submit
                     </Button>
                 </div>
             );
-        } else if (this.state.currentPage === "renderReport") {
+        }
+
+        else if (this.state.currentPage === "renderReport") {
             return (
                 <div className={"card-container"}>
                     <ReportCard/>
