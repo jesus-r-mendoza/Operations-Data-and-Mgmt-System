@@ -6,7 +6,7 @@ import {Button, Form, FormCheck} from "react-bootstrap";
 export default class QueryData extends React.Component {
 // TODO Implement the checkbox selections
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
-// TODO Make generate report button adaptive to all screens
+// TODO Disable generate report button while nothing is selected
 
     constructor(props) {
         super(props);

@@ -1,5 +1,40 @@
-.file-input {
+.file-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding-top: 5em;
     padding-left: 10em;
+}
+
+.file-input {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 60px;
+}
+
+.file-label {
+    font-size: large;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 34%;
+    position: relative;
+    overflow: hidden;
+    /*display: inline-block;*/
+    /*border: 3px solid black;*/
+}
+
+.input-box {
+    width: 400px;
+}
+
+.submit-btn {
+    width: 10%;
+}
+
+.file-btn {
+
 }

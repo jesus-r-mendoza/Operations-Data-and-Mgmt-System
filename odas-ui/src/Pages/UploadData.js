@@ -5,7 +5,7 @@ import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import "../Layout/UploadData.css"
-import {Button} from "react-bootstrap";
+import {Button, FormControl} from "react-bootstrap";
 
 export default class UploadData extends React.Component {
 
@@ -24,14 +24,44 @@ export default class UploadData extends React.Component {
         });
     }
 
+    goToReport() {
+        this.setState({
+            currentPage: "renderReport"
+        });
+    }
+
+    gotToInput() {
+        this.setState({
+            currentPage: "upload"
+        });
+    }
+
     renderFileInput() {
         if (this.state.currentPage === "upload") {
             return (
-                <div className={"file-input"}>
-                    <input type={"file"} name={"logFile"} placeholder={""} />
-                    <input type="file" name="file" id="file" class="inputfile" data-multiple-caption="{count} files selected" multiple />
-                    <label for={"file"}>Choose a file</label>
-                    <Button type={"submit"} variant={"primary"}>Submit</Button>
+                <div className={"file-container"}>
+                    <div className={"file-input"}>
+                        <label htmlFor={"logFile"} className={"file-label"}>Choose a log file</label>
+                        <div className={"input-container"}>
+                            <FormControl disabled type={"text"} placeholder={"File name"} className={"input-box"} />
+                            <input type="file" name="logFile" data-multiple-caption="{count} files selected" multiple />
+                        </div>
+                    </div>
+                    <div className={"file-input"}>
+                        <label htmlFor={"configFile"} className={"file-label"}>Choose a configuration file (Optional)</label>
+                        <div className={"input-container"}>
+                            <FormControl disabled type={"text"} placeholder={"File name"} className={"input-box"} />
+                            <input type="file" name="logFile" data-multiple-caption="{count} files selected" multiple />
+                        </div>
+                    </div>
+                    <Button
+                        primary
+                        className={"submit-btn"}
+                        type={"submit"}
+                        onClick={() => this.handleClick()}
+                    >
+                        Submit
+                    </Button>
                 </div>
             );
         } else if (this.state.currentPage === "renderReport") {
