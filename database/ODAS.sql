@@ -1,8 +1,5 @@
 -- ODAS SQL ----
 
--- DROP DATABASE if exists ODAS;
--- CREATE DATABASE ODAS;
--- use ODAS;
 
 DROP table if exists SATELLITE;
 DROP table if exists POSITION;
