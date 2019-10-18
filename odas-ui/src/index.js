@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 // Components
-import Header from "./Layout/Header";
+import Header from "./Components/Header";
 import Main from "./Pages/Main";
 import QueryData from "./Pages/QueryData";
 import GenerateData from "./Pages/GenerateData";
