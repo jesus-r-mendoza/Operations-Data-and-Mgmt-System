@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ODAS</title>
+</head>
+<body>
+<h1>Upload a file</h1>
+<form method = "post" enctype ="multipart/form-data">
+{%csrf_token%}
+
+<input type ="file" name = "fileinput">
+<button type="submit">Upload</button>
+</form>
+{%if url%}
+<p>Uploaded File: <a href = "{{url}}"> {{url}}</a> </p>
+{%endif%}
+</body>
+</html>
