@@ -27,6 +27,7 @@
 			fetch(request)//, {mode: "same-origin"})//no-cors"})
 				.then(res => res.json())
 				.then((out) => {
+					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
 					console.log('Status Sub Code: ', out.Result.StatusSubCode);
 					keys = Object.keys(out.Result.Data[1][0]);
@@ -52,6 +53,10 @@
 					//return res.json();
 	//			})
 	//			.catch(err => console.error(err));				
+			var chartValuesFields = [];
+			var sumChartValues = [];
+			var chartValues = [];
+			var chartValuesIndex = 0;
 			console.log('testc');
 			var totalxlength = 0;//500;
 			var data = [];//[{y:[getData()], type: 'line'}, {y: [getData()],type: 'line'}, {y: [getData()],type: 'line'}];
@@ -71,10 +76,38 @@
 						var dataAdd = {y:[keysValues[q][1][0]], type: 'line'};
 						data.push(dataAdd);
 					//}
+					var addToChartValuesFields = keysValues[q][0]; //may be redundant in for loop, only need once
+					chartValuesFields.push(addToChartValuesFields);
+					var addToChartValues = keysValues[q][1][0];
+					chartValues.push(addToChartValues);
+					//console.log('addToChartValuesFields', chartValuesFields);
+					//console.log('addToChartValues', chartValues);
+					
+					//var para = document.createElement("td");
+					//var node = document.createTextNode(chartValuesFields);
+					//para.appendChild(node);
+					//var para2 = document.createElement("p");
+					//var node2 = document.createTextNode(chartValues);
+					//para2.appendChild(node2);
+
 				}
 				//if "Coordinates" special case
 			}
-				
+			chartValuesIndex++;
+			chartValuesIndex++;
+			for(var a=0;a<chartValuesFields.length;a++){
+console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFields[a]', chartValuesFields[a]);
+				var para = document.createElement("td");
+				var node = document.createTextNode(chartValuesFields[a]);
+				para.appendChild(node);
+				sumChartValues.push(chartValuesFields);
+				sumChartValues.push(chartValues);
+				var element = document.getElementById("fieldnames");
+				element.appendChild(para);
+			}
+			//element.appendChild(para2);
+			console.log('sumChartValues initial', sumChartValues);
+			
 			Plotly.plot('chart', data);
 			var cnt=0;
 			var dataindex = 0;
@@ -88,10 +121,47 @@
 			console.log('indices', indices);
 			setInterval(function(){
 				multipleTraces = []; //clear
+				var table = document.getElementById("traces");
+				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				for(var r=0;r<finalKeyValuesNum;r++){//<17 times down by column
 					multipleTraces.push([getData(r, dataindex)]);
-				}	
-				//console.log('dataindex', dataindex);
+					
+					if(r==finalKeyValuesNum-1){
+						for(var a=0;a<multipleTraces.length;a++){
+							var cellAdd = row.insertCell(a);
+							cellAdd.innerHTML = (multipleTraces[a]);
+							//var para3 = document.createElement("td");
+							//var node3 = document.createTextNode(multipletraces[a]);
+							//para3.appendChild(node3);
+							//var element = document.getElementById("data");
+							//element.appendChild(para3);
+						}
+					}
+				//}	
+				/*
+				sumChartValues.push(multipleTraces);
+				var para3 = document.createElement("td");
+				var node3 = document.createTextNode(sumChartValues[r][1][dataindex]);
+				para3.appendChild(node3);
+				var element = document.getElementById("data");
+				element.appendChild(para3);
+				*/
+				}
+
+				
+				//var para4 = document.createElement("tr");
+				//var node4 = document.create
+				//console.log('sumChartValues initial', sumChartValues);
+				chartValuesIndex++;
+				console.log('multpltraces', multipleTraces);
+				/*var para1 = document.createElement("p");
+				var node3 = document.createTextNode(addToChartValuesFields);
+				para1.appendChild(node);
+				var node4 = document.createTextNode(addToChartValues);
+				para1.appendChild(node4);
+				var element = document.getElementById("bottomchart");
+				element.appendChild(para1);
+				*///console.log('dataindex', dataindex);
 				//console.log('multipleTraces',multipleTraces);
 				Plotly.extendTraces('chart',{y:multipleTraces},indices)
 				//Plotly.extendTraces('chart',{y:[[getData()]]},[0])
@@ -111,7 +181,7 @@
 			var valueIndex = 0;
 			function getData(r, dataindex){//keyIndex, valueIndex){
 				//for(int r=0;r<totalxlength;r++){ //30 times
-					return finalKeyValues[r][1][dataindex];
+				return finalKeyValues[r][1][dataindex];
 					//var dataAdd = {y:[getData(q, keysValues[q][1][r])], type: 'line'};
 					//data.push(dataAdd);
 				//}
@@ -180,21 +250,13 @@
 		})
 				.catch(err => console.error(err));	
 		</script>
-		<table style="width:100%">
-			<tr>
-			<td>trace 0</td>
-			<td>trace 1</td>
-			<td>trace 2</td>
+	</div>
+	<div id = "bottomchart">
+	<p>Table Chart</p>
+	<table style="width:100%" id = "traces">
+			<tr id = "fieldnames">
 			</tr>
-			<tr>
-			<td>55577854</td>
-			<td>555777899</td>
-			<td>54446786</td>
-			</tr>
-			<tr>
-			<td>55577855</td>
-			<td>55578868</td>
-			<td>4567566</td>
+			<tr id = "data">
 			</tr>
 		</table>
 	</div>
