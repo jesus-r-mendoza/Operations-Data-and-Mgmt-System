@@ -13,7 +13,7 @@ class Component(models.Model):
     category = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
 
-class Collectable(model.Model):
+class Collectable(models.Model):
     component = models.ForeignKey(Component, on_delete=models.CASCADE)
     units = models.CharField(max_length=64)
 

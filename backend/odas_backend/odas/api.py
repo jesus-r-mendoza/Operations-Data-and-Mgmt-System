@@ -1,4 +1,4 @@
-from odas.models import Satellite
+from odas.models import Satellite, Component, Collectable, Measurement
 from rest_framework import viewsets, permissions
 from .serializers import SatelliteSerializer, ComponentSerializer, CollectableSerializer, MeasurementSerializer 
 
