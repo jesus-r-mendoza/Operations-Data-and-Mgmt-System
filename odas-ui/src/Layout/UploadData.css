@@ -19,7 +19,7 @@
 .input-container {
     display: flex;
     flex-direction: row;
-    width: 30%;
+    width: 40%;
     position: relative;
     overflow: hidden;
     /*display: inline-block;*/
@@ -27,15 +27,11 @@
 }
 
 .input-box {
-    width: 50em;
+    width: 60em;
 }
 
 .submit-btn {
     width: 10%;
-}
-
-.file-btn {
-
 }
 
 .upload-btn-wrapper {

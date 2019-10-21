@@ -14,7 +14,7 @@ export default class UploadData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: "upload",
-            selectedFile: null
+            selectedFile: "File name"
         };
     }
 
@@ -24,15 +24,11 @@ export default class UploadData extends React.Component {
         });
     }
 
+    //TODO Needs implementation. May need rethinking.
+    // Will need to find where the database connection and call will be
     goToReport() {
         this.setState({
             currentPage: "renderReport"
-        });
-    }
-
-    gotToInput() {
-        this.setState({
-            currentPage: "upload"
         });
     }
 
@@ -46,7 +42,8 @@ export default class UploadData extends React.Component {
                             <FormControl
                                 disabled
                                 type={"text"}
-                                placeholder={"File name"}
+                                name={"data-file"}
+                                placeholder={this.state.selectedFile.name}
                                 className={"input-box"}
                             />
                             <div className={"upload-btn-wrapper"}>
@@ -62,32 +59,7 @@ export default class UploadData extends React.Component {
                                     name="logFile"
                                     data-multiple-caption="{count} files selected"
                                     multiple
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"file-input"}>
-                        <label htmlFor={"configFile"} className={"file-label"}>Choose a configuration file (Optional)</label>
-                        <div className={"input-container"}>
-                            <FormControl
-                                disabled
-                                type={"text"}
-                                placeholder={"File name"}
-                                className={"input-box"}
-                            />
-                            <div className={"upload-btn-wrapper"}>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    className={"browse-btn"}
-                                >
-                                    Browse...
-                                </Button>
-                                <input
-                                    type={"file"}
-                                    name={"logFile"}
-                                    data-multiple-caption="{count} files selected"
-                                    multiple
+                                    onChange={this.onChangeHandler}
                                 />
                             </div>
                         </div>
@@ -112,6 +84,15 @@ export default class UploadData extends React.Component {
         }
     }
 
+    onChangeHandler = event => {
+        this.setState({
+            selectedFile: event.target.files[0],
+            loaded: 0
+        });
+
+        console.log(event.target.files[0]);
+    };
+
     render() {
         if (this.state.isLoading) {
             return(
@@ -122,7 +103,7 @@ export default class UploadData extends React.Component {
         if(!this.state.isLoading) {
             return (
                 <div className={"report-container"}>
-                    <Sidebar>Upload a Dataset</Sidebar>
+                    <Sidebar page={this.state.currentPage}>Upload a Dataset</Sidebar>
                     {this.renderFileInput()}
                 </div>
             );
