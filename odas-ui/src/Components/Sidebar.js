@@ -11,19 +11,48 @@ export default class QueryData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            currentPage: this.props.page
         };
+
+        console.log(this.props.page)
+    }
+
+    handleSubmit() {
+        console.log("chicken")
+    }
+
+    goBack() {
+        this.setState({
+            currentPage: "upload"
+        });
+
+
+        console.log(this.state.currentPage)
+    }
+
+    // TODO Does not route back to the desired page.
+    renderBackArrow(page) {
+        if(page === "renderReport") {
+            return (
+                <div className={"back-arrow-container"}>
+                    {/*<button className={"back-arrow-btn"} />*/}
+                        <img
+                            src={require("../Images/back-arrow.png")}
+                            alt={""}
+                            className={"back-arrow"}
+                            onClick={() => this.goBack()}
+                        />
+                </div>
+            );
+        }
     }
 
     render() {
-
-        function handleSubmit() {
-            console.log("chicken")
-        }
-
         return (
             <div className={"sidebar"}>
                 <div className={"sidebar-title"}>
+                    {/*{this.renderBackArrow(this.props.page)}*/}
                     <span>{this.props.children}</span>
                 </div>
                 <div>
@@ -31,17 +60,22 @@ export default class QueryData extends React.Component {
                         <span>Select data to be reported</span>
                     </div>
                     <div className={"checkbox-container"}>
-                        <Form onSubmit={handleSubmit()}>
-                            <FormCheck label={"Stuff"}/>
-                            <FormCheck label={"Stuff"}/>
-                            <FormCheck label={"Stuff"}/>
+                        <Form>
+                            <FormCheck label={"Temperature"}/>
+                            <FormCheck label={"Voltage"}/>
+                            <FormCheck label={"Amps"}/>
                             <FormCheck label={"Stuff"}/>
                             <FormCheck label={"Stuff"}/>
                             <FormCheck label={"Stuff"}/>
                         </Form>
                     </div>
                     <div className={"gen-button-container"}>
-                        <Button type={"submit"} variant={"info"} className={"gen-button"}>
+                        <Button
+                            type={"submit"}
+                            variant={"info"}
+                            className={"gen-button"}
+                            onClick={() => this.handleSubmit()}
+                        >
                             Generate Report
                         </Button>
                     </div>
