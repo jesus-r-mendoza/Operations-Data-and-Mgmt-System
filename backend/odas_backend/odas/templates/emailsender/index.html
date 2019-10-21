@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ODAS</title>
+</head>
+<body>
+<h1>Your email was sent</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-actions">
+      <button type="submit">Send</button>
+    </div>
+</form>
+</body>
+</html>
