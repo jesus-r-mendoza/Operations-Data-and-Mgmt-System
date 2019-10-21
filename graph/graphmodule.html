@@ -14,6 +14,7 @@
 	<div class="navbar"><span>Real-Time Telemetry Data</span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
 			console.log('start');
 			var done = false;
@@ -21,12 +22,51 @@
 			var numKeys = 0;
 			var rawvalues = [];
 			var keysValues = [];
+			var json = "";
 			//var myList = document.querySelector('ul');
-			var request = new Request('https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+			
+			$.ajax({
+				method: 'GET',
+//WARNING: ALWAYS ADD/REMOVE API KEY
+				url: 'https://cors-anywhere.herokuapp.com/https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?',
+				success: function(html) {
+					console.log('herokutest');
+					console.log(html);
+				}
+			})
+			
+			var request = new Request(
+		//	'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
+	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
+	//{timeRange} = time range for which data location is being requested. There must be two comma separated basic format (minimal number of separators) ISO 8601 date values.
+	//{coordinateSystems} = a comma separated list of the names of the coordinate systems in which to represent the returned location information. The values must be from this list: geo, gm, gse, gsm, sm, geitod, geij2000. If no values are given, gse will be assumed. For each coordinate system, the X, Y, Z, Latitude, Longitude, and local-time (if applicable) values will be returned.
+	//Satellite observatories: mms1,mms2
+	//Time range: 20190101T000000Z,20190101T001000Z
+	//Coordinate systems: gse,geo
+//WARNING: ALWAYS ADD/REMOVE API KEY
+			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
-			fetch(request)//, {mode: "same-origin"})//no-cors"})
-				.then(res => res.json())
+			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json');
+			//'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+			//app.get('/YourPath/:parameterName', 
+			//function (req, res) {
+			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
+				//.then(res => res.json())
+				.then(res => res.text())
+				.then(text => {
+				console.log(text);
+				json = xml2json(text);
+				//json = $(text).serializeArray();
+				/*var element = document.getElementsByTagName('Result');
+				var html = element.outerHTML; 
+				var data = { html: html }; 
+				json = JSON.stringify(data);*/
+				console.log('jsontest');
+				console.log(json);
+				})
 				.then((out) => {
+					//out = json;
 					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
 					console.log('Status Sub Code: ', out.Result.StatusSubCode);
@@ -249,6 +289,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 		});*/
 		})
 				.catch(err => console.error(err));	
+	//	}
 		</script>
 	</div>
 	<div id = "bottomchart">
