@@ -24,8 +24,8 @@ export default class UploadData extends React.Component {
         });
     }
 
-    //TODO Needs implementation. May need rethinking.
-    // Will need to find where the database connection and call will be
+     //TODO Needs implementation. May need rethinking.
+     // Will need to find where the database connection and call will be
     goToReport() {
         this.setState({
             currentPage: "renderReport"

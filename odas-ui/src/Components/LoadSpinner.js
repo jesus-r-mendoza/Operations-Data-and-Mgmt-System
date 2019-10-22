@@ -7,9 +7,8 @@ export default class LoadSpinner extends React.Component {
     render() {
         return(
           <div className={"spinner"}>
-              <Spinner animation={"border"} role={"status"}>
-                  <span>Loading...</span>
-              </Spinner>
+              <Spinner animation={"border"} role={"status"} />
+              <span>Loading...</span>
           </div>
         );
     }
