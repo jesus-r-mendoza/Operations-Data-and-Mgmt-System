@@ -2,9 +2,10 @@ import React from 'react';
 // Stylesheets
 import '../Layout/Reports.css'
 import {Button} from "react-bootstrap";
-import Checkbox from "./Checkbox";
+import Checkboxdisplay from "./Checkbox";
+// import {Checkbox} from 'office-ui-fabric-react/lib/Checkbox';
 
-const LABELS = ["", "Temperature", "Voltage", "Velocity"];
+const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets"];
 
 export default class QueryData extends React.Component {
 // TODO Implement the checkbox selections
@@ -64,10 +65,11 @@ export default class QueryData extends React.Component {
     };
 
     createCheckbox = option => (
-        <Checkbox
+        <Checkboxdisplay
+            type={"checkbox"}
             label={option}
-            isSelected={this.state.checkboxes[option]}
-            onCheckboxChange={this.handleCheckboxChange}
+            // isSelected={this.state.checkboxes[option]}
+            onChange={this.handleCheckboxChange}
             key={option}
         />
     );
@@ -112,8 +114,7 @@ export default class QueryData extends React.Component {
                         <div className={"sidebar-info"}>
                             <span>Select data to be reported</span>
                         </div>
-                        <div>
-
+                        <div className={"checkbox-container"}>
                             {this.createCheckboxes()}
                         </div>
                         <div className={"gen-button-container"}>

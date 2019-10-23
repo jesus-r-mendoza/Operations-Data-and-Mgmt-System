@@ -1,17 +1,15 @@
 import React from 'react';
+import {Checkbox} from "office-ui-fabric-react";
 
-const Checkbox = ({label, isSelected, onCheckboxChange}) => (
+const Checkboxdisplay = ({label, isSelected, onCheckboxChange}) => (
     <div className={"checkbox-container"}>
-        <label>
-            <input
-                type={"checkbox"}
-                name={label}
-                checked={isSelected}
-                onChange={onCheckboxChange}
-            />
-            {" "}{label}
-        </label>
+        <Checkbox
+            type={"checkbox"}
+            label={label}
+            checked={isSelected}
+            onChange={onCheckboxChange}
+        />
     </div>
 );
 
-export default Checkbox;
+export default Checkboxdisplay;

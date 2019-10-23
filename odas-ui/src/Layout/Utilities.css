@@ -1,0 +1,14 @@
+/*Loading*/
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15em;
+}
+
+.loading-text {
+    padding-top: 20px;
+    padding-left: 10px;
+    font-size: large;
+}
