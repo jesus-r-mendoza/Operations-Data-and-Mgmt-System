@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from odas.models import Satellite, Component, Collectable, Measurement
+from odas.models import Satellite, Component, Measurement, Units
 
 # Lead Serializer
 class SatelliteSerializer(serializers.ModelSerializer):
@@ -12,9 +12,9 @@ class ComponentSerializer(serializers.ModelSerializer):
         model = Component
         fields = '__all__'
 
-class CollectableSerializer(serializers.ModelSerializer):
+class UnitsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Collectable
+        model = Units
         fields = '__all__'
 
 class MeasurementSerializer(serializers.ModelSerializer):
