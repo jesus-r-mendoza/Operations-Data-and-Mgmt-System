@@ -139,11 +139,11 @@ STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static' )]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_HOST= credentials['smtp']
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'odasreport@gmail.com'
+EMAIL_HOST_USER = credentials['email_user']
 EMAIL_HOST_PASSWORD = credentials['email_pswd']
 
 EMAIL_USE_TLS = True
