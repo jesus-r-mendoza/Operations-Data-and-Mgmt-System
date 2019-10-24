@@ -1,31 +1,43 @@
 import React from 'react';
 // Stylesheets
-import '../Layout/Reports.css'
+import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
-import Checkboxdisplay from "./Checkbox";
-// import {Checkbox} from 'office-ui-fabric-react/lib/Checkbox';
-
-const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets"];
+import CheckComponent from "./CheckComponent";
+// TODO map the attributes of the measurements table into this array
+const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets", "Naomi", "Wada"];
 
 export default class QueryData extends React.Component {
-// TODO Implement the checkbox selections
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
 // TODO Disable generate report button while nothing is selected
 
     constructor(props) {
         super(props);
-        // TODO map the attributes of the measurements table into this array
         this.state = {
             isLoading: true,
             currentPage: this.props.page,
             checkboxes: LABELS.reduce(
                 (options, option) => ({
                     ...options,
-                    [option]: false
+                        [option]: false
                 }),
-            )
+                {}
+            ),
         };
+
         console.log(this.props.page)
+    }
+
+// TODO currently required to uncheck hidden initialization of array of letters .. ?
+    componentDidMount() {
+        this.selectAllCheckboxes(false);
+    }
+
+    goBack() {
+        this.setState({
+            currentPage: "upload"
+        });
+
+        console.log(this.state.currentPage)
     }
 
     selectAllCheckboxes = isSelected => {
@@ -38,10 +50,6 @@ export default class QueryData extends React.Component {
             }));
         });
     };
-
-    selectAll = () => this.selectAllCheckboxes(true);
-
-    deselectAll = () => this.selectAllCheckboxes(false);
 
     handleCheckboxChange = changeEvent => {
         const { name } = changeEvent.target;
@@ -65,25 +73,17 @@ export default class QueryData extends React.Component {
     };
 
     createCheckbox = option => (
-        <Checkboxdisplay
-            type={"checkbox"}
+        <CheckComponent
             label={option}
-            // isSelected={this.state.checkboxes[option]}
-            onChange={this.handleCheckboxChange}
+            isSelected={this.state.checkboxes[option]}
+            onCheckboxChange={this.handleCheckboxChange}
             key={option}
         />
     );
 
+    selectAll = () => this.selectAllCheckboxes(true);
+    deselectAll = () => this.selectAllCheckboxes(false);
     createCheckboxes = () => LABELS.map(this.createCheckbox);
-
-    goBack() {
-        this.setState({
-            currentPage: "upload"
-        });
-
-
-        console.log(this.state.currentPage)
-    }
 
     // TODO Does not route back to the desired page.
     renderBackArrow(page) {
@@ -114,17 +114,33 @@ export default class QueryData extends React.Component {
                         <div className={"sidebar-info"}>
                             <span>Select data to be reported</span>
                         </div>
-                        <div className={"checkbox-container"}>
-                            {this.createCheckboxes()}
-                        </div>
-                        <div className={"gen-button-container"}>
-                            <Button
-                                type={"submit"}
-                                variant={"info"}
-                                className={"gen-button"}
-                            >
-                                Generate Report
-                            </Button>
+                        <div className={"checkbox-selection-btn"}>
+                            <div className={"checkbox-container"}>
+                                {this.createCheckboxes()}
+                            </div>
+                            <div className={"selection-buttons"}>
+                                <Button
+                                    variant={"secondary"}
+                                    onClick={() => this.selectAll()}
+                                >
+                                    Select All
+                                </Button>
+                                <Button
+                                    variant={"secondary"}
+                                    onClick={() => this.deselectAll()}
+                                >
+                                    Deselect All
+                                </Button>
+                            </div>
+                            <div className={"gen-button-container"}>
+                                <Button
+                                    type={"submit"}
+                                    variant={"info"}
+                                    className={"gen-button"}
+                                >
+                                    Generate Report
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -132,3 +148,5 @@ export default class QueryData extends React.Component {
         );
     }
 }
+
+// TODO Find out how to use the key prop to use for the query
