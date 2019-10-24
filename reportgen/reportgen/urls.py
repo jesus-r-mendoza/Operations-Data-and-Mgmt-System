@@ -1,4 +1,4 @@
-"""odas_backend URL Configuration
+"""reportgen URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -14,14 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('', include('odas.urls')),
+    path('emailsender/', include('emailsender.urls')),
+    path('fileio/', include('fileio.urls')),
+    path('admin/', admin.site.urls),
 ]
 
-if settings.DEBUG:
-    urlpatterns+= static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

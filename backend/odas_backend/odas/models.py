@@ -22,3 +22,9 @@ class Measurement(models.Model):
     units = models.ForeignKey(Units, on_delete=models.CASCADE)
     time_measured = models.DateTimeField(auto_now_add=True)
     value = models.FloatField()
+
+class Upload(models.Model):
+    description = models.CharField(max_length=100)
+    upfile = models.FileField(upload_to='files/uploads/')
+    def __str__(self):
+        return self.description
