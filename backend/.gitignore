@@ -1,2 +1,4 @@
 config.cfg
+**/media/
+**/db.sqlite3
 **/__pycache__/
