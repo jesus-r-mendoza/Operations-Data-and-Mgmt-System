@@ -144,7 +144,7 @@ EMAIL_HOST= 'smtp.gmail.com'
 EMAIL_PORT = 587
 
 EMAIL_HOST_USER = 'odasreport@gmail.com'
-EMAIL_HOST_PASSWORD = '1234$ODAS'
+EMAIL_HOST_PASSWORD = credentials['email_pswd']
 
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL= False
