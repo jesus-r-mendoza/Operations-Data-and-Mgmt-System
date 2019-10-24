@@ -1,12 +1,14 @@
 -- ODAS SQL ----
 
+use odas;
+
 
 DROP table if exists SATELLITE;
 DROP table if exists POSITION;
 DROP table if exists CPU;
 DROP table if exists POWERSUPPLY;
 DROP table if exists THERMOMETER;
-DROP table if exists PROPPULSION;
+DROP table if exists PROPULSION;
 DROP table if exists CAMERA;
 DROP table if exists SOLARPANEL;
 

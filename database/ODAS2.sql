@@ -1,0 +1,70 @@
+-- ODAS SQL ----
+
+--DROP DATABASE if exists ODAS;
+--CREATE DATABASE ODAS;
+use ODAS;
+
+DROP table if exists SATELLITES;
+DROP table if exists MEASUREMENTS;
+DROP table if exists PARTS;
+DROP table if exists SATELS_HAS_PARTS;
+DROP table if exists UNITS;
+DROP table if exists MODEL;
+
+
+-- SATELLITES TABLE  #1--
+
+CREATE TABLE SATELLITES (
+    SId INT(9) UNIQUE,
+	Sname VARCHAR(15),
+    SDescription VARCHAR(50),
+    Ybuild DATE,
+    Sweight INT(3),
+    Ssize VARCHAR(30),
+    PRIMARY KEY (SId)
+   
+);
+
+-- MEASUREMENTS TABLE #2---
+
+CREATE TABLE MEASUREMENTS (
+    MeaId INT UNIQUE,
+    Sid INT(9),
+	UnitId INT(9),
+	MeaTime TIME,
+	MeaValue INT,
+PRIMARY KEY (MeaId)
+);
+
+-- PARTS TABLE #3 --
+
+CREATE TABLE PARTS( 
+	PId INT(9) UNIQUE,
+	PName VARCHAR(9),
+    PDescription VARCHAR(256),
+PRIMARY KEY (PId)
+);
+
+-- SATELS_HAS_PARTS TABLE #4 ---
+
+CREATE TABLE SATELS_HAS_PARTS(
+	SHPId INT(9),
+ 	SId INT(9)
+);
+
+-- UNITS TABLE #5 ---
+
+CREATE TABLE UNITS(
+	UnitId CHAR(9),
+	PId INT(9),
+	Unit VARCHAR(9)
+);
+
+-- MODELS TABLE #6---
+
+CREATE TABLE MODELS(
+	ModId INT(9) UNIQUE,
+	ModDescription VARCHAR(30)
+PRIMARY KEY (ModId)
+);
+
