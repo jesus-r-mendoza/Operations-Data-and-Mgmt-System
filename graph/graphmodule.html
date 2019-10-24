@@ -5,6 +5,7 @@
 
 	<script src="plotly.min.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="xml2json.js"></script>	
 	
 	<script>
 
@@ -14,6 +15,7 @@
 	<div class="navbar"><span>Real-Time Telemetry Data</span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
+		<script src="xml2json.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
 			console.log('start');
@@ -36,7 +38,7 @@
 			})
 			
 			var request = new Request(
-		//	'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+//			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
 	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
 	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
 	//{timeRange} = time range for which data location is being requested. There must be two comma separated basic format (minimal number of separators) ISO 8601 date values.
@@ -45,28 +47,49 @@
 	//Time range: 20190101T000000Z,20190101T001000Z
 	//Coordinate systems: gse,geo
 //WARNING: ALWAYS ADD/REMOVE API KEY
-			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
+			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?api_key=Pfpfhf3PZS8MhCZWRvwv81zI3ID6VoLJggVdWvvR');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
-			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json');
-			//'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
 			//app.get('/YourPath/:parameterName', 
 			//function (req, res) {
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
-				//.then(res => res.json())
+//				.then(res => res.json())
 				.then(res => res.text())
 				.then(text => {
-				console.log(text);
-				json = xml2json(text);
-				//json = $(text).serializeArray();
-				/*var element = document.getElementsByTagName('Result');
-				var html = element.outerHTML; 
-				var data = { html: html }; 
-				json = JSON.stringify(data);*/
+//				console.log(text);
+			//from xmljson_test.html
+			function parseXml(xml) {
+				var dom = null;
+				if (window.DOMParser) {
+					try { 
+						dom = (new DOMParser()).parseFromString(xml, "text/xml"); 
+					} 
+					catch (e) { dom = null; }
+				}
+				else if (window.ActiveXObject) {
+					try {
+						dom = new ActiveXObject('Microsoft.XMLDOM');
+						dom.async = false;
+						if (!dom.loadXML(xml)) // parse error ..
+							window.alert(dom.parseError.reason + dom.parseError.srcText);
+						} 
+					catch (e) { dom = null; }
+				}
+				else
+					alert("Error!");
+					return dom;
+				}
+				json = xml2json(parseXml(text), "  ");
 				console.log('jsontest');
 				console.log(json);
 				})
 				.then((out) => {
-					//out = json;
+					//--------------testdata2.json ---------------
+					out = JSON.parse(json);
+					//console.log(typeof(out));
+					console.log(out.Response.Result[0]);
+					console.log(out.Response.Result[1]);
+					console.log(out.Response.Result[2]);
+					//--------------testdata2.json-----------------
 					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
 					console.log('Status Sub Code: ', out.Result.StatusSubCode);
@@ -226,67 +249,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 					//data.push(dataAdd);
 				//}
 				//return Math.random();
-			}			
-/*			
-			let items = [
-				'Blue',
-				'Red',
-				'White',
-				'Green',
-				'Black',
-				'Orange'
-			],
-			ul = document.createElement('ul');
-			document.getElementById('myItemList').appendChild(ul);
-			items.forEach(function (item) {
-				let li = document.createElement('li');
-				ul.appendChild(li);
-					li.innerHTML += item;
-				});
-			
-			Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/Mining-BTC-180.csv", function(err, rows){
-			function unpack(rows, key) {
-			return rows.map(function(row) { return row[key]; });
 			}
-			var headerNames = Plotly.d3.keys(rows[0]);
-			var headerValues = [];
-			var cellValues = [];
-			for (i = 0; i < headerNames.length; i++) {
-				headerValue = [headerNames[i]];
-				headerValues[i] = headerValue;
-				cellValue = unpack(rows, headerNames[i]);
-				cellValues[i] = cellValue;
-			}
-			// clean date
-			for (i = 0; i < cellValues[1].length; i++) {
-				var dateValue = cellValues[1][i].split(' ')[0]
-				cellValues[1][i] = dateValue
-			}
-			var data = [{
-				type: 'table',
-				columnwidth: [200,500,600,600,400,400,600,600,600],
-				columnorder: [0,1,2,3,4,5,6,7,8,9],
-				header: {
-					values: headerValues,
-					align: "center",
-					line: {width: 1, color: 'rgb(50, 50, 50)'},
-					fill: {color: ['rgb(235, 100, 230)']},
-					font: {family: "Arial", size: 11, color: "white"}
-				},
-				cells: {
-					values: cellValues,
-					align: ["center", "center"],
-					line: {color: "black", width: 1},
-					fill: {color: ['rgba(228, 222, 249, 0.65)','rgb(235, 193, 238)', 'rgba(228, 222, 249, 0.65)']},
-					font: {family: "Arial", size: 10, color: ["black"]}
-				}
-			}]
-			var layout = {
-				title: "Bitcoin mining stats for 180 days"
-			}
-			Plotly.plot('graph', data, layout);
-
-		});*/
 		})
 				.catch(err => console.error(err));	
 	//	}
