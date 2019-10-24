@@ -1,6 +1,6 @@
-from odas.models import Satellite, Component, Collectable, Measurement
+from odas.models import Satellite, Component, Measurement, Units
 from rest_framework import viewsets, permissions
-from .serializers import SatelliteSerializer, ComponentSerializer, CollectableSerializer, MeasurementSerializer 
+from .serializers import SatelliteSerializer, ComponentSerializer, MeasurementSerializer, UnitsSerializer
 
 # Satellite Viewset
 class SatelliteViewSet(viewsets.ModelViewSet):
@@ -17,16 +17,17 @@ class ComponentViewSet(viewsets.ModelViewSet):
     ]
     serializer_class = ComponentSerializer
 
-class CollectableViewSet(viewsets.ModelViewSet):
-    queryset = Collectable.objects.all()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = CollectableSerializer
-
 class MeasurementViewSet(viewsets.ModelViewSet):
     queryset = Measurement.objects.all()
     permission_classes = [
         permissions.AllowAny
     ]
     serializer_class = MeasurementSerializer
+
+
+class UnitsViewSet(viewsets.ModelViewSet):
+    queryset = Units.objects.all()
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = UnitsSerializer

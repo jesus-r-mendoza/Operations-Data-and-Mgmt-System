@@ -84,14 +84,14 @@ WSGI_APPLICATION = 'odas_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE':   'django.db.backends.mysql',
-        'NAME':     credentials['name'],
-        'USER':     credentials['user'],
-        'PASSWORD': credentials['pswd'],
-        'HOST':     credentials['host'],
-        'PORT':     credentials['port'],
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE':   'django.db.backends.mysql',
+        # 'NAME':     credentials['name'],
+        # 'USER':     credentials['user'],
+        # 'PASSWORD': credentials['pswd'],
+        # 'HOST':     credentials['host'],
+        # 'PORT':     credentials['port'],
     }
 }
 
