@@ -1,0 +1,7 @@
+alien,cat,glasses,happy,pancakes,pineapple
+alien,cat,glasses,happy,pancakes,pineapple
+pineapple,happy,glasses,alien,pancakes,cat
+happy,glasses,pancakes,cat,pineapple,alien
+alien,happy,happy,pancakes,pineapple,cat
+alien,alien,cat,pineapple,cat,alien
+cat,cat,pancakes,alien,cat,cat
