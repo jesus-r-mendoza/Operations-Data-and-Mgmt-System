@@ -7,6 +7,8 @@ import ReportCard from "../Components/ReportCard";
 import "../Layout/UploadData.css"
 import {Button, FormControl} from "react-bootstrap";
 
+var acceptedExtensions = [".tlm"];
+
 export default class UploadData extends React.Component {
 
     constructor(props) {
@@ -32,6 +34,31 @@ export default class UploadData extends React.Component {
         });
     }
 
+    sanitizeFile(fileName) {
+
+    }
+
+    onChangeHandler = event => {
+        let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
+        let fileName = event.target.files[0].name;
+
+        let extension = extractExtension.exec(fileName)[0];
+        console.log(extension);
+        if (acceptedExtensions.contains(extension)) {
+            this.setState({
+                selectedFile: event.target.files[0].name,
+                loaded: 0
+            });
+        } else {
+            this.setState({
+                selectedFile: "File name...",
+                loaded: 0
+            });
+        }
+
+        console.log(event.target.files[0].name);
+    };
+
     renderFileInput() {
         if (this.state.currentPage === "upload") {
             return (
@@ -43,7 +70,7 @@ export default class UploadData extends React.Component {
                                 disabled
                                 type={"text"}
                                 name={"data-file"}
-                                placeholder={this.state.selectedFile.name}
+                                placeholder={this.state.selectedFile}
                                 className={"input-box"}
                             />
                             <div className={"upload-btn-wrapper"}>
@@ -83,15 +110,6 @@ export default class UploadData extends React.Component {
             );
         }
     }
-
-    onChangeHandler = event => {
-        this.setState({
-            selectedFile: event.target.files[0],
-            loaded: 0
-        });
-
-        console.log(event.target.files[0]);
-    };
 
     render() {
         if (this.state.isLoading) {
