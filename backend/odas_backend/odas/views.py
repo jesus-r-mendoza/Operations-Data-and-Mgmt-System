@@ -63,18 +63,18 @@ def recent_measurements(request, satellite_id, quantity):
         data = _build_response(measurements)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
-        return JsonResponse( {'data': False} )
+        return JsonResponse( { 'data': False, 'error': 'Sateliite Does Not Exist'} )
 
 def _build_response(meas_query_set):
     if not meas_query_set:
-        return { 'data': 'None' }
+        return { 'data': False, 'error': 'Satellite has no recent measurements' }
     data = {
         'Satellite': {
             'name': meas_query_set[0].satellite.name,
             'mission_description': meas_query_set[0].satellite.mission_description,
             'year_launched': meas_query_set[0].satellite.year_launched 
         },
-        'Measurements': [] 
+        'Measurements': []
     }
     for measurement in meas_query_set:
         entry = {
@@ -91,4 +91,7 @@ def _build_response(meas_query_set):
             }
         }
         data['Measurements'].append(entry)
+    data['Quantity'] = len(data['Measurements'])
+    data['data'] = True
+    data['error'] = 'None'
     return data
