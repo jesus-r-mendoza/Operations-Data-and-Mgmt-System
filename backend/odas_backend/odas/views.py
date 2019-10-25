@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail,BadHeaderError
 from django.core.files.storage import FileSystemStorage
 from .forms import SubscriberForm, UploadForm
-from .models import Upload 
+from .models import Upload, Satellite, Component, Measurement, Units
 
 
 def index(request):
@@ -54,3 +54,50 @@ def upload_view(request):
     return render(request, 'fileio/upload_file.html', {
         'form': form
     })
+
+def recent_measurements(request, satellite_id, quantity):
+    try:
+        if satellite_id < 0:
+            print('id < 0', satellite_id)
+            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
+
+        sat = Satellite.objects.get(pk=satellite_id)
+        if quantity < 1:
+            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+        # Take the specified amount of the  most recent measurements for the given satellite
+        measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
+        data = _build_response(measurements)
+        return JsonResponse(data)
+    except Satellite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+
+def _build_response(meas_query_set):
+    if not meas_query_set:
+        return { 'data': False, 'error': 'Satellite has no recent measurements' }
+    data = {
+        'Satellite': {
+            'name': meas_query_set[0].satellite.name,
+            'mission_description': meas_query_set[0].satellite.mission_description,
+            'year_launched': meas_query_set[0].satellite.year_launched 
+        },
+        'Measurements': []
+    }
+    for measurement in meas_query_set:
+        entry = {
+            'Component': {
+                'name': measurement.component.name,
+                'model': measurement.component.model,
+                'category': measurement.component.category,
+                'description': measurement.component.description
+            },
+            'Measurement': {
+                'units': measurement.units.units,
+                'time': measurement.time_measured,
+                'value': measurement.value
+            }
+        }
+        data['Measurements'].append(entry)
+    data['Quantity'] = len(data['Measurements'])
+    data['data'] = True
+    data['error'] = 'None'
+    return data
