@@ -55,23 +55,24 @@ def upload_view(request):
         'form': form
     })
 
-def recent_measurements(request, sat_id):
+def recent_measurements(request, satellite_id, quantity):
     try:
-        sat = Satellite.objects.get(pk=sat_id)
+        sat = Satellite.objects.get(pk=satellite_id)
         # Take the 100 most recent measurements for the given satellite
-        measurements = Measurements.objects.filter(satellite=sat).order_by('-time_measured')[:100]
+        measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
         data = _build_response(measurements)
-        print(data)
         return JsonResponse(data)
-    except Satellite.DoesNotExits:
+    except Satellite.DoesNotExist:
         return JsonResponse( {'data': False} )
 
 def _build_response(meas_query_set):
+    if not meas_query_set:
+        return { 'data': 'None' }
     data = {
         'Satellite': {
-            'name': measurement.satellite.name,
-            'mission_description': measurement.satellite.mission_description,
-            'year_launched': measurement.satellite.year_launched 
+            'name': meas_query_set[0].satellite.name,
+            'mission_description': meas_query_set[0].satellite.mission_description,
+            'year_launched': meas_query_set[0].satellite.year_launched 
         },
         'Measurements': []
     }
@@ -90,4 +91,4 @@ def _build_response(meas_query_set):
             }
         }
         data['Measurements'].append(entry)
-        return data
+    return data
