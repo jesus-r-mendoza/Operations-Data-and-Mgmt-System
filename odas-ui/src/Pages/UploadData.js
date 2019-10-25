@@ -16,7 +16,7 @@ export default class UploadData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: "upload",
-            selectedFile: "Telemetry File",
+            selectedFile: "File Name",
             loaded: 1
         };
     }
@@ -48,7 +48,6 @@ export default class UploadData extends React.Component {
             });
         } else {
             this.setState({
-                selectedFile: "Telemetry File",
                 loaded: 0
             });
         }
@@ -70,7 +69,7 @@ export default class UploadData extends React.Component {
                 <div className={"file-container"}>
                     <div className={"file-input"}>
                         <div>
-                            <label htmlFor={"logFile"} className={"file-label"}>Choose a log file.</label>
+                            <label htmlFor={"logFile"} className={"file-label"}>Choose a log file:</label>
                             {this.showErrorMessage(this.state.loaded)}
                         </div>
                         <div className={"input-container"}>

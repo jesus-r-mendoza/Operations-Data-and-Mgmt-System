@@ -4,7 +4,7 @@ import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
 import CheckComponent from "./CheckComponent";
 // TODO map the attributes from API of the measurements table into this array
-const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets", "Naomi", "Wada"];
+const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets"];
 
 export default class QueryData extends React.Component {
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
