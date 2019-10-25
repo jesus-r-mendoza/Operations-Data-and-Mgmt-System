@@ -4,7 +4,7 @@ from django.db import models
 class Satellite(models.Model):
     name = models.CharField(max_length=64)
     mission_description = models.CharField(max_length=512)
-    year_lauched = models.DateTimeField(auto_now_add=True)
+    year_launched = models.DateTimeField(auto_now_add=True)
 
 class Component(models.Model):
     satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
