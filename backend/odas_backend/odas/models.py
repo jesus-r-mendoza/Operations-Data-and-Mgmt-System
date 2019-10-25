@@ -6,6 +6,9 @@ class Satellite(models.Model):
     mission_description = models.CharField(max_length=512)
     year_launched = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.id}: {self.name}'
+
 class Component(models.Model):
     satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
@@ -13,8 +16,14 @@ class Component(models.Model):
     category = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
 
+    def __str__(self):
+        return f'{self.id}: {self.name}'
+
 class Units(models.Model):
     units = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f'{self.id}: {self.units}'
 
 class Measurement(models.Model):
     satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
@@ -22,6 +31,10 @@ class Measurement(models.Model):
     units = models.ForeignKey(Units, on_delete=models.CASCADE)
     time_measured = models.DateTimeField(auto_now_add=True)
     value = models.FloatField()
+
+    def __str__(self):
+        s = f'{self.id}: | Satellite: {self.satellite.name} | Component: {self.component.name} | '
+        s += f'Value: {self.value} | Time: {self.time_measured}'
 
 class Upload(models.Model):
     description = models.CharField(max_length=100)

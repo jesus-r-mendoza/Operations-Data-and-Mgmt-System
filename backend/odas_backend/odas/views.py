@@ -57,6 +57,10 @@ def upload_view(request):
 
 def recent_measurements(request, satellite_id, quantity):
     try:
+        if satellite_id < 0:
+            print('id < 0', satellite_id)
+            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
+
         sat = Satellite.objects.get(pk=satellite_id)
         if quantity < 1:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
