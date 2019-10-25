@@ -58,7 +58,9 @@ def upload_view(request):
 def recent_measurements(request, satellite_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
-        # Take the 100 most recent measurements for the given satellite
+        if quantity < 1:
+            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+        # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
         data = _build_response(measurements)
         return JsonResponse(data)
