@@ -69,7 +69,7 @@ def recent_measurements(request, satellite_id, quantity):
         data = _build_response(measurements)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Sateliite Does Not Exist'} )
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
 def _build_response(meas_query_set):
     if not meas_query_set:
