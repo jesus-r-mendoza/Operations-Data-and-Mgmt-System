@@ -1,0 +1,109 @@
+/*Sidebar container*/
+.sidebar {
+    height: 100%;
+    width: 20em;
+    z-index: auto;
+    left: 0;
+    background-color: #f4f3f1;
+    box-shadow: 0 2px 4px 0 darkgray;
+    /*box-shadow: 1px 0 1px lightgray;*/
+    border-top: 0;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    position: -webkit-sticky;
+}
+
+.sidebar-title {
+    display: flex;
+    justify-content: space-around;
+    color: #606060;
+    font-size: x-large;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px 0 darkgray;
+    /*box-shadow: 1px 1px 1px lightgray;*/
+    padding-bottom: 10px;
+}
+
+.sidebar-info {
+    display: flex;
+    justify-content: center;
+    font-size: large;
+    color: #606060;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/*Buttons*/
+.gen-button {
+    display: flex;
+    justify-content: space-around;
+    width: 90%;
+    margin-top: 15px;
+    margin-bottom: 1em;
+    font-size: x-large;
+}
+
+.gen-button-container {
+    display: flex;
+    justify-content: center;
+    /*box-shadow: 1px 0 1px lightgray;*/
+    box-shadow: 0 1px 2px 0 darkgray;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.back-arrow-btn {
+    width: 50px;
+    height: 40px;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.back-arrow {
+    width: 30px;
+    height: 30px;
+    padding-top: 3px;
+    margin-right: -60px;
+    margin-left: -35px;
+}
+
+.back-arrow-container {
+    display: flex;
+    justify-content: center;
+}
+
+.selection-buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    bottom: 0;
+    margin-bottom: 10%;
+}
+
+.check-selections {
+    padding-bottom: 5px;
+}
+
+.checkbox-selection-btn {
+    align-content: flex-end;
+    height: 100%;
+}
+
+/*Checkboxes*/
+.checkbox-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 15%;
+    font-size: large;
+    color: #606060;
+}
+
+.checkbox-label {
+    display: flex;
+    flex-direction: row;
+}

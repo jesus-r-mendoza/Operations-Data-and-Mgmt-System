@@ -7,6 +7,8 @@ import ReportCard from "../Components/ReportCard";
 import "../Layout/UploadData.css"
 import {Button, FormControl} from "react-bootstrap";
 
+var acceptedExtensions = [".tlm"];
+
 export default class UploadData extends React.Component {
 
     constructor(props) {
@@ -14,7 +16,8 @@ export default class UploadData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: "upload",
-            selectedFile: null
+            selectedFile: "File Name",
+            loaded: 1
         };
     }
 
@@ -24,16 +27,40 @@ export default class UploadData extends React.Component {
         });
     }
 
+     //TODO Needs implementation. May need rethinking.
+     // Will need to find where the database connection and call will be
     goToReport() {
         this.setState({
             currentPage: "renderReport"
         });
     }
 
-    gotToInput() {
-        this.setState({
-            currentPage: "upload"
-        });
+    onChangeHandler = event => {
+        let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
+        let fileName = event.target.files[0].name;
+
+        let extension = extractExtension.exec(fileName)[0];
+        console.log(extension);
+        if (acceptedExtensions.includes(extension)) {
+            this.setState({
+                selectedFile: event.target.files[0].name,
+                loaded: 1
+            });
+        } else {
+            this.setState({
+                loaded: 0
+            });
+        }
+
+        console.log(event.target.files[0].name);
+    };
+
+    showErrorMessage(loaded) {
+        if(loaded === 0) {
+            return(
+              <span className={"error-message"}>Please choose a valid file.</span>
+            );
+        }
     }
 
     renderFileInput() {
@@ -41,14 +68,18 @@ export default class UploadData extends React.Component {
             return (
                 <div className={"file-container"}>
                     <div className={"file-input"}>
-                        <label htmlFor={"logFile"} className={"file-label"}>Choose a log file</label>
+                        <div>
+                            <label htmlFor={"logFile"} className={"file-label"}>Choose a log file:</label>
+                            {this.showErrorMessage(this.state.loaded)}
+                        </div>
                         <div className={"input-container"}>
-                            <FormControl
-                                disabled
-                                type={"text"}
-                                placeholder={"File name"}
-                                className={"input-box"}
-                            />
+                                <FormControl
+                                    disabled
+                                    type={"text"}
+                                    name={"data-file"}
+                                    placeholder={this.state.selectedFile}
+                                    className={"input-box"}
+                                />
                             <div className={"upload-btn-wrapper"}>
                                 <Button
                                     variant={"info"}
@@ -62,32 +93,7 @@ export default class UploadData extends React.Component {
                                     name="logFile"
                                     data-multiple-caption="{count} files selected"
                                     multiple
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"file-input"}>
-                        <label htmlFor={"configFile"} className={"file-label"}>Choose a configuration file (Optional)</label>
-                        <div className={"input-container"}>
-                            <FormControl
-                                disabled
-                                type={"text"}
-                                placeholder={"File name"}
-                                className={"input-box"}
-                            />
-                            <div className={"upload-btn-wrapper"}>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    className={"browse-btn"}
-                                >
-                                    Browse...
-                                </Button>
-                                <input
-                                    type={"file"}
-                                    name={"logFile"}
-                                    data-multiple-caption="{count} files selected"
-                                    multiple
+                                    onChange={this.onChangeHandler}
                                 />
                             </div>
                         </div>
@@ -122,7 +128,7 @@ export default class UploadData extends React.Component {
         if(!this.state.isLoading) {
             return (
                 <div className={"report-container"}>
-                    <Sidebar>Upload a Dataset</Sidebar>
+                    <Sidebar page={this.state.currentPage}>Upload a Dataset</Sidebar>
                     {this.renderFileInput()}
                 </div>
             );
