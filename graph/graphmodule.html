@@ -244,6 +244,7 @@
 						var datapointAdd = {y:masterData[0][s], type: 'line'};
 						datapoint.push(datapointAdd);
 						}
+					var chartCheck = 0;
 					var totalxlength = 500; //display 500 points before sliding
 					var indices = [];
 						for (var w=0;w<masterSingleDataArrayLength;w++){
@@ -257,19 +258,31 @@
 					var cnt = 0;
 					setInterval(function(){
 						multipleTraces = [];
-						twodeimalPlaces = [];
-						var table = document.getElementById("traces");
-						var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-						for(var r=0;r<masterSingleDataArrayLength;r++){//<17 times down by column
-							multipleTraces.push(getData(cnt,r));
-							if(r==masterSingleDataArrayLength-1){
-								for(var a=0;a<multipleTraces.length;a++){
-								var cellAdd = row.insertCell(a);
-								console.log('multipleTraces', multipleTraces[a]);
-								var toChart = multipleTraces[a];
-								cellAdd.innerHTML = (toChart);
+						twodecimalPlaces = [];
+						if(cnt<dataLength){
+							var table = document.getElementById("traces");
+							var row = table.insertRow(table.rows.length-1); //insert row at bottom	
 						}
-					}
+						console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
+						for(var r=0;r<masterSingleDataArrayLength;r++){//24 times down by column
+							if(cnt<dataLength){
+							console.log('getData',getData(cnt,r));
+								multipleTraces.push(getData(cnt,r));
+							//console.log('dataLength', dataLength);//10
+							//console.log('multTracestest1', multipleTraces.length);
+							
+								if(r==masterSingleDataArrayLength-1){
+							//console.log('multTraceestest2', multipleTraces.length);
+									for(var a=0;a<dataLength;a++){
+										var cellAdd = row.insertCell(a);
+							console.log('multipleTraces', multipleTraces[a]);
+								//if(multipleTraces.length<dataLength){
+										var toChart = multipleTraces[a];
+										cellAdd.innerHTML = (toChart);
+								//	}
+									}
+								}
+							}
 						}
 						Plotly.extendTraces('chart',{y:multipleTraces}, indices);
 						cnt++;
