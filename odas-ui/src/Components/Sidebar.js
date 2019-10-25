@@ -3,7 +3,7 @@ import React from 'react';
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
 import CheckComponent from "./CheckComponent";
-// TODO map the attributes of the measurements table into this array
+// TODO map the attributes from API of the measurements table into this array
 const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets", "Naomi", "Wada"];
 
 export default class QueryData extends React.Component {
@@ -114,32 +114,34 @@ export default class QueryData extends React.Component {
                         <div className={"sidebar-info"}>
                             <span>Select data to be reported</span>
                         </div>
+                        <div className={"selection-buttons"}>
+                            <Button
+                                variant={"secondary"}
+                                onClick={() => this.selectAll()}
+                                size={"sm"}
+                            >
+                                Select All
+                            </Button>
+                            <Button
+                                variant={"secondary"}
+                                onClick={() => this.deselectAll()}
+                                size={"sm"}
+                            >
+                                Deselect All
+                            </Button>
+                        </div>
+                        <div className={"gen-button-container"}>
+                            <Button
+                                type={"submit"}
+                                variant={"info"}
+                                className={"gen-button"}
+                            >
+                                Generate Report
+                            </Button>
+                        </div>
                         <div className={"checkbox-selection-btn"}>
                             <div className={"checkbox-container"}>
                                 {this.createCheckboxes()}
-                            </div>
-                            <div className={"selection-buttons"}>
-                                <Button
-                                    variant={"secondary"}
-                                    onClick={() => this.selectAll()}
-                                >
-                                    Select All
-                                </Button>
-                                <Button
-                                    variant={"secondary"}
-                                    onClick={() => this.deselectAll()}
-                                >
-                                    Deselect All
-                                </Button>
-                            </div>
-                            <div className={"gen-button-container"}>
-                                <Button
-                                    type={"submit"}
-                                    variant={"info"}
-                                    className={"gen-button"}
-                                >
-                                    Generate Report
-                                </Button>
                             </div>
                         </div>
                     </div>

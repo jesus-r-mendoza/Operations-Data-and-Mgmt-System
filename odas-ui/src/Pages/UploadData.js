@@ -16,7 +16,8 @@ export default class UploadData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: "upload",
-            selectedFile: "File name"
+            selectedFile: "Telemetry File",
+            loaded: 1
         };
     }
 
@@ -34,24 +35,20 @@ export default class UploadData extends React.Component {
         });
     }
 
-    sanitizeFile(fileName) {
-
-    }
-
     onChangeHandler = event => {
         let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
         let fileName = event.target.files[0].name;
 
         let extension = extractExtension.exec(fileName)[0];
         console.log(extension);
-        if (acceptedExtensions.contains(extension)) {
+        if (acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0].name,
-                loaded: 0
+                loaded: 1
             });
         } else {
             this.setState({
-                selectedFile: "File name...",
+                selectedFile: "Telemetry File",
                 loaded: 0
             });
         }
@@ -59,20 +56,31 @@ export default class UploadData extends React.Component {
         console.log(event.target.files[0].name);
     };
 
+    showErrorMessage(loaded) {
+        if(loaded === 0) {
+            return(
+              <span className={"error-message"}>Please choose a valid file.</span>
+            );
+        }
+    }
+
     renderFileInput() {
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
                     <div className={"file-input"}>
-                        <label htmlFor={"logFile"} className={"file-label"}>Choose a log file</label>
+                        <div>
+                            <label htmlFor={"logFile"} className={"file-label"}>Choose a log file.</label>
+                            {this.showErrorMessage(this.state.loaded)}
+                        </div>
                         <div className={"input-container"}>
-                            <FormControl
-                                disabled
-                                type={"text"}
-                                name={"data-file"}
-                                placeholder={this.state.selectedFile}
-                                className={"input-box"}
-                            />
+                                <FormControl
+                                    disabled
+                                    type={"text"}
+                                    name={"data-file"}
+                                    placeholder={this.state.selectedFile}
+                                    className={"input-box"}
+                                />
                             <div className={"upload-btn-wrapper"}>
                                 <Button
                                     variant={"info"}

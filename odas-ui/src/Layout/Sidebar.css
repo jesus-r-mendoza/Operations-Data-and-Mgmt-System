@@ -5,7 +5,8 @@
     z-index: auto;
     left: 0;
     background-color: #f4f3f1;
-    box-shadow: 1px 0 1px lightgray;
+    box-shadow: 0 2px 4px 0 darkgray;
+    /*box-shadow: 1px 0 1px lightgray;*/
     border-top: 0;
     display: flex;
     flex-direction: column;
@@ -21,7 +22,8 @@
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 20px;
-    box-shadow: 1px 1px 1px lightgray;
+    box-shadow: 0 1px 2px 0 darkgray;
+    /*box-shadow: 1px 1px 1px lightgray;*/
     padding-bottom: 10px;
 }
 
@@ -47,7 +49,8 @@
 .gen-button-container {
     display: flex;
     justify-content: center;
-    box-shadow: 1px 0 1px lightgray;
+    /*box-shadow: 1px 0 1px lightgray;*/
+    box-shadow: 0 1px 2px 0 darkgray;
     bottom: 0;
     position: absolute;
     width: 100%;
@@ -79,7 +82,7 @@
     justify-content: space-around;
     flex-direction: row;
     bottom: 0;
-    margin-top: 20%;
+    margin-bottom: 10%;
 }
 
 .check-selections {

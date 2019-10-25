@@ -9,11 +9,12 @@
 .file-input {
     display: flex;
     flex-direction: column;
-    padding-bottom: 60px;
+    padding-bottom: 50px;
 }
 
 .file-label {
     font-size: large;
+    padding-right: 10px
 }
 
 .input-container {
@@ -22,12 +23,16 @@
     width: 40%;
     position: relative;
     overflow: hidden;
-    /*display: inline-block;*/
-    /*border: 3px solid black;*/
 }
 
 .input-box {
     width: 60em;
+}
+
+.input-error {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .submit-btn {
@@ -53,4 +58,11 @@
     left: 0;
     top: 0;
     opacity: 0;
+}
+
+.error-message {
+    color: #cf4100;
+    opacity: 85%;
+    padding-top: 20px;
+    font-size: larger;
 }
