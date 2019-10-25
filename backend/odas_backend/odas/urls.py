@@ -1,7 +1,6 @@
 from rest_framework import routers
 
 from .api import SatelliteViewSet, ComponentViewSet, MeasurementViewSet, UnitsViewSet
-from .api import SatelliteViewSet
 from django.urls import path
 from . import views
 
