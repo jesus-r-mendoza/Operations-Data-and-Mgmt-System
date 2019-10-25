@@ -16,6 +16,7 @@ urlpatterns = [
     path('success/', views.successView, name='success'),
     path('files/', views.file_view, name='file_list'),
     path('files/upload/', views.upload_view, name='upload_file'),
+    path('api/satellites/<int:satellite_id>/recent', views.recent_measurements, name='recent')
 ]
 
 urlpatterns += router.urls
