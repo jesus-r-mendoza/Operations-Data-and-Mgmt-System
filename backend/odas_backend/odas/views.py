@@ -74,7 +74,7 @@ def _build_response(meas_query_set):
             'mission_description': meas_query_set[0].satellite.mission_description,
             'year_launched': meas_query_set[0].satellite.year_launched 
         },
-        'Measurements': []
+        'Measurements': [] 
     }
     for measurement in meas_query_set:
         entry = {
