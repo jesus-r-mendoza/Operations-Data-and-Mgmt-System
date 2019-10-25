@@ -84,17 +84,13 @@ def _build_response(meas_query_set):
     }
     for measurement in meas_query_set:
         entry = {
-            'Component': {
-                'name': measurement.component.name,
-                'model': measurement.component.model,
-                'category': measurement.component.category,
-                'description': measurement.component.description
-            },
-            'Measurement': {
-                'units': measurement.units.units,
-                'time': measurement.time_measured,
-                'value': measurement.value
-            }
+            'component_name': measurement.component.name,
+            'component_model': measurement.component.model,
+            'component_category': measurement.component.category,
+            'component_description': measurement.component.description,
+            'units': measurement.units.units,
+            'time': measurement.time_measured,
+            'value': measurement.value
         }
         data['Measurements'].append(entry)
     data['Quantity'] = len(data['Measurements'])
