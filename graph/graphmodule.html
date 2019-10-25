@@ -79,17 +79,17 @@
 					return dom;
 				}
 				json = xml2json(parseXml(text), "  ");
-				console.log('jsontest');
-				console.log(json);
+//				console.log('jsontest');
+//				console.log(json);
 				})
 				.then((out) => {
 					var testType = 2;
 					//--------------testdata2.json ---------------
 					if(testType==2){
 					out = JSON.parse(json);
-					var stringJSON = JSON.stringify(out);
-					console.log(typeof(stringJSON));
-					console.log('stringJSON', stringJSON);
+					//var stringJSON = JSON.stringify(out);
+					//console.log(typeof(stringJSON));
+					//console.log('stringJSON', stringJSON);
 					//console.log(typeof(out));
 					console.log(out.Response.Result[0]);
 					console.log(out.Response.Result[1]);
@@ -110,7 +110,11 @@
 					var radialLengthArray = [];
 					var coordinateSystems = [];
 					var arrangeDataPoints = [];
+					var masterDatatempArray = [];
+					var masterSingleDataArray = [];
+					var masterSingleDataArrayLength = 0;
 					var firstKey = "";
+					var dataLength = 0;
 					var fieldCount = 0;
 					var numDatas = out.Response.Result.length - 2;
 					var coordinateLength = 0;
@@ -119,43 +123,78 @@
 					console.log('out.Response.Result[2].Data.length',out.Response.Result[2].Data.length);
 					
 					for(var a=0;a<out.Response.Result.length;a++){ //0123
-						numObservatories++;
 						if(a>=2){// if, only if is DataArray
 							for(var b=0;b<out.Response.Result[a].Data.length;b++){
 								if(b==0){// Id
-									observatories.push(out.Response.Result[a].Data[0].Id);
 									id = (out.Response.Result[a].Data[0].Id);//mms1
+									observatories.push(id); //mms1, mms2
 								}
 								if(Object.keys(out.Response.Result[a].Data[b])=="Coordinates"){//2 times
-									numCoordinates++;
 									//mms1, geo
-									masterType.push([id, out.Response.Result[a].Data[b].Coordinates[0]]);
-									coordinates.push(out.Response.Result[a].Data[b].Coordinates);
+									var secondvalue = Object.values(out.Response.Result[a].Data[b].Coordinates[0]);
+									masterType.push([id, secondvalue[0]]);
+									//lines to plot
+									
+								//	coordinates.push(out.Response.Result[a].Data[b].Coordinates);
 									//names of CoordinateSystems, Geo, Gre
 									//coordinateSystems.push(out.Response.Result[a].Data[b].Coordinates[0]);
-									coordinateLength = out.Response.Result[a].Data[b].Coordinates.length;
+									coordinateLength = out.Response.Result[a].Data[b].Coordinates.length; //length of Data[1] and Data[2]
 									//masterType.push(masterSubType); //mms1, geo
-									for(var c=0;c<coordinateLength;c++){
+									dataLength = (coordinateLength-1)/6; //PROBLEM: May be calculated more than once.
+									console.log('dataLength', dataLength);
+									//NASA standard: 6 field types in Coordinates.
+									for(var q=0;q<dataLength;q++){//sets of 10 to mastertempdata.
+										var r=[];
+										masterData.push(r);
+									}
+									console.log('empty masterData', masterData);
+									for(var c=0;c<coordinateLength;c++){ //0..61
 							//var currentDataPoints = [];
 										if(c!=0){//data X, Y, Z, ...
 											var currentKey = Object.keys(out.Response.Result[a].Data[b].Coordinates[c]);
+											console.log('c', c, 'currentKey', currentKey);
 											//X
-											if(currentKey!=firstKey){//different field
-												if(c!=1){//not 1st X												
-													masterFields.push(firstKey);
+											if(currentKey[0]!=firstKey){//different field
+												console.log('different field-currentKey[0]', currentKey[0]);
+												//if(c!=1){//not 1st X					
+													console.log('firstKey', firstKey[0]);
+													if(masterFields.includes(firstKey[0])==false){
+														masterFields.push(firstKey[0]);
+														console.log('masterFields pushed', firstKey[0]);
+													}
 													//masterData.push();
 													fieldCount = 0;
-												}
+												//}
+												//if(c==1){
+												//	fieldCount = 0;
+												//}
 												firstKey = currentKey; //X
+												var currentValue = Object.values(out.Response.Result[a].Data[b].Coordinates[c]);
+												console.log('currentValue', currentValue);
+												console.log('fieldCount', fieldCount);
+												masterDatatempArray = masterData[fieldCount];
+												console.log('masterDatatempArraya', masterDatatempArray);
+												masterData[fieldCount].push(currentValue);
+												fieldCount++;
 											}
 											else{
 												var currentValue = Object.values(out.Response.Result[a].Data[b].Coordinates[c]);
+												console.log('currentValue', currentValue);
+												if(c==1){
+													//arrangeDataPoints.push();
+													
+												}
+												console.log('fieldCount', fieldCount);
+												masterDatatempArray = masterData[fieldCount];
+												console.log('masterDatatempArrayb', masterDatatempArray);
 												masterData[fieldCount].push(currentValue);
 												fieldCount++;
+												
 											}
 										}										
 									}
 									//masterData.push([]);
+									numCoordinates++;
 								}
 								if(Object.keys(out.Response.Result[a].Data[b])=="Time"){
 									masterTime.push(Object.values(out.Response.Result[a].Data[b]));
@@ -165,7 +204,15 @@
 								}
 							}
 						}
+						numObservatories++;
 					}
+					masterSingleDataArrayLength = numDatas*numObservatories*6;
+					for(var w=0;w<masterSingleDataArrayLength;w++){
+						var tempHolder = [];
+						masterSingleDataArray.push(tempHolder);
+						//for example, size 24 array.
+					}
+					console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
 					console.log('numObservatories', numObservatories);
 					console.log('observatories', observatories);
 					console.log('masterData', masterData);
@@ -173,21 +220,38 @@
 					console.log('masterRadialLength', masterRadialLength);
 					console.log('masterTime', masterTime);
 					console.log('masterType', masterType);
-					
-					/*
-					function getData() {
-						return Math.random();
-					}  
-					Plotly.plot('chart',[{y:[getData()],type:'line'}]);
-					var cnt = 0;
-					setInterval(function(){
-						Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
-						cnt++;
-					if(cnt > 500) {
-						Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
+					console.log('masterDatatempArrayc', masterDatatempArray);
+					var data = [];
+					for(var q=0;q<dataLength;q++){
+						for(var s=0;s<masterSingleDataArrayLength;s++){
+							var dataAdd = {y:[masterData[q][s]], type: 'line'};
+							data.push(dataAdd);
+						}
 					}
-					},15);
+					var totalxlength = 500;
+					var indices = [];
+						for (var w=0;w<dataLength;w++){
+							indices.push(w);
+						}
+					
+					//function getData() {
+					//	return masterData;
+					//}  
+					Plotly.plot('chart',data);
+					var cnt = 0;
+					/*setInterval(function(){
+						Plotly.extendTraces('chart',data, indices);
+						cnt++;
+						if(cnt>totalxlength){
+							Plotly.relayout('chart', {
+								xaxis: {
+									range: [cnt-totalxlength, cnt]
+								}
+						});
+						}
+					},200); //update every 200 seconds.
 					*/
+					
 					
 					}
 					//--------------testdata2.json-----------------
