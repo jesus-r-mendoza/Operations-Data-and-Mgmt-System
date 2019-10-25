@@ -221,6 +221,7 @@
 					console.log('masterTime', masterTime);
 					console.log('masterType', masterType);
 					console.log('masterDatatempArrayc', masterDatatempArray);
+					
 					var data = [];
 					for(var q=0;q<dataLength;q++){
 						for(var s=0;s<masterSingleDataArrayLength;s++){
@@ -228,19 +229,28 @@
 							data.push(dataAdd);
 						}
 					}
-					var totalxlength = 500;
+					var datapoint = [];
+					for(var s=0;s<masterSingleDataArrayLength;s++){
+						var datapointAdd = {y:masterData[0][s], type: 'line'};
+						datapoint.push(datapointAdd);
+						}
+					var totalxlength = 500; //display 500 points before sliding
 					var indices = [];
-						for (var w=0;w<dataLength;w++){
+						for (var w=0;w<masterSingleDataArrayLength;w++){
 							indices.push(w);
 						}
-					
-					//function getData() {
-					//	return masterData;
-					//}  
-					Plotly.plot('chart',data);
+					var multipleTraces = [];
+					function getData(r, index) {
+						return masterData[r][index];
+					}  
+					Plotly.plot('chart',datapoint);
 					var cnt = 0;
-					/*setInterval(function(){
-						Plotly.extendTraces('chart',data, indices);
+					setInterval(function(){
+						multipleTraces = [];
+						for(var r=0;r<masterSingleDataArrayLength;r++){//<17 times down by column
+							multipleTraces.push(getData(cnt,r));
+						}
+						Plotly.extendTraces('chart',{y:multipleTraces}, indices);
 						cnt++;
 						if(cnt>totalxlength){
 							Plotly.relayout('chart', {
@@ -250,7 +260,7 @@
 						});
 						}
 					},200); //update every 200 seconds.
-					*/
+					
 					
 					
 					}
