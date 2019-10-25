@@ -38,7 +38,7 @@
 			})
 			
 			var request = new Request(
-//			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+//			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
 	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
 	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
 	//{timeRange} = time range for which data location is being requested. There must be two comma separated basic format (minimal number of separators) ISO 8601 date values.
@@ -46,14 +46,14 @@
 	//Satellite observatories: mms1,mms2
 	//Time range: 20190101T000000Z,20190101T001000Z
 	//Coordinate systems: gse,geo
-//WARNING: ALWAYS ADD/REMOVE API KEY
-			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?api_key=Pfpfhf3PZS8MhCZWRvwv81zI3ID6VoLJggVdWvvR');  
+//WARNING: ALWAYS ADD/REMOVE API KEY testType = 2
+			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 			//app.get('/YourPath/:parameterName', 
 			//function (req, res) {
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
-//				.then(res => res.json())
-				.then(res => res.text())
+//				.then(res => res.json()) //testType = 1
+				.then(res => res.text()) //testType = 2
 				.then(text => {
 //				console.log(text);
 			//from xmljson_test.html
@@ -83,13 +83,116 @@
 				console.log(json);
 				})
 				.then((out) => {
+					var testType = 2;
 					//--------------testdata2.json ---------------
+					if(testType==2){
 					out = JSON.parse(json);
+					var stringJSON = JSON.stringify(out);
+					console.log(typeof(stringJSON));
+					console.log('stringJSON', stringJSON);
 					//console.log(typeof(out));
 					console.log(out.Response.Result[0]);
 					console.log(out.Response.Result[1]);
-					console.log(out.Response.Result[2]);
+					console.log(out.Response.Result[2]); //2->infinity observatories
+					var observatories = [];
+					var coordinates = [];
+					//numObservatories = number of Datas
+					var numObservatories = -2; // -1 to account for StatusCode, StatusSubCode
+					var numCoordinates = 0;
+					var id = "";
+					var masterData = [];
+					var masterType = [];
+					var masterSubType = [];
+					var masterTime = [];
+					var masterRadialLength = [];
+					var masterFields = [];
+					var timeArray = [];
+					var radialLengthArray = [];
+					var coordinateSystems = [];
+					var arrangeDataPoints = [];
+					var firstKey = "";
+					var fieldCount = 0;
+					var numDatas = out.Response.Result.length - 2;
+					var coordinateLength = 0;
+					console.log('numDatas', numDatas);
+					console.log('out.Response.Result.length',out.Response.Result.length);
+					console.log('out.Response.Result[2].Data.length',out.Response.Result[2].Data.length);
+					
+					for(var a=0;a<out.Response.Result.length;a++){ //0123
+						numObservatories++;
+						if(a>=2){// if, only if is DataArray
+							for(var b=0;b<out.Response.Result[a].Data.length;b++){
+								if(b==0){// Id
+									observatories.push(out.Response.Result[a].Data[0].Id);
+									id = (out.Response.Result[a].Data[0].Id);//mms1
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="Coordinates"){//2 times
+									numCoordinates++;
+									//mms1, geo
+									masterType.push([id, out.Response.Result[a].Data[b].Coordinates[0]]);
+									coordinates.push(out.Response.Result[a].Data[b].Coordinates);
+									//names of CoordinateSystems, Geo, Gre
+									//coordinateSystems.push(out.Response.Result[a].Data[b].Coordinates[0]);
+									coordinateLength = out.Response.Result[a].Data[b].Coordinates.length;
+									//masterType.push(masterSubType); //mms1, geo
+									for(var c=0;c<coordinateLength;c++){
+							//var currentDataPoints = [];
+										if(c!=0){//data X, Y, Z, ...
+											var currentKey = Object.keys(out.Response.Result[a].Data[b].Coordinates[c]);
+											//X
+											if(currentKey!=firstKey){//different field
+												if(c!=1){//not 1st X												
+													masterFields.push(firstKey);
+													//masterData.push();
+													fieldCount = 0;
+												}
+												firstKey = currentKey; //X
+											}
+											else{
+												var currentValue = Object.values(out.Response.Result[a].Data[b].Coordinates[c]);
+												masterData[fieldCount].push(currentValue);
+												fieldCount++;
+											}
+										}										
+									}
+									//masterData.push([]);
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="Time"){
+									masterTime.push(Object.values(out.Response.Result[a].Data[b]));
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="RadialLength"){
+									masterRadialLength.push(Object.values(out.Response.Result[a].Data[b]));
+								}
+							}
+						}
+					}
+					console.log('numObservatories', numObservatories);
+					console.log('observatories', observatories);
+					console.log('masterData', masterData);
+					console.log('masterFields', masterFields);
+					console.log('masterRadialLength', masterRadialLength);
+					console.log('masterTime', masterTime);
+					console.log('masterType', masterType);
+					
+					/*
+					function getData() {
+						return Math.random();
+					}  
+					Plotly.plot('chart',[{y:[getData()],type:'line'}]);
+					var cnt = 0;
+					setInterval(function(){
+						Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+						cnt++;
+					if(cnt > 500) {
+						Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
+					}
+					},15);
+					*/
+					
+					}
 					//--------------testdata2.json-----------------
+					//------------github testdata.txt--------------
+					else if (testType==1){
 					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
 					console.log('Status Sub Code: ', out.Result.StatusSubCode);
@@ -193,27 +296,9 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 						for(var a=0;a<multipleTraces.length;a++){
 							var cellAdd = row.insertCell(a);
 							cellAdd.innerHTML = (multipleTraces[a]);
-							//var para3 = document.createElement("td");
-							//var node3 = document.createTextNode(multipletraces[a]);
-							//para3.appendChild(node3);
-							//var element = document.getElementById("data");
-							//element.appendChild(para3);
 						}
 					}
-				//}	
-				/*
-				sumChartValues.push(multipleTraces);
-				var para3 = document.createElement("td");
-				var node3 = document.createTextNode(sumChartValues[r][1][dataindex]);
-				para3.appendChild(node3);
-				var element = document.getElementById("data");
-				element.appendChild(para3);
-				*/
 				}
-
-				
-				//var para4 = document.createElement("tr");
-				//var node4 = document.create
 				//console.log('sumChartValues initial', sumChartValues);
 				chartValuesIndex++;
 				console.log('multpltraces', multipleTraces);
@@ -250,6 +335,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 				//}
 				//return Math.random();
 			}
+		}//testType
 		})
 				.catch(err => console.error(err));	
 	//	}
