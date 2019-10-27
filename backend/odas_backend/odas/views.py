@@ -97,3 +97,6 @@ def _build_response(meas_query_set):
     data['data'] = True
     data['error'] = 'None'
     return data
+
+def recent_by_component(request, satellite_id, component_id, quantity):
+    pass
