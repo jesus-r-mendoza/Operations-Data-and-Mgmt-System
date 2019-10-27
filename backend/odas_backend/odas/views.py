@@ -71,7 +71,31 @@ def recent_measurements(request, satellite_id, quantity):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
-def _build_response(meas_query_set):
+def recent_by_component(request, satellite_id, component_id, quantity):
+    try:
+        if satellite_id < 0:
+            print('id < 0', satellite_id)
+            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
+        if component_id < 0:
+            print('id < 0', component_id)
+            return JsonResponse( { 'data': False, 'error': 'Must request at valid component id'} )
+
+        sat = Satellite.objects.get(pk=satellite_id)
+        comp = Component.objects.get(pk=component_id)
+
+        if quantity < 1:
+            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+        # Take the specified amount of the  most recent measurements for the given satellite
+        measurements = Measurement.objects.filter(satellite=sat).filter(component=comp).order_by('-time_measured')[:quantity]
+        data = _build_response(measurements, component=True)
+        return JsonResponse(data)
+
+    except Satellite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Component.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
+
+def _build_response(meas_query_set, component=False):
     if not meas_query_set:
         return { 'data': False, 'error': 'Satellite has no recent measurements' }
     data = {
@@ -83,20 +107,20 @@ def _build_response(meas_query_set):
         'Measurements': []
     }
     for measurement in meas_query_set:
-        entry = {
-            'component_name': measurement.component.name,
-            'component_model': measurement.component.model,
-            'component_category': measurement.component.category,
-            'component_description': measurement.component.description,
-            'units': measurement.units.units,
-            'time': measurement.time_measured,
-            'value': measurement.value
-        }
+        entry = {}
+        if not component:            
+            entry['component_name'] = measurement.component.name,
+            entry['component_model'] = measurement.component.model,
+            entry['component_category'] = measurement.component.category,
+            entry['component_description'] = measurement.component.description,
+                
+        entry['units'] = measurement.units.units
+        entry['time']  = measurement.time_measured
+        entry['value'] = measurement.value
+
         data['Measurements'].append(entry)
+
     data['Quantity'] = len(data['Measurements'])
     data['data'] = True
     data['error'] = 'None'
     return data
-
-def recent_by_component(request, satellite_id, component_id, quantity):
-    pass
