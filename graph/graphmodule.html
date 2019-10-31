@@ -257,7 +257,15 @@
 					}  
 					Plotly.plot('chart',datapoint);
 					var cnt = 0;
-					setInterval(function(){
+					var paused = false;
+					
+					document.getElementById("pause").addEventListener("click", pause);
+					function pause() {
+						console.log('Pause enabled.');
+						paused = true;
+						}
+					
+	var interval = 	setInterval(function(){
 						multipleTraces = [];
 						twodecimalPlaces = [];
 						if(cnt<dataLength){ //10 rows
@@ -287,16 +295,25 @@ console.log('New row', cnt);
 							}
 						}
 						}
+						
+						if(paused == true){
+							document.getElementById("pause").innerHTML = "Paused";//Date();
+						clearInterval(interval);
+						console.log('Paused!');
+						}
+						
 						if(cnt<dataLength){
 						Plotly.extendTraces('chart',{y:multipleTraces}, indices);
 						}
 						cnt++;
-						if(cnt>totalxlength){
+						if(cnt>totalxlength){ //displaying 500 points, then slides
 							Plotly.relayout('chart', {
 								xaxis: {
 									range: [cnt-totalxlength, cnt]
 								}
 						});
+						
+						
 						}
 					},200); //update every 200 seconds.
 					console.log('finish');
@@ -454,6 +471,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 	</div>
 	<div id = "bottomchart">
 	<p>Table Chart</p>
+	<button id="pause">Pause</button>
 	<table style="width:100%" id = "traces">
 			<tr id = "fieldnames">
 			</tr>
