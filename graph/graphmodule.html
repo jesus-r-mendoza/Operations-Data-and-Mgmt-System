@@ -5,6 +5,7 @@
 
 	<script src="plotly.min.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="xml2json.js"></script>	
 	
 	<script>
 
@@ -14,6 +15,8 @@
 	<div class="navbar"><span>Real-Time Telemetry Data</span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
+		<script src="xml2json.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
 			console.log('start');
 			var done = false;
@@ -21,12 +24,304 @@
 			var numKeys = 0;
 			var rawvalues = [];
 			var keysValues = [];
+			var json = "";
 			//var myList = document.querySelector('ul');
-			var request = new Request('https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt');
+			
+			$.ajax({
+				method: 'GET',
+//WARNING: ALWAYS ADD/REMOVE API KEY
+				url: 'https://cors-anywhere.herokuapp.com/https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?',
+				success: function(html) {
+					console.log('herokutest');
+					console.log(html);
+				}
+			})
+			
+			var request = new Request(
+//			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
+	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
+	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
+	//{timeRange} = time range for which data location is being requested. There must be two comma separated basic format (minimal number of separators) ISO 8601 date values.
+	//{coordinateSystems} = a comma separated list of the names of the coordinate systems in which to represent the returned location information. The values must be from this list: geo, gm, gse, gsm, sm, geitod, geij2000. If no values are given, gse will be assumed. For each coordinate system, the X, Y, Z, Latitude, Longitude, and local-time (if applicable) values will be returned.
+	//Satellite observatories: mms1,mms2
+	//Time range: 20190101T000000Z,20190101T001000Z
+	//Coordinate systems: gse,geo
+//WARNING: ALWAYS ADD/REMOVE API KEY testType = 2
+			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
-			fetch(request)//, {mode: "same-origin"})//no-cors"})
-				.then(res => res.json())
+			//app.get('/YourPath/:parameterName', 
+			//function (req, res) {
+			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
+//				.then(res => res.json()) //testType = 1
+				.then(res => res.text()) //testType = 2
+				.then(text => {
+//				console.log(text);
+			//from xmljson_test.html
+			function parseXml(xml) {
+				var dom = null;
+				if (window.DOMParser) {
+					try { 
+						dom = (new DOMParser()).parseFromString(xml, "text/xml"); 
+					} 
+					catch (e) { dom = null; }
+				}
+				else if (window.ActiveXObject) {
+					try {
+						dom = new ActiveXObject('Microsoft.XMLDOM');
+						dom.async = false;
+						if (!dom.loadXML(xml)) // parse error ..
+							window.alert(dom.parseError.reason + dom.parseError.srcText);
+						} 
+					catch (e) { dom = null; }
+				}
+				else
+					alert("Error!");
+					return dom;
+				}
+				json = xml2json(parseXml(text), "  ");
+//				console.log('jsontest');
+//				console.log(json);
+				})
 				.then((out) => {
+					var testType = 2;
+					//--------------testdata2.json ---------------
+					if(testType==2){
+					out = JSON.parse(json);
+					//var stringJSON = JSON.stringify(out);
+					//console.log(typeof(stringJSON));
+					//console.log('stringJSON', stringJSON);
+					//console.log(typeof(out));
+					console.log(out.Response.Result[0]);
+					console.log(out.Response.Result[1]);
+					console.log(out.Response.Result[2]); //2->infinity observatories
+					var observatories = [];
+					var coordinates = [];
+					//numObservatories = number of Datas
+					var numObservatories = -2; // -1 to account for StatusCode, StatusSubCode
+					var numCoordinates = 0;
+					var id = "";
+					var masterData = [];
+					var masterType = [];
+					var masterSubType = [];
+					var masterTime = [];
+					var masterRadialLength = [];
+					var masterFields = [];
+					var timeArray = [];
+					var radialLengthArray = [];
+					var coordinateSystems = [];
+					var arrangeDataPoints = [];
+					var masterDatatempArray = [];
+					var masterSingleDataArray = [];
+					var masterSingleDataArrayLength = 0;
+					var firstKey = "";
+					var dataLength = 0;
+					var fieldCount = 0;
+					var numDatas = out.Response.Result.length - 2;
+					var coordinateLength = 0;
+					console.log('numDatas', numDatas);
+					console.log('out.Response.Result.length',out.Response.Result.length);
+					console.log('out.Response.Result[2].Data.length',out.Response.Result[2].Data.length);
+					
+					for(var a=0;a<out.Response.Result.length;a++){ //0123
+						if(a>=2){// if, only if is DataArray
+							for(var b=0;b<out.Response.Result[a].Data.length;b++){
+								if(b==0){// Id
+									id = (out.Response.Result[a].Data[0].Id);//mms1
+									observatories.push(id); //mms1, mms2
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="Coordinates"){//2 times
+									//mms1, geo
+									var secondvalue = Object.values(out.Response.Result[a].Data[b].Coordinates[0]);
+									masterType.push([id, secondvalue[0]]);
+									//lines to plot
+									
+								//	coordinates.push(out.Response.Result[a].Data[b].Coordinates);
+									//names of CoordinateSystems, Geo, Gre
+									//coordinateSystems.push(out.Response.Result[a].Data[b].Coordinates[0]);
+									coordinateLength = out.Response.Result[a].Data[b].Coordinates.length; //length of Data[1] and Data[2]
+									//masterType.push(masterSubType); //mms1, geo
+									dataLength = (coordinateLength-1)/6; //PROBLEM: May be calculated more than once.
+									console.log('dataLength', dataLength);
+									//NASA standard: 6 field types in Coordinates.
+									for(var q=0;q<dataLength;q++){//sets of 10 to mastertempdata.
+										var r=[];
+										masterData.push(r);
+									}
+									//console.log('empty masterData', masterData);
+									for(var c=0;c<coordinateLength;c++){ //0..61
+							//var currentDataPoints = [];
+										if(c!=0){//data X, Y, Z, ...
+											var currentKey = Object.keys(out.Response.Result[a].Data[b].Coordinates[c]);
+											//console.log('c', c, 'currentKey', currentKey);
+											//X
+											if(currentKey[0]!=firstKey){//different field
+												console.log('different field-currentKey[0]', currentKey[0]);
+												//if(c!=1){//not 1st X					
+													console.log('firstKey', firstKey[0]);
+													if(masterFields.includes(firstKey[0])==false){
+														masterFields.push(firstKey[0]);
+													//	console.log('masterFields pushed', firstKey[0]);
+													}
+													//masterData.push();
+													fieldCount = 0;
+												//}
+												//if(c==1){
+												//	fieldCount = 0;
+												//}
+												firstKey = currentKey; //X
+												var currentValue = Object.values(out.Response.Result[a].Data[b].Coordinates[c]);
+												console.log('currentValue', currentValue);
+												console.log('fieldCount', fieldCount);
+												masterDatatempArray = masterData[fieldCount];
+												//console.log('masterDatatempArraya', masterDatatempArray);
+												masterData[fieldCount].push(currentValue);
+												fieldCount++;
+											}
+											else{
+												var currentValue = Object.values(out.Response.Result[a].Data[b].Coordinates[c]);
+												//console.log('currentValue', currentValue);
+												if(c==1){
+													//arrangeDataPoints.push();
+													
+												}
+												//console.log('fieldCount', fieldCount);
+												masterDatatempArray = masterData[fieldCount];
+												//console.log('masterDatatempArrayb', masterDatatempArray);
+												masterData[fieldCount].push(currentValue);
+												fieldCount++;
+												
+											}
+										}										
+									}
+									//masterData.push([]);
+									numCoordinates++;
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="Time"){
+									masterTime.push(Object.values(out.Response.Result[a].Data[b]));
+								}
+								if(Object.keys(out.Response.Result[a].Data[b])=="RadialLength"){
+									masterRadialLength.push(Object.values(out.Response.Result[a].Data[b]));
+								}
+							}
+						}
+						numObservatories++;
+					}
+					masterSingleDataArrayLength = numDatas*numObservatories*6;
+					for(var w=0;w<masterSingleDataArrayLength;w++){
+						var tempHolder = [];
+						masterSingleDataArray.push(tempHolder);
+						//for example, size 24 array.
+					}
+					console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
+					console.log('numObservatories', numObservatories);
+					console.log('observatories', observatories);
+					console.log('masterData', masterData);
+					console.log('masterFields', masterFields);
+					console.log('masterRadialLength', masterRadialLength);
+					console.log('masterTime', masterTime);
+					console.log('masterType', masterType);
+					console.log('masterDatatempArrayc', masterDatatempArray);
+					
+					for(var t=0;t<masterType.length;t++){
+						for(var u=1;u<masterFields.length;u++){ //PROBLEM: Fix the size for 1st index.
+							var para = document.createElement("td");
+							var node = document.createTextNode(masterType[t]+" "+masterFields[u]);
+							para.appendChild(node);
+							var element = document.getElementById("fieldnames");
+							element.appendChild(para);
+						}
+					}
+					
+					var data = [];
+					for(var q=0;q<dataLength;q++){ //10
+						for(var s=0;s<masterSingleDataArrayLength;s++){ //24
+							var dataAdd = {y:[masterData[q][s]], type: 'line'};
+							data.push(dataAdd);
+						}
+					}
+					//Initial Point
+					var datapoint = [];
+					for(var s=0;s<masterSingleDataArrayLength;s++){ //24
+						var datapointAdd = {y:masterData[0][s], type: 'line'};
+						datapoint.push(datapointAdd);
+						}
+					var chartCheck = 0;
+					var totalxlength = 500; //display 500 points before sliding
+					var indices = []; //24 indices
+						for (var w=0;w<masterSingleDataArrayLength;w++){
+							indices.push(w);
+						}
+					var multipleTraces = [];
+					function getData(r, index) {
+						return masterData[r][index];
+					}  
+					Plotly.plot('chart',datapoint);
+					var cnt = 0;
+					var paused = false;
+					
+					document.getElementById("pause").addEventListener("click", pause);
+					function pause() {
+						console.log('Pause enabled.');
+						paused = true;
+						}
+					
+	var interval = 	setInterval(function(){
+						multipleTraces = [];
+						twodecimalPlaces = [];
+						if(cnt<dataLength){ //10 rows
+console.log('New row', cnt);
+							var table = document.getElementById("traces");
+							var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+						//}
+						console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
+						for(var r=0;r<masterSingleDataArrayLength;r++){//24 times down by column
+							//if(cnt<dataLength){
+							console.log('getData',getData(cnt,r)); //0..10, 0..24
+								multipleTraces.push(getData(cnt,r)); //0..10, 0..24
+							//console.log('dataLength', dataLength);//10
+							//console.log('multTracestest1', multipleTraces.length);//1..24
+							if(cnt<masterSingleDataArrayLength-1){
+								if(r==masterSingleDataArrayLength-1){
+							//console.log('multTraceestest2', multipleTraces.length);//24
+									for(var a=0;a<masterSingleDataArrayLength;a++){
+										var cellAdd = row.insertCell(a);
+							console.log('multipleTraces', multipleTraces[a]);
+								//if(multipleTraces.length<dataLength){
+										var toChart = multipleTraces[a];
+										cellAdd.innerHTML = (toChart);
+								//	}
+									}
+								}
+							}
+						}
+						}
+						
+						if(paused == true){
+							document.getElementById("pause").innerHTML = "Paused";//Date();
+						clearInterval(interval);
+						console.log('Paused!');
+						}
+						
+						if(cnt<dataLength){
+						Plotly.extendTraces('chart',{y:multipleTraces}, indices);
+						}
+						cnt++;
+						if(cnt>totalxlength){ //displaying 500 points, then slides
+							Plotly.relayout('chart', {
+								xaxis: {
+									range: [cnt-totalxlength, cnt]
+								}
+						});
+						
+						
+						}
+					},200); //update every 200 seconds.
+					console.log('finish');
+					}
+					//--------------testdata2.json-----------------
+					//------------github testdata.txt--------------
+					else if (testType==1){
+					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
 					console.log('Status Sub Code: ', out.Result.StatusSubCode);
 					keys = Object.keys(out.Result.Data[1][0]);
@@ -52,6 +347,10 @@
 					//return res.json();
 	//			})
 	//			.catch(err => console.error(err));				
+			var chartValuesFields = [];
+			var sumChartValues = [];
+			var chartValues = [];
+			var chartValuesIndex = 0;
 			console.log('testc');
 			var totalxlength = 0;//500;
 			var data = [];//[{y:[getData()], type: 'line'}, {y: [getData()],type: 'line'}, {y: [getData()],type: 'line'}];
@@ -71,10 +370,38 @@
 						var dataAdd = {y:[keysValues[q][1][0]], type: 'line'};
 						data.push(dataAdd);
 					//}
+					var addToChartValuesFields = keysValues[q][0]; //may be redundant in for loop, only need once
+					chartValuesFields.push(addToChartValuesFields);
+					var addToChartValues = keysValues[q][1][0];
+					chartValues.push(addToChartValues);
+					//console.log('addToChartValuesFields', chartValuesFields);
+					//console.log('addToChartValues', chartValues);
+					
+					//var para = document.createElement("td");
+					//var node = document.createTextNode(chartValuesFields);
+					//para.appendChild(node);
+					//var para2 = document.createElement("p");
+					//var node2 = document.createTextNode(chartValues);
+					//para2.appendChild(node2);
+
 				}
 				//if "Coordinates" special case
 			}
-				
+			chartValuesIndex++;
+			chartValuesIndex++;
+			for(var a=0;a<chartValuesFields.length;a++){
+console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFields[a]', chartValuesFields[a]);
+				var para = document.createElement("td");
+				var node = document.createTextNode(chartValuesFields[a]);
+				para.appendChild(node);
+				sumChartValues.push(chartValuesFields);
+				sumChartValues.push(chartValues);
+				var element = document.getElementById("fieldnames");
+				element.appendChild(para);
+			}
+			//element.appendChild(para2);
+			console.log('sumChartValues initial', sumChartValues);
+			
 			Plotly.plot('chart', data);
 			var cnt=0;
 			var dataindex = 0;
@@ -88,10 +415,29 @@
 			console.log('indices', indices);
 			setInterval(function(){
 				multipleTraces = []; //clear
+				var table = document.getElementById("traces");
+				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				for(var r=0;r<finalKeyValuesNum;r++){//<17 times down by column
 					multipleTraces.push([getData(r, dataindex)]);
-				}	
-				//console.log('dataindex', dataindex);
+					
+					if(r==finalKeyValuesNum-1){
+						for(var a=0;a<multipleTraces.length;a++){
+							var cellAdd = row.insertCell(a);
+							cellAdd.innerHTML = (multipleTraces[a]);
+						}
+					}
+				}
+				//console.log('sumChartValues initial', sumChartValues);
+				chartValuesIndex++;
+				console.log('multpltraces', multipleTraces);
+				/*var para1 = document.createElement("p");
+				var node3 = document.createTextNode(addToChartValuesFields);
+				para1.appendChild(node);
+				var node4 = document.createTextNode(addToChartValues);
+				para1.appendChild(node4);
+				var element = document.getElementById("bottomchart");
+				element.appendChild(para1);
+				*///console.log('dataindex', dataindex);
 				//console.log('multipleTraces',multipleTraces);
 				Plotly.extendTraces('chart',{y:multipleTraces},indices)
 				//Plotly.extendTraces('chart',{y:[[getData()]]},[0])
@@ -111,90 +457,25 @@
 			var valueIndex = 0;
 			function getData(r, dataindex){//keyIndex, valueIndex){
 				//for(int r=0;r<totalxlength;r++){ //30 times
-					return finalKeyValues[r][1][dataindex];
+				return finalKeyValues[r][1][dataindex];
 					//var dataAdd = {y:[getData(q, keysValues[q][1][r])], type: 'line'};
 					//data.push(dataAdd);
 				//}
 				//return Math.random();
-			}			
-/*			
-			let items = [
-				'Blue',
-				'Red',
-				'White',
-				'Green',
-				'Black',
-				'Orange'
-			],
-			ul = document.createElement('ul');
-			document.getElementById('myItemList').appendChild(ul);
-			items.forEach(function (item) {
-				let li = document.createElement('li');
-				ul.appendChild(li);
-					li.innerHTML += item;
-				});
-			
-			Plotly.d3.csv("https://raw.githubusercontent.com/plotly/datasets/master/Mining-BTC-180.csv", function(err, rows){
-			function unpack(rows, key) {
-			return rows.map(function(row) { return row[key]; });
 			}
-			var headerNames = Plotly.d3.keys(rows[0]);
-			var headerValues = [];
-			var cellValues = [];
-			for (i = 0; i < headerNames.length; i++) {
-				headerValue = [headerNames[i]];
-				headerValues[i] = headerValue;
-				cellValue = unpack(rows, headerNames[i]);
-				cellValues[i] = cellValue;
-			}
-			// clean date
-			for (i = 0; i < cellValues[1].length; i++) {
-				var dateValue = cellValues[1][i].split(' ')[0]
-				cellValues[1][i] = dateValue
-			}
-			var data = [{
-				type: 'table',
-				columnwidth: [200,500,600,600,400,400,600,600,600],
-				columnorder: [0,1,2,3,4,5,6,7,8,9],
-				header: {
-					values: headerValues,
-					align: "center",
-					line: {width: 1, color: 'rgb(50, 50, 50)'},
-					fill: {color: ['rgb(235, 100, 230)']},
-					font: {family: "Arial", size: 11, color: "white"}
-				},
-				cells: {
-					values: cellValues,
-					align: ["center", "center"],
-					line: {color: "black", width: 1},
-					fill: {color: ['rgba(228, 222, 249, 0.65)','rgb(235, 193, 238)', 'rgba(228, 222, 249, 0.65)']},
-					font: {family: "Arial", size: 10, color: ["black"]}
-				}
-			}]
-			var layout = {
-				title: "Bitcoin mining stats for 180 days"
-			}
-			Plotly.plot('graph', data, layout);
-
-		});*/
+		}//testType
 		})
 				.catch(err => console.error(err));	
+		//}
 		</script>
-		<table style="width:100%">
-			<tr>
-			<td>trace 0</td>
-			<td>trace 1</td>
-			<td>trace 2</td>
+	</div>
+	<div id = "bottomchart">
+	<p>Table Chart</p>
+	<button id="pause">Pause</button>
+	<table style="width:100%" id = "traces">
+			<tr id = "fieldnames">
 			</tr>
-			<tr>
-			<td>55577854</td>
-			<td>555777899</td>
-			<td>54446786</td>
-			</tr>
-			<tr>
-			<td>55577855</td>
-			<td>55578868</td>
-			<td>4567566</td>
+			<tr id = "data">
 			</tr>
 		</table>
 	</div>
