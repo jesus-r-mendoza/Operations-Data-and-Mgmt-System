@@ -4,8 +4,9 @@ from django.core.mail import send_mail,BadHeaderError
 from django.core.files.storage import FileSystemStorage
 from .forms import SubscriberForm, UploadForm
 from .models import Upload, Satellite, Component, Measurement, Units
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def index(request):
     if request.method == 'GET':
         form = SubscriberForm()
