@@ -28,6 +28,7 @@ def successView(request):
 
 
 # Create your views here.
+@csrf_exempt
 def uploader(request):
     context = {}
     if request.method =='POST':
