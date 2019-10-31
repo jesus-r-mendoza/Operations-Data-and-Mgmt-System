@@ -57,6 +57,20 @@ def upload_view(request):
         'form': form
     })
 
+def components_of_satellite(request, satellite_id):
+    try:
+        if satellite_id < 0:
+            print('id < 0', satellite_id)
+            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
+
+        sat = Satellite.objects.get(pk=satellite_id)
+        components = Component.objects.filter(satellite=sat)
+        data = _build_comp_response(components)
+        return JsonResponse(data)
+    except Satellite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+
+
 def recent_measurements(request, satellite_id, quantity):
     try:
         if satellite_id < 0:
@@ -123,6 +137,33 @@ def _build_response(meas_query_set, component=False):
         data['Measurements'].append(entry)
 
     data['Quantity'] = len(data['Measurements'])
+    data['data'] = True
+    data['error'] = 'None'
+    return data
+
+def _build_comp_response(comp_query_set):
+    if not comp_query_set:
+        return { 'data': False, 'error': 'Satellite has no components' }
+    data = {
+        'Satellite': {
+            'name': comp_query_set[0].satellite.name,
+            'mission_description': comp_query_set[0].satellite.mission_description,
+            'year_launched': comp_query_set[0].satellite.year_launched 
+        },
+        'Components': []
+    }
+    for comp in comp_query_set:
+        entry = {
+            'id': comp.id,
+            'name': comp.name,
+            'model': comp.model,
+            'category': comp.category,
+            'description': comp.description
+        }
+
+        data['Components'].append(entry)
+
+    data['Quantity'] = len(data['Components'])
     data['data'] = True
     data['error'] = 'None'
     return data
