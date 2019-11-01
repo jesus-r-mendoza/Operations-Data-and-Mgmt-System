@@ -1,8 +1,8 @@
 from rest_framework import routers
 
 from .api import SatelliteViewSet, ComponentViewSet, MeasurementViewSet, UnitsViewSet
-from django.urls import path
-from . import views
+from django.urls import path, register_converter
+from . import views, converters
 
 router = routers.DefaultRouter()
 router.register('api/satellites', SatelliteViewSet, 'satellites')
@@ -10,6 +10,7 @@ router.register('api/components', ComponentViewSet, 'components')
 router.register('api/measurements', MeasurementViewSet, 'measurements')
 router.register('api/units', UnitsViewSet, 'units')
 
+register_converter(converters.ManyIdConverter, 'many-id')
 
 urlpatterns = [
     path('email/', views.index, name='index'),
