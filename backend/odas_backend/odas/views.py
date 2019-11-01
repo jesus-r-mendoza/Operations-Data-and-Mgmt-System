@@ -70,7 +70,6 @@ def components_of_satellite(request, satellite_id):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
-
 def recent_measurements(request, satellite_id, quantity):
     try:
         if satellite_id < 0:
@@ -110,6 +109,9 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
     except Component.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
+
+def recent_by_many_components(request, satellite_id, component_ids, quantity):
+    pass
 
 def _build_response(meas_query_set, component=False):
     if not meas_query_set:
