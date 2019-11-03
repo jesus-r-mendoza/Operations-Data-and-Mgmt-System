@@ -7,7 +7,7 @@ import ReportCard from "../Components/ReportCard";
 import "../Layout/UploadData.css"
 import {Button, FormControl} from "react-bootstrap";
 
-var acceptedExtensions = [".tlm"];
+const acceptedExtensions = [".tlm"];
 
 export default class UploadData extends React.Component {
 

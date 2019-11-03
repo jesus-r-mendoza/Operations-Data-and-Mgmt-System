@@ -82,11 +82,12 @@
     justify-content: space-around;
     flex-direction: row;
     bottom: 0;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 }
 
 .check-selections {
     padding-bottom: 5px;
+    padding-left: 14%;
 }
 
 .checkbox-selection-btn {
@@ -98,7 +99,6 @@
 .checkbox-container {
     display: flex;
     flex-direction: column;
-    padding-left: 15%;
     font-size: large;
     color: #606060;
 }

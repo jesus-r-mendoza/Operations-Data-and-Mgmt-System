@@ -1,10 +1,13 @@
 import React from 'react';
+import CheckComponent from "./CheckComponent";
 // Stylesheets
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
-import CheckComponent from "./CheckComponent";
-// TODO map the attributes from API of the measurements table into this array
-const LABELS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets"];
+import {Divider} from "semantic-ui-react";
+import axios from "axios";
+
+const MEASUREMENTS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets", "Cheeseburgers"];
+const COMPONENTS = ["Something", "Some other thing", "Some more things"];
 
 export default class QueryData extends React.Component {
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
@@ -15,10 +18,18 @@ export default class QueryData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: this.props.page,
-            checkboxes: LABELS.reduce(
+            data: [],
+            measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
                     ...options,
                         [option]: false
+                }),
+                {}
+            ),
+            moreCheckboxes: COMPONENTS.reduce(
+                (options, option) => ({
+                    ...options,
+                    [option]: false
                 }),
                 {}
             ),
@@ -27,9 +38,23 @@ export default class QueryData extends React.Component {
         console.log(this.props.page)
     }
 
-// TODO currently required to uncheck hidden initialization of array of letters .. ?
     componentDidMount() {
-        this.selectAllCheckboxes(false);
+        axios.get('http://localhost:8000/api/units/', {
+            headers: {
+                'Content-type': "application/json"
+            }})
+            .then((response) => {
+                // const units = response.data;
+                console.log(response.data)
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
+
+        this.setState({
+
+        })
     }
 
     goBack() {
@@ -41,10 +66,10 @@ export default class QueryData extends React.Component {
     }
 
     selectAllCheckboxes = isSelected => {
-        Object.keys(this.state.checkboxes).forEach(checkbox => {
+        Object.keys(this.state.measurementCheckboxes).forEach(checkbox => {
             this.setState(prevState => ({
-                checkboxes: {
-                    ...prevState.checkboxes,
+                measurementCheckboxes: {
+                    ...prevState.measurementCheckboxes,
                     [checkbox]: isSelected
                 }
             }));
@@ -55,9 +80,9 @@ export default class QueryData extends React.Component {
         const { name } = changeEvent.target;
 
         this.setState(prevState => ({
-            checkboxes: {
-                ...prevState.checkboxes,
-                [name]: !prevState.checkboxes[name]
+            measurementCheckboxes: {
+                ...prevState.measurementCheckboxes,
+                [name]: !prevState.measurementCheckboxes[name]
             }
         }));
     };
@@ -65,8 +90,8 @@ export default class QueryData extends React.Component {
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
 
-        Object.keys(this.state.checkboxes)
-            .filter(checkbox => this.state.checkboxes[checkbox])
+        Object.keys(this.state.measurementCheckboxes)
+            .filter(checkbox => this.state.measurementCheckboxes[checkbox])
             .forEach(checkbox => {
                 console.log(checkbox, "is selected.");
             });
@@ -75,7 +100,7 @@ export default class QueryData extends React.Component {
     createCheckbox = option => (
         <CheckComponent
             label={option}
-            isSelected={this.state.checkboxes[option]}
+            isSelected={this.state.measurementCheckboxes[option]}
             onCheckboxChange={this.handleCheckboxChange}
             key={option}
         />
@@ -83,7 +108,7 @@ export default class QueryData extends React.Component {
 
     selectAll = () => this.selectAllCheckboxes(true);
     deselectAll = () => this.selectAllCheckboxes(false);
-    createCheckboxes = () => LABELS.map(this.createCheckbox);
+    createCheckboxes = type => type.map(this.createCheckbox);
 
     // TODO Does not route back to the desired page.
     renderBackArrow(page) {
@@ -141,7 +166,10 @@ export default class QueryData extends React.Component {
                         </div>
                         <div className={"checkbox-selection-btn"}>
                             <div className={"checkbox-container"}>
-                                {this.createCheckboxes()}
+                                <Divider horizontal>Measurements</Divider>
+                                {this.createCheckboxes(MEASUREMENTS)}
+                                <Divider horizontal>Components</Divider>
+                                {this.createCheckboxes(COMPONENTS)}
                             </div>
                         </div>
                     </div>
