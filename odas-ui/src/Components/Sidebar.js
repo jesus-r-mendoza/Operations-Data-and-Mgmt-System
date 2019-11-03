@@ -6,8 +6,11 @@ import {Button} from "react-bootstrap";
 import {Divider} from "semantic-ui-react";
 import axios from "axios";
 
-const MEASUREMENTS = ["Temperature", "Voltage", "Velocity", "Chicken", "Nuggets", "Cheeseburgers"];
-const COMPONENTS = ["Something", "Some other thing", "Some more things"];
+import {makeGetRequest} from "./Functions";
+import LoadSpinner from "./LoadSpinner";
+
+let MEASUREMENTS = ["Chicken", "Nuggets"];
+let COMPONENTS = ["Cow", "Patties"];
 
 export default class QueryData extends React.Component {
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
@@ -18,15 +21,17 @@ export default class QueryData extends React.Component {
         this.state = {
             isLoading: true,
             currentPage: this.props.page,
-            data: [],
+            units: [],
+            MEASUREMENTS: [],
+            COMPONENTS: [],
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
                     ...options,
-                        [option]: false
+                    [option]: false
                 }),
                 {}
             ),
-            moreCheckboxes: COMPONENTS.reduce(
+            componentCheckboxes: COMPONENTS.reduce(
                 (options, option) => ({
                     ...options,
                     [option]: false
@@ -39,23 +44,31 @@ export default class QueryData extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:8000/api/units/', {
+        axios.get("http://localhost:8000/api/units/", {
             headers: {
                 'Content-type': "application/json"
             }})
-            .then((response) => {
-                // const units = response.data;
-                console.log(response.data)
-            })
+            .then(res => {
+                    this.setState({
+                        units: res.data
+                    })
+                }
+            )
             .catch(function (err) {
                 console.log(err);
             });
 
-
         this.setState({
-
-        })
+            isLoading: false
+        });
     }
+
+    populateCheckboxes = units => {
+        this.state.units.map(function (unit) {
+            return (unit.units)
+        });
+        console.log("pls", units);
+    };
 
     goBack() {
         this.setState({
@@ -128,54 +141,61 @@ export default class QueryData extends React.Component {
     }
 
     render() {
-        return (
-            <div className={"sidebar"}>
-                <form onSubmit={this.handleFormSubmit}>
-                    <div className={"sidebar-title"}>
-                        {/*{this.renderBackArrow(this.props.page)}*/}
-                        <span>{this.props.children}</span>
-                    </div>
-                    <div>
-                        <div className={"sidebar-info"}>
-                            <span>Select data to be reported</span>
+        console.log("UNITS: ", this.state.measurementCheckboxes);
+        if (this.state.isLoading === true) {
+            return (
+                <LoadSpinner />
+            );
+        } else {
+            return (
+                <div className={"sidebar"}>
+                    <form onSubmit={this.handleFormSubmit}>
+                        <div className={"sidebar-title"}>
+                            {/*{this.renderBackArrow(this.props.page)}*/}
+                            <span>{this.props.children}</span>
                         </div>
-                        <div className={"selection-buttons"}>
-                            <Button
-                                variant={"secondary"}
-                                onClick={() => this.selectAll()}
-                                size={"sm"}
-                            >
-                                Select All
-                            </Button>
-                            <Button
-                                variant={"secondary"}
-                                onClick={() => this.deselectAll()}
-                                size={"sm"}
-                            >
-                                Deselect All
-                            </Button>
-                        </div>
-                        <div className={"gen-button-container"}>
-                            <Button
-                                type={"submit"}
-                                variant={"info"}
-                                className={"gen-button"}
-                            >
-                                Generate Report
-                            </Button>
-                        </div>
-                        <div className={"checkbox-selection-btn"}>
-                            <div className={"checkbox-container"}>
-                                <Divider horizontal>Measurements</Divider>
-                                {this.createCheckboxes(MEASUREMENTS)}
-                                <Divider horizontal>Components</Divider>
-                                {this.createCheckboxes(COMPONENTS)}
+                        <div>
+                            <div className={"sidebar-info"}>
+                                <span>Select data to be reported</span>
+                            </div>
+                            <div className={"selection-buttons"}>
+                                <Button
+                                    variant={"success"}
+                                    onClick={() => this.selectAll()}
+                                    size={"sm"}
+                                >
+                                    Select All
+                                </Button>
+                                <Button
+                                    variant={"danger"}
+                                    onClick={() => this.deselectAll()}
+                                    size={"sm"}
+                                >
+                                    Deselect All
+                                </Button>
+                            </div>
+                            <div className={"gen-button-container"}>
+                                <Button
+                                    type={"submit"}
+                                    variant={"info"}
+                                    className={"gen-button"}
+                                >
+                                    Generate Report
+                                </Button>
+                            </div>
+                            <div className={"checkbox-selection-btn"}>
+                                <div className={"checkbox-container"}>
+                                    <Divider horizontal>Measurements</Divider>
+                                    {this.createCheckboxes(MEASUREMENTS)}
+                                    <Divider horizontal>Components</Divider>
+                                    {this.createCheckboxes(COMPONENTS)}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-        );
+                    </form>
+                </div>
+            );
+        }
     }
 }
 
