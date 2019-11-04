@@ -4,26 +4,21 @@ import CheckComponent from "./CheckComponent";
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
 import {Divider} from "semantic-ui-react";
-import axios from "axios";
 
-import {makeGetRequest} from "./Functions";
 import LoadSpinner from "./LoadSpinner";
 
-let MEASUREMENTS = ["Chicken", "Nuggets"];
-let COMPONENTS = ["Cow", "Patties"];
-
-export default class QueryData extends React.Component {
+export default class Sidebar extends React.Component {
 // TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
 // TODO Disable generate report button while nothing is selected
 
     constructor(props) {
         super(props);
+        let MEASUREMENTS = this.props.units;
+        let COMPONENTS = this.props.components;
         this.state = {
             isLoading: true,
             currentPage: this.props.page,
-            units: [],
-            MEASUREMENTS: [],
-            COMPONENTS: [],
+            formSubmit: [],
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
                     ...options,
@@ -40,35 +35,15 @@ export default class QueryData extends React.Component {
             ),
         };
 
-        console.log(this.props.page)
+        console.log(this.props.page);
+
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8000/api/units/", {
-            headers: {
-                'Content-type': "application/json"
-            }})
-            .then(res => {
-                    this.setState({
-                        units: res.data
-                    })
-                }
-            )
-            .catch(function (err) {
-                console.log(err);
+            this.setState({
+                isLoading: false
             });
-
-        this.setState({
-            isLoading: false
-        });
     }
-
-    populateCheckboxes = units => {
-        this.state.units.map(function (unit) {
-            return (unit.units)
-        });
-        console.log("pls", units);
-    };
 
     goBack() {
         this.setState({
@@ -78,24 +53,46 @@ export default class QueryData extends React.Component {
         console.log(this.state.currentPage)
     }
 
-    selectAllCheckboxes = isSelected => {
-        Object.keys(this.state.measurementCheckboxes).forEach(checkbox => {
-            this.setState(prevState => ({
+    selectAllUnitCheckboxes = isSelected => {
+        Object.keys(this.state.measurementCheckboxes).forEach(checkboxU => {
+            this.setState(prevStateU => ({
                 measurementCheckboxes: {
-                    ...prevState.measurementCheckboxes,
-                    [checkbox]: isSelected
+                    ...prevStateU.measurementCheckboxes,
+                    [checkboxU]: isSelected
                 }
             }));
         });
     };
 
-    handleCheckboxChange = changeEvent => {
-        const { name } = changeEvent.target;
+    selectAllComponentCheckboxes = isSelected => {
+        Object.keys(this.state.componentCheckboxes).forEach(checkboxC => {
+            this.setState(prevStateC => ({
+                componentCheckboxes: {
+                    ...prevStateC.componentCheckboxes,
+                    [checkboxC]: isSelected
+                }
+            }));
+        });
+    };
+
+    handleUnitCheckboxChange = unitChangeEvent => {
+        const { name } = unitChangeEvent.target;
 
         this.setState(prevState => ({
             measurementCheckboxes: {
                 ...prevState.measurementCheckboxes,
                 [name]: !prevState.measurementCheckboxes[name]
+            }
+        }));
+    };
+
+    handleComponentCheckboxChange = componentChangeEvent => {
+        const { name } = componentChangeEvent.target;
+
+        this.setState(prevState => ({
+            componentCheckboxes: {
+                ...prevState.componentCheckboxes,
+                [name]: !prevState.componentCheckboxes[name]
             }
         }));
     };
@@ -106,22 +103,43 @@ export default class QueryData extends React.Component {
         Object.keys(this.state.measurementCheckboxes)
             .filter(checkbox => this.state.measurementCheckboxes[checkbox])
             .forEach(checkbox => {
+
+                console.log(checkbox, "is selected.");
+            });
+        Object.keys(this.state.componentCheckboxes)
+            .filter(checkbox => this.state.componentCheckboxes[checkbox])
+            .forEach(checkbox => {
+
                 console.log(checkbox, "is selected.");
             });
     };
 
-    createCheckbox = option => (
+    unitCheckboxes = option => (
         <CheckComponent
             label={option}
             isSelected={this.state.measurementCheckboxes[option]}
-            onCheckboxChange={this.handleCheckboxChange}
+            onCheckboxChange={this.handleUnitCheckboxChange}
             key={option}
         />
     );
 
-    selectAll = () => this.selectAllCheckboxes(true);
-    deselectAll = () => this.selectAllCheckboxes(false);
-    createCheckboxes = type => type.map(this.createCheckbox);
+    componentCheckboxes = option => (
+        <CheckComponent
+            label={option}
+            isSelected={this.state.componentCheckboxes[option]}
+            onCheckboxChange={this.handleComponentCheckboxChange}
+            key={option}
+        />
+    );
+
+    selectAllUnits = () => this.selectAllUnitCheckboxes(true);
+    deselectAllUnits = () => this.selectAllUnitCheckboxes(false);
+
+    selectAllComponents = () => this.selectAllComponentCheckboxes(true, "components");
+    deselectAllComponents = () => this.selectAllComponentCheckboxes(false, "components");
+
+    createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
+    createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
     // TODO Does not route back to the desired page.
     renderBackArrow(page) {
@@ -141,7 +159,6 @@ export default class QueryData extends React.Component {
     }
 
     render() {
-        console.log("UNITS: ", this.state.measurementCheckboxes);
         if (this.state.isLoading === true) {
             return (
                 <LoadSpinner />
@@ -158,22 +175,6 @@ export default class QueryData extends React.Component {
                             <div className={"sidebar-info"}>
                                 <span>Select data to be reported</span>
                             </div>
-                            <div className={"selection-buttons"}>
-                                <Button
-                                    variant={"success"}
-                                    onClick={() => this.selectAll()}
-                                    size={"sm"}
-                                >
-                                    Select All
-                                </Button>
-                                <Button
-                                    variant={"danger"}
-                                    onClick={() => this.deselectAll()}
-                                    size={"sm"}
-                                >
-                                    Deselect All
-                                </Button>
-                            </div>
                             <div className={"gen-button-container"}>
                                 <Button
                                     type={"submit"}
@@ -186,9 +187,41 @@ export default class QueryData extends React.Component {
                             <div className={"checkbox-selection-btn"}>
                                 <div className={"checkbox-container"}>
                                     <Divider horizontal>Measurements</Divider>
-                                    {this.createCheckboxes(MEASUREMENTS)}
+                                    {this.createMeasurementCheckboxes(this.props.units)}
+                                    <div className={"selection-buttons"}>
+                                        <Button
+                                            variant={"outline-success"}
+                                            onClick={() => this.selectAllUnits()}
+                                            size={"sm"}
+                                        >
+                                            Select All
+                                        </Button>
+                                        <Button
+                                            variant={"outline-danger"}
+                                            onClick={() => this.deselectAllUnits()}
+                                            size={"sm"}
+                                        >
+                                            Deselect All
+                                        </Button>
+                                    </div>
                                     <Divider horizontal>Components</Divider>
-                                    {this.createCheckboxes(COMPONENTS)}
+                                    {this.createComponentCheckboxes(this.props.components)}
+                                    <div className={"selection-buttons"}>
+                                        <Button
+                                            variant={"outline-success"}
+                                            onClick={() => this.selectAllComponents()}
+                                            size={"sm"}
+                                        >
+                                            Select All
+                                        </Button>
+                                        <Button
+                                            variant={"outline-danger"}
+                                            onClick={() => this.deselectAllComponents()}
+                                            size={"sm"}
+                                        >
+                                            Deselect All
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -199,4 +232,4 @@ export default class QueryData extends React.Component {
     }
 }
 
-// TODO Find out how to use the key prop to use for the query
+// TODO Bring api calls back into sidebar

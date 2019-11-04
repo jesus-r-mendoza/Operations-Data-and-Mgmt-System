@@ -6,8 +6,16 @@ import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Button, FormControl} from "react-bootstrap";
+import axios from "axios";
 
 const acceptedExtensions = [".tlm"];
+
+const APIs = [
+    {
+        unit: "http://localhost:8000/api/units/",
+        component: "http://localhost:8000/api/components/"
+    }
+];
 
 export default class UploadData extends React.Component {
 
@@ -17,11 +25,47 @@ export default class UploadData extends React.Component {
             isLoading: true,
             currentPage: "upload",
             selectedFile: "File Name",
-            loaded: 1
+            loaded: 1,
+            MEASUREMENTS: [],
+            COMPONENTS: [],
         };
     }
 
     componentDidMount() {
+        axios.get(APIs[0].unit, {
+            headers: {
+                'Content-type': "application/json"
+            }
+        })
+            .then(res => {
+                    this.setState({
+                        MEASUREMENTS: res.data
+                    })
+                }
+            )
+            .catch(function (err) {
+                console.log(err);
+            });
+
+        axios.get(APIs[0].component, {
+            headers: {
+                'Content-type': "application/json"
+            }
+        })
+            .then(res => {
+                    this.setState({
+                        COMPONENTS: res.data
+                    })
+                }
+            )
+            .catch(function (err) {
+                console.log(err);
+            });
+
+        this.setState({
+            isLoading: false
+        });
+
         this.setState({
             isLoading: false
         });
@@ -60,6 +104,24 @@ export default class UploadData extends React.Component {
             return(
               <span className={"error-message"}>Please choose a valid file.</span>
             );
+        }
+    }
+
+    // TODO implement onFileSubmit
+
+    createArray(type) {
+        if(type === "units") {
+            let values = this.state.MEASUREMENTS.map(function (units) {
+                return (units.units);
+            });
+            console.log("VALUES: ", values);
+            return values;
+        } else if(type === "components") {
+            let values = this.state.COMPONENTS.map(function (components) {
+                return (components.name);
+            });
+            console.log("VALUES: ", values);
+            return values;
         }
     }
 
@@ -126,9 +188,17 @@ export default class UploadData extends React.Component {
         }
 
         if(!this.state.isLoading) {
+            let units = this.createArray("units");
+            let components = this.createArray("components");
             return (
                 <div className={"report-container"}>
-                    <Sidebar page={this.state.currentPage}>Upload a Dataset</Sidebar>
+                    <Sidebar
+                        page={this.state.currentPage}
+                        units={units}
+                        components={components}
+                    >
+                        Upload a Dataset
+                    </Sidebar>
                     {this.renderFileInput()}
                 </div>
             );

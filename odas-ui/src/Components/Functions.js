@@ -6,16 +6,17 @@ export default function () {
 }
 
 // TODO look into JS modules
-export async function makeGetRequest(endpoint) {
-    return await axios.get(endpoint, {
+export function makeGetRequest(endpoint) {
+    let value;
+    axios.get(endpoint, {
         headers: {
             'Content-type': "application/json"
         }
     })
         .then((res) => {
-            this.state({
-                data: res.data
-            });
+            value = res.data.map(function(unit) {
+                return (unit.units)
+            })
         })
         .catch(function (err) {
             console.log(err);
