@@ -1,8 +1,10 @@
 class ManyIdConverter:
-    regex = r'^(\d{1,}\+{0,1})*\d+$'
-
+    regex = '[\d+]+'
+    
     def to_python(self, value):
-        return [ int(id) for id in value.split('+') ]
+        res = [ int(id) for id in value.split('+') ]
+        return res
 
     def to_url(self, value):
-        return '+'.join(value)
+        res = '+'.join(value)
+        return res

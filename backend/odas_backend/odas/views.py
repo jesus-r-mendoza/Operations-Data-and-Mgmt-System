@@ -111,7 +111,11 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
 
 def recent_by_many_components(request, satellite_id, component_ids, quantity):
-    pass
+    return JsonResponse({
+        'sid': satellite_id,
+        'comps': component_ids,
+        'quant': quantity
+    })
 
 def _build_response(meas_query_set, component=False):
     if not meas_query_set:
