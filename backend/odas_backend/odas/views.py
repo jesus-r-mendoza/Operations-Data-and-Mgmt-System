@@ -44,7 +44,6 @@ def file_view(request):
         'files': files
     })
 
-
 def upload_view(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
@@ -96,11 +95,25 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
 
 def recent_by_many_components(request, satellite_id, component_ids, quantity):
-    return JsonResponse({
-        'sid': satellite_id,
-        'comps': component_ids,
-        'quant': quantity
-    })
+    try:
+        sat = Satellite.objects.get(pk=satellite_id)
+        measurements = Measurement.objects.filter(satellite=sat)
+        querys = []
+        if quantity < 1:
+            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+        for id in component_ids:
+            comp = Component.objects.get(pk=id)
+            meas = measurements.filter(component=comp).order_by('-time_measured')
+            querys.append( (comp.name, len(meas), meas) )
+        
+        # TODO: Modify _build_response to accept list of tuples containing comp.name, size of qs, and the queryset
+        # data = _build_response( querys, component=True )
+        return JsonResponse(data)
+
+    except Satellite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Component.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
 
 def _build_response(meas_query_set, component=False):
     if not meas_query_set:
