@@ -59,10 +59,6 @@ def upload_view(request):
 
 def components_of_satellite(request, satellite_id):
     try:
-        if satellite_id < 0:
-            print('id < 0', satellite_id)
-            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
-
         sat = Satellite.objects.get(pk=satellite_id)
         components = Component.objects.filter(satellite=sat)
         data = _build_comp_response(components)
@@ -72,10 +68,6 @@ def components_of_satellite(request, satellite_id):
 
 def recent_measurements(request, satellite_id, quantity):
     try:
-        if satellite_id < 0:
-            print('id < 0', satellite_id)
-            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
-
         sat = Satellite.objects.get(pk=satellite_id)
         if quantity < 1:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
@@ -88,13 +80,6 @@ def recent_measurements(request, satellite_id, quantity):
 
 def recent_by_component(request, satellite_id, component_id, quantity):
     try:
-        if satellite_id < 0:
-            print('id < 0', satellite_id)
-            return JsonResponse( { 'data': False, 'error': 'Must request at valid satellite id'} )
-        if component_id < 0:
-            print('id < 0', component_id)
-            return JsonResponse( { 'data': False, 'error': 'Must request at valid component id'} )
-
         sat = Satellite.objects.get(pk=satellite_id)
         comp = Component.objects.get(pk=component_id)
 
