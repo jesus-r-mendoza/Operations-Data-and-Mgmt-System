@@ -12,6 +12,8 @@ router.register('api/units', UnitsViewSet, 'units')
 
 
 urlpatterns = [
+    path('size/', views.size, name='size'),
+	path('sizeView/', views.sizeView, name='sizeView'),
     path('email/', views.index, name='index'),
     path('success/', views.successView, name='success'),
     path('files/', views.file_view, name='file_list'),

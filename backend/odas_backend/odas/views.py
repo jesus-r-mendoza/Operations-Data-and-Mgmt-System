@@ -5,6 +5,8 @@ from django.core.files.storage import FileSystemStorage
 from .forms import SubscriberForm, UploadForm
 from .models import Upload, Satellite, Component, Measurement, Units
 from django.views.decorators.csrf import csrf_exempt
+import os
+import json
 
 @csrf_exempt
 def index(request):
@@ -26,6 +28,20 @@ def index(request):
 def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
+# create myView
+
+def sizeView(request):
+    return HttpResponse('Thank you. You know your usage files')
+	
+def size(request):
+	startdir = 'C:/Users/AlbertC/Desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads/'
+	fnames = os.listdir(startdir)
+	paths = [os.path.join(startdir, fname) for fname in fnames]
+	sizes = [(path, os.stat(path).st_size) for path in paths]
+	x=dict(sizes)
+	JS=json.dumps(x)
+	return HttpResponse(JS)
+	
 
 # Create your views here.
 @csrf_exempt
