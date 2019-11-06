@@ -72,7 +72,7 @@ def recent_measurements(request, satellite_id, quantity):
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
         qs = [sat, (None, len(measurements), measurements)]
-        data = _build_response(qs, add_component=True)
+        data = _build_response(qs)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
@@ -106,7 +106,7 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
         for id in component_ids:
             try:
                 comp = Component.objects.get(pk=id)
-                meas = measurements.filter(component=comp).order_by('-time_measured')
+                meas = measurements.filter(component=comp).order_by('-time_measured')[:quantity]
                 querys.append( (comp, len(meas), meas) )
             except Component.DoesNotExist:
                 # add to list of comps not exists
