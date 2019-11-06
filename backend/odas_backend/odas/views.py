@@ -26,7 +26,6 @@ def index(request):
 def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
-
 # Create your views here.
 @csrf_exempt
 def uploader(request):
@@ -73,7 +72,7 @@ def recent_measurements(request, satellite_id, quantity):
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
         qs = [sat, (None, len(measurements), measurements)]
-        data = _build_response( qs )
+        data = _build_response(qs, add_component=True)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
@@ -142,11 +141,13 @@ def _build_response(query_set_list, add_component=True):
     for (comp, quant, qs) in query_set_list[1:]:
         for measurement in qs:
             entry = {}
-            if  add_component:
-                entry['component_name'] = comp.name if comp != None else measurement.component.name,
-                entry['component_model'] = comp.model if comp != None else measurement.component.model,
-                entry['component_category'] = comp.category if comp != None else measurement.component.catergory,
-                entry['component_description'] = comp.description if comp != None else measurement.component.description,
+            if add_component:
+                if comp == None:
+                    comp = measurement.component
+                entry['component_name'] = comp.name,
+                entry['component_model'] = comp.model,
+                entry['component_category'] = comp.category,
+                entry['component_description'] = comp.description,
                     
             entry['units'] = measurement.units.units
             entry['time']  = measurement.time_measured
