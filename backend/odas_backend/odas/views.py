@@ -98,49 +98,63 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         measurements = Measurement.objects.filter(satellite=sat)
-        querys = []
+        querys = [sat] # list will be in this format: [sat, (comp, size, qs), (comp, size, qs), ...]
         if quantity < 1:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+        comp_not_exist = []
         for id in component_ids:
-            comp = Component.objects.get(pk=id)
-            meas = measurements.filter(component=comp).order_by('-time_measured')
-            querys.append( (comp.name, len(meas), meas) )
+            try:
+                comp = Component.objects.get(pk=id)
+                meas = measurements.filter(component=comp).order_by('-time_measured')
+                querys.append( (comp, len(meas), meas) )
+            except Component.DoesNotExist:
+                # add to list of comps not exists
+                comp_not_exist.append( { id: f'Component of this ID does not exist on {sat.name}'} )
         
-        # TODO: Modify _build_response to accept list of tuples containing comp.name, size of qs, and the queryset
-        # data = _build_response( querys, component=True )
+        if len(comp_not_exist) == len(component_ids):
+            return JsonResponse( { 'data': False, 'error': 'Component(s) Does not exist' } )
+
+        data = _build_response( querys )
+        
+        if len(comp_not_exist) > 0:
+            data['Quantities'] += comp_not_exist
+
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
-    except Component.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
 
-def _build_response(meas_query_set, component=False):
-    if not meas_query_set:
+def _build_response(query_set_list, component=False):
+    # query_set_list[0] contains Satellite obj
+    if not len(query_set_list) > 1:
         return { 'data': False, 'error': 'Satellite has no recent measurements' }
     data = {
         'Satellite': {
-            'name': meas_query_set[0].satellite.name,
-            'mission_description': meas_query_set[0].satellite.mission_description,
-            'year_launched': meas_query_set[0].satellite.year_launched 
+            'name': query_set_list[0].name,
+            'mission_description': query_set_list[0].mission_description,
+            'year_launched': query_set_list[0].year_launched 
         },
         'Measurements': []
     }
-    for measurement in meas_query_set:
-        entry = {}
-        if not component:            
-            entry['component_name'] = measurement.component.name,
-            entry['component_model'] = measurement.component.model,
-            entry['component_category'] = measurement.component.category,
-            entry['component_description'] = measurement.component.description,
-                
-        entry['units'] = measurement.units.units
-        entry['time']  = measurement.time_measured
-        entry['value'] = measurement.value
+    quantities = []
+    for (comp, quant, qs) in query_set_list[1:]:
+        for measurement in qs:
+            entry = {}
+            if not component:
+                entry['component_name'] = comp.name,
+                entry['component_model'] = comp.model,
+                entry['component_category'] = comp.category,
+                entry['component_description'] = comp.description,
+                    
+            entry['units'] = measurement.units.units
+            entry['time']  = measurement.time_measured
+            entry['value'] = measurement.value
 
-        data['Measurements'].append(entry)
+            data['Measurements'].append(entry)
+        
+        quantities.append( { comp.name: quant } )
 
-    data['Quantity'] = len(data['Measurements'])
+    data['Quantities'] = quantities
     data['data'] = True
     data['error'] = 'None'
     return data
@@ -167,7 +181,7 @@ def _build_comp_response(comp_query_set):
 
         data['Components'].append(entry)
 
-    data['Quantity'] = len(data['Components'])
+    data['Quantities'] = len(data['Components'])
     data['data'] = True
     data['error'] = 'None'
     return data
