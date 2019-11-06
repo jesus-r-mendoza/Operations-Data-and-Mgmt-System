@@ -72,7 +72,8 @@ def recent_measurements(request, satellite_id, quantity):
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
-        data = _build_response(measurements)
+        qs = [sat, (None, len(measurements), measurements)]
+        data = _build_response( qs )
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
@@ -86,7 +87,8 @@ def recent_by_component(request, satellite_id, component_id, quantity):
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).filter(component=comp).order_by('-time_measured')[:quantity]
-        data = _build_response(measurements, component=True)
+        qs = [sat, (comp, len(measurements), measurements)]
+        data = _build_response(qs, add_component=False)
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
@@ -124,7 +126,7 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
-def _build_response(query_set_list, component=False):
+def _build_response(query_set_list, add_component=True):
     # query_set_list[0] contains Satellite obj
     if not len(query_set_list) > 1:
         return { 'data': False, 'error': 'Satellite has no recent measurements' }
@@ -140,11 +142,11 @@ def _build_response(query_set_list, component=False):
     for (comp, quant, qs) in query_set_list[1:]:
         for measurement in qs:
             entry = {}
-            if not component:
-                entry['component_name'] = comp.name,
-                entry['component_model'] = comp.model,
-                entry['component_category'] = comp.category,
-                entry['component_description'] = comp.description,
+            if  add_component:
+                entry['component_name'] = comp.name if comp != None else measurement.component.name,
+                entry['component_model'] = comp.model if comp != None else measurement.component.model,
+                entry['component_category'] = comp.category if comp != None else measurement.component.catergory,
+                entry['component_description'] = comp.description if comp != None else measurement.component.description,
                     
             entry['units'] = measurement.units.units
             entry['time']  = measurement.time_measured
