@@ -41,3 +41,6 @@ class Upload(models.Model):
     upfile = models.FileField(upload_to='files/uploads/')
     def __str__(self):
         return self.description
+    def delete(self, *args, **kwargs):
+        self.upfile.delete()
+        super().delete(*args, **kwargs)

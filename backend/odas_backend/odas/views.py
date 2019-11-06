@@ -56,6 +56,11 @@ def upload_view(request):
     return render(request, 'fileio/upload_file.html', {
         'form': form
     })
+def delete_file(request, pk):
+    if request.method == 'POST':
+        user_file = Upload.objects.get(pk=pk)
+        user_file.delete()
+    return redirect('file_list')
 
 def recent_measurements(request, satellite_id, quantity):
     try:
