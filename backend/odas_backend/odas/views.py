@@ -64,6 +64,14 @@ def components_of_satellite(request, satellite_id):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
+def comp_measu_from_to(request, satellite_id, component_id, from_date, to_date):
+    return JsonResponse({
+        'sat': satellite_id,
+        'comp': component_id,
+        'from': from_date,
+        'to': to_date
+    })
+
 def recent_measurements(request, satellite_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
