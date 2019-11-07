@@ -64,7 +64,7 @@ def components_of_satellite(request, satellite_id):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
-def comp_measu_from_to(request, satellite_id, component_id, from_date, to_date):
+def comp_measu_from_to(request, satellite_id, from_date, to_date):
     try:
         if from_date[0] != 'from' or to_date[0] != 'to':
             return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
@@ -100,7 +100,7 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).filter(component=comp).order_by('-time_measured')[:quantity]
         qs = [sat, (comp, len(measurements), measurements)]
-        data = _build_response(qs, add_component=False)
+        data = _build_response(qs)
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
@@ -152,10 +152,14 @@ def _build_response(query_set_list, add_component=True):
     }
     quantities = []
     for (comp, quant, qs) in query_set_list[1:]:
+        if comp == None:
+            reassign_comp = True
+        else:
+            reassign_comp = False
         for measurement in qs:
             entry = {}
             if add_component:
-                if comp == None:
+                if reassign_comp:
                     comp = measurement.component
                 entry['component_name'] = comp.name,
                 entry['component_model'] = comp.model,
