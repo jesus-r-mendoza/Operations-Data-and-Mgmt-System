@@ -9,10 +9,12 @@ router.register('api/satellites', SatelliteViewSet, 'satellites')
 router.register('api/components', ComponentViewSet, 'components')
 router.register('api/measurements', MeasurementViewSet, 'measurements')
 router.register('api/units', UnitsViewSet, 'units')
-
+#router.register('api/user/id/storage')
 
 urlpatterns = [
-    path('size/', views.size, name='size'),
+
+    path('api/user/<int:user>/storage/', views.filesize, name='filesize'),
+	path('filesize/', views.filesize, name='filesize'),
 	path('sizeView/', views.sizeView, name='sizeView'),
     path('email/', views.index, name='index'),
     path('success/', views.successView, name='success'),

@@ -33,14 +33,13 @@ def successView(request):
 def sizeView(request):
     return HttpResponse('Thank you. You know your usage files')
 	
-def size(request):
+def filesize(request):
 	startdir = 'C:/Users/AlbertC/Desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads/'
 	fnames = os.listdir(startdir)
 	paths = [os.path.join(startdir, fname) for fname in fnames]
 	sizes = [(path, os.stat(path).st_size) for path in paths]
 	x=dict(sizes)
-	JS=json.dumps(x)
-	return HttpResponse(JS)
+	return JsonResponse(x)
 	
 
 # Create your views here.
