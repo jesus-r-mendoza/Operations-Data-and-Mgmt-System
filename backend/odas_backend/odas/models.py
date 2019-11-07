@@ -35,6 +35,7 @@ class Measurement(models.Model):
     def __str__(self):
         s = f'{self.id}: | Satellite: {self.satellite.name} | Component: {self.component.name} | '
         s += f'Value: {self.value} | Time: {self.time_measured}'
+        return s
 
 class Upload(models.Model):
     description = models.CharField(max_length=100)
