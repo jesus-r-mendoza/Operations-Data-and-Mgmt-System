@@ -12,7 +12,7 @@
 	</script>
 	</head>
 	<body>
-	<div class="navbar"><span>Real-Time Telemetry Data</span></div>
+	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
 		<script src="xml2json.js"></script>
@@ -26,7 +26,9 @@
 			var keysValues = [];
 			var json = "";
 			//var myList = document.querySelector('ul');
-			
+
+//TEST 4
+/*			
 			$.ajax({
 				method: 'GET',
 //WARNING: ALWAYS ADD/REMOVE API KEY
@@ -36,8 +38,12 @@
 					console.log(html);
 				}
 			})
-			
+*/			
 			var request = new Request(
+//TEST 3
+			'http://127.0.0.1:8000/api/satellites/1/recent/7/');
+			//'http://127.0.0.1:8000/api/satellites/2/recent/7/');
+//TEST 1
 //			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
 	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
 	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
@@ -46,14 +52,15 @@
 	//Satellite observatories: mms1,mms2
 	//Time range: 20190101T000000Z,20190101T001000Z
 	//Coordinate systems: gse,geo
+//TEST 2
 //WARNING: ALWAYS ADD/REMOVE API KEY testType = 2
-			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
+//			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 			//app.get('/YourPath/:parameterName', 
 			//function (req, res) {
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
-//				.then(res => res.json()) //testType = 1
-				.then(res => res.text()) //testType = 2
+				.then(res => res.json()) //testType = 1, 3
+/*				.then(res => res.text()) //testType = 2
 				.then(text => {
 //				console.log(text);
 			//from xmljson_test.html
@@ -82,10 +89,99 @@
 //				console.log('jsontest');
 //				console.log(json);
 				})
+*/
 				.then((out) => {
-					var testType = 2;
+					var testType = 3;
+					
+					//------------- odas api json ------------------------------
+					if(testType==3){
+						console.log('test full API', out);
+						if(out.data==true){
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = out.Satellite.name+": "+out.Satellite.year_launched;
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							
+							var measurementsComponent_Category = [];
+							var measurementsComponent_Description = [];
+							var measurementsComponent_Model = [];
+							var measurementsComponent_Name = [];
+							var measurementsTime = [];
+							var measurementsUnits = [];
+							var measurementsValue = [];
+							
+							var quantity = out.Quantity;
+							var realQuantity = out.Measurements.length;
+							var checkQuantities = false;
+							if(quantity==realQuantity){
+								checkQuantities = true;
+							}
+							console.log('Test: Quantities Match? : ', checkQuantities);
+							
+							for(var a=0;a<realQuantity;a++){
+								measurementsComponent_Category.push(out.Measurements[a].component_category[0]);
+								measurementsComponent_Description.push(out.Measurements[a].component_description[0]);
+								measurementsComponent_Model.push(out.Measurements[a].component_model[0]);
+								measurementsComponent_Name.push(out.Measurements[a].component_name[0]);
+								measurementsTime.push(out.Measurements[a].time);
+								measurementsUnits.push(out.Measurements[a].units);
+								measurementsValue.push(out.Measurements[a].value);
+							}
+							//ignore
+							console.log('Component_Categories: ', measurementsComponent_Category);
+							//ignore
+							console.log('Component_Description: ', measurementsComponent_Description);
+							
+							console.log('Component_Model: ', measurementsComponent_Model);
+							console.log('Component_Name: ', measurementsComponent_Name);
+							
+							//ignore
+							console.log('Time: ', measurementsTime);
+							
+							console.log('Units: ', measurementsUnits);
+							console.log('Value: ', measurementsValue);
+							
+						}
+						else if(out.data==false){
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = "Error";
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							var node = document.createElement("p");
+							var node2 = document.createElement("p");
+							var textnode = document.createTextNode(out.error);
+							var textnode2 = document.createTextNode(out.error);
+							node.appendChild(textnode);
+							node2.appendChild(textnode2);
+							document.getElementById("toptitle").appendChild(node);
+							document.getElementById("tablechart").appendChild(node2);
+							
+						}
+						else{
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = "Error";
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							var node = document.createElement("p");
+							var node2 = document.createElement("p");
+							var textnode = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
+							var textnode2 = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
+							node.appendChild(textnode);
+							node2.appendChild(textnode2);
+							document.getElementById("toptitle").appendChild(node);
+							document.getElementById("tablechart").appendChild(node2);
+						}
+					}
+					
+					//--------------odas api json ----------------
 					//--------------testdata2.json ---------------
-					if(testType==2){
+					else if(testType==2){
 					out = JSON.parse(json);
 					//var stringJSON = JSON.stringify(out);
 					//console.log(typeof(stringJSON));
@@ -318,8 +414,8 @@ console.log('New row', cnt);
 					},200); //update every 200 seconds.
 					console.log('finish');
 					}
-					//--------------testdata2.json-----------------
-					//------------github testdata.txt--------------
+//					//--------------testdata2.json-----------------
+//					//------------github testdata.txt--------------
 					else if (testType==1){
 					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
@@ -470,7 +566,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 		</script>
 	</div>
 	<div id = "bottomchart">
-	<p>Table Chart</p>
+	<p id="tablechart">Table Chart</p>
 	<button id="pause">Pause</button>
 	<table style="width:100%" id = "traces">
 			<tr id = "fieldnames">
