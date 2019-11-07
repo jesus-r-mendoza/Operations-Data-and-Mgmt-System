@@ -66,7 +66,7 @@ def components_of_satellite(request, satellite_id):
 
 def comp_measu_from_to(request, satellite_id, component_id, from_date, to_date):
     try:
-        if from_date[0] != 'from' and to_date[0] != 'to':
+        if from_date[0] != 'from' or to_date[0] != 'to':
             return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
         sat = Satellite.objects.get(pk=satellite_id)
         measurements = Measurement.objects.filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
