@@ -1,7 +1,7 @@
 /*Sidebar container*/
 .sidebar {
     height: 100%;
-    width: 20em;
+    width: 22em;
     z-index: auto;
     left: 0;
     background-color: #f4f3f1;
@@ -10,6 +10,7 @@
     border-top: 0;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
     position: sticky;
     position: -webkit-sticky;
 }
@@ -44,6 +45,7 @@
     margin-top: 15px;
     margin-bottom: 1em;
     font-size: x-large;
+    /*position: absolute;*/
 }
 
 .gen-button-container {
@@ -52,7 +54,7 @@
     /*box-shadow: 1px 0 1px lightgray;*/
     box-shadow: 0 1px 2px 0 darkgray;
     bottom: 0;
-    position: absolute;
+    /*position: absolute;*/
     width: 100%;
 }
 
@@ -77,6 +79,7 @@
     justify-content: center;
 }
 
+/*Checkboxes*/
 .selection-buttons {
     display: flex;
     justify-content: space-around;
@@ -95,7 +98,6 @@
     height: 100%;
 }
 
-/*Checkboxes*/
 .checkbox-container {
     display: flex;
     flex-direction: column;

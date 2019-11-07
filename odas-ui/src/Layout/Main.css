@@ -60,7 +60,7 @@
 .main-text {
     display: flex;
     flex-direction: column;
-    margin-top: 30%;
+    margin-top: 20%;
     margin-bottom: auto;
     font-size: 40px;
     color: white;
@@ -70,16 +70,21 @@
     display: flex;
     flex-direction: column;
     width: auto;
-    padding-top: 30%;
+    padding-top: 25%;
     padding-right: 25%;
     color: white;
     font-size: large;
+
 }
 
-.email-button {
+.email-button-container {
     display: flex;
     flex-direction: row;
     padding-top: 10px;
+}
+
+.email-button {
+    padding-right: 10px;
 }
 
 .email-header {
@@ -87,8 +92,12 @@
     padding-right: 8px;
 }
 
-.email-form {
+.main-content {
     padding-top: 2%;
     width: 30%
+}
+
+.email-form {
+    padding-bottom: 18px;
 }
 

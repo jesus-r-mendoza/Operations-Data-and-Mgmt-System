@@ -19,6 +19,7 @@ export default class Sidebar extends React.Component {
             isLoading: true,
             currentPage: this.props.page,
             formSubmit: [],
+            loadDropdown: true,
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
                     ...options,
@@ -40,9 +41,9 @@ export default class Sidebar extends React.Component {
     }
 
     componentDidMount() {
-            this.setState({
-                isLoading: false
-            });
+        this.setState({
+            isLoading: false
+        });
     }
 
     goBack() {
@@ -164,6 +165,7 @@ export default class Sidebar extends React.Component {
                 <LoadSpinner />
             );
         } else {
+            if (this.state.loadDropdown === true)
             return (
                 <div className={"sidebar"}>
                     <form onSubmit={this.handleFormSubmit}>
@@ -174,15 +176,6 @@ export default class Sidebar extends React.Component {
                         <div>
                             <div className={"sidebar-info"}>
                                 <span>Select data to be reported</span>
-                            </div>
-                            <div className={"gen-button-container"}>
-                                <Button
-                                    type={"submit"}
-                                    variant={"info"}
-                                    className={"gen-button"}
-                                >
-                                    Generate Report
-                                </Button>
                             </div>
                             <div className={"checkbox-selection-btn"}>
                                 <div className={"checkbox-container"}>
@@ -223,6 +216,15 @@ export default class Sidebar extends React.Component {
                                         </Button>
                                     </div>
                                 </div>
+                            </div>
+                            <div className={"gen-button-container"}>
+                                <Button
+                                    type={"submit"}
+                                    variant={"info"}
+                                    className={"gen-button"}
+                                >
+                                    Generate Report
+                                </Button>
                             </div>
                         </div>
                     </form>

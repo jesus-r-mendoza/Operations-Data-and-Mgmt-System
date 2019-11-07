@@ -20,7 +20,7 @@ export default class Main extends React.Component {
         return (
             <div className={"main-page"}>
                 <div className={"main-container"}>
-                    <div className={"email-form"}>
+                    <div className={"main-content"}>
                         <span className={"main-text"}>Welcome to <br/> ODAS Report Generator</span>
                         <div className={"main-button"}>
                             <Link to={"/query"}>
@@ -57,10 +57,23 @@ export default class Main extends React.Component {
                                     </Button>
                                 </OverlayTrigger>
                             </div>
-                            <FormControl type={"text"} placeholder={"Email"} />
-                            <div className={"email-button"}>
+                            <div className={"email-form"}>
+                                <FormControl type={"text"} placeholder={"Email"} />
+                            </div>
+                            <div>
+                                <FormControl type={"password"} placeholder={"Password"} />
+                            </div>
+                            <div className={"email-button-container"}>
+                                <div className={"email-button"}>
+                                    <Button
+                                        variant={"info"}
+                                        type={"submit"}
+                                        onClick={() => console.log("Sign up")}
+                                    >
+                                        Login
+                                    </Button>
+                                </div>
                                 <Button
-                                    size={"sm"}
                                     variant={"info"}
                                     type={"submit"}
                                     onClick={() => console.log("Sign up")}
