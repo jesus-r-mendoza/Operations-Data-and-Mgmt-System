@@ -64,14 +64,23 @@ def components_of_satellite(request, satellite_id):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
-def comp_measu_from_to(request, satellite_id, from_date, to_date):
+def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=None):
     try:
         if from_date[0] != 'from' or to_date[0] != 'to':
             return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
         sat = Satellite.objects.get(pk=satellite_id)
         measurements = Measurement.objects.filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
-        qs = [sat, (None, len(measurements), measurements)]
-        data = _build_response(qs)
+        if component_id == None:
+            comp = None
+        else:
+            comp = Component.objects.get(pk=component_id)
+            measurements = measurements.filter(component = comp)
+
+        qs = [sat, (comp, len(measurements), measurements)]
+        if comp == None:
+            data = _build_response(qs)
+        else:
+            data = _build_response(qs, add_component=False)
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
