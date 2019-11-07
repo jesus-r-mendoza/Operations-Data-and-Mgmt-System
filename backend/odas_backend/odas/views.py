@@ -65,12 +65,17 @@ def components_of_satellite(request, satellite_id):
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
 def comp_measu_from_to(request, satellite_id, component_id, from_date, to_date):
-    return JsonResponse({
-        'sat': satellite_id,
-        'comp': component_id,
-        'from': from_date,
-        'to': to_date
-    })
+    try:
+        if from_date[0] != 'from' and to_date[0] != 'to':
+            return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
+        sat = Satellite.objects.get(pk=satellite_id)
+        measurements = Measurement.objects.filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
+        qs = [sat, (None, len(measurements), measurements)]
+        data = _build_response(qs)
+        return JsonResponse(data)
+
+    except Satellite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
 
 def recent_measurements(request, satellite_id, quantity):
     try:
@@ -135,8 +140,8 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
 
 def _build_response(query_set_list, add_component=True):
     # query_set_list[0] contains Satellite obj
-    if not len(query_set_list) > 1:
-        return { 'data': False, 'error': 'Satellite has no recent measurements' }
+    if not len(query_set_list) > 1 or query_set_list[1][1] == 0:
+        return { 'data': False, 'error': 'Satellite has no measurements fitting those parameters' }
     data = {
         'Satellite': {
             'name': query_set_list[0].name,
