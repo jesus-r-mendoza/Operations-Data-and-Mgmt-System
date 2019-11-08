@@ -1,14 +1,15 @@
 import React from 'react';
 import CheckComponent from "./CheckComponent";
+import axios from 'axios';
 // Stylesheets
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
 import {Divider} from "semantic-ui-react";
-
+// Components
 import LoadSpinner from "./LoadSpinner";
+import DropdownComp from "./DropdownComp";
 
 export default class Sidebar extends React.Component {
-// TODO Extra maybe. Pull checkbox labels from the database. Dynamic rendering
 // TODO Disable generate report button while nothing is selected
 
     constructor(props) {
@@ -19,6 +20,7 @@ export default class Sidebar extends React.Component {
             isLoading: true,
             currentPage: this.props.page,
             formSubmit: [],
+            satNames: [],
             loadDropdown: true,
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
@@ -41,6 +43,17 @@ export default class Sidebar extends React.Component {
     }
 
     componentDidMount() {
+        axios.get("http://localhost:8000/api/satellites/", {
+            headers: {
+                'Content-type': "application/json"
+            }
+        })
+            .then(res => {
+               this.setState({
+                   satNames: res.data
+               })
+            });
+
         this.setState({
             isLoading: false
         });
@@ -142,6 +155,28 @@ export default class Sidebar extends React.Component {
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
     createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
+    // createSatNameObject(satArray) {
+    //     let nameList = Object.create(Object.prototype, {
+    //         key: {value: satArray.id},
+    //         text: {value: satArray.name},
+    //         value: {value: satArray.id}
+    //     });
+    //
+    //     return nameList;
+    // }
+
+
+    showDropdown (satArray) {
+        let nameList = this.createSatNameObject();
+        // let nameList = this.createDictionary(satArray);
+        console.log("SAT NAMES", satArray);
+        return (
+            <DropdownComp
+                optionsList={nameList}
+            />
+        );
+    }
+
     // TODO Does not route back to the desired page.
     renderBackArrow(page) {
         if(page === "renderReport") {
@@ -160,72 +195,75 @@ export default class Sidebar extends React.Component {
     }
 
     render() {
+        console.log("ARRAY", this.state.satNames);
         if (this.state.isLoading === true) {
             return (
-                <LoadSpinner />
+                <LoadSpinner/>
             );
         } else {
-            if (this.state.loadDropdown === true)
             return (
-                <div className={"sidebar"}>
+                <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <div className={"sidebar-title"}>
-                            {/*{this.renderBackArrow(this.props.page)}*/}
-                            <span>{this.props.children}</span>
-                        </div>
-                        <div>
-                            <div className={"sidebar-info"}>
-                                <span>Select data to be reported</span>
+                        <div className={"sidebar"}>
+                            <div className={"sidebar-title"}>
+                                {/*{this.renderBackArrow(this.props.page)}*/}
+                                <span>{this.props.children}</span>
                             </div>
-                            <div className={"checkbox-selection-btn"}>
-                                <div className={"checkbox-container"}>
-                                    <Divider horizontal>Measurements</Divider>
-                                    {this.createMeasurementCheckboxes(this.props.units)}
-                                    <div className={"selection-buttons"}>
-                                        <Button
-                                            variant={"outline-success"}
-                                            onClick={() => this.selectAllUnits()}
-                                            size={"sm"}
-                                        >
-                                            Select All
-                                        </Button>
-                                        <Button
-                                            variant={"outline-danger"}
-                                            onClick={() => this.deselectAllUnits()}
-                                            size={"sm"}
-                                        >
-                                            Deselect All
-                                        </Button>
-                                    </div>
-                                    <Divider horizontal>Components</Divider>
-                                    {this.createComponentCheckboxes(this.props.components)}
-                                    <div className={"selection-buttons"}>
-                                        <Button
-                                            variant={"outline-success"}
-                                            onClick={() => this.selectAllComponents()}
-                                            size={"sm"}
-                                        >
-                                            Select All
-                                        </Button>
-                                        <Button
-                                            variant={"outline-danger"}
-                                            onClick={() => this.deselectAllComponents()}
-                                            size={"sm"}
-                                        >
-                                            Deselect All
-                                        </Button>
+                            <div>
+                                <div className={"sidebar-info"}>
+                                    {/*{this.showDropdown(this.state.satNames)}*/}
+                                    {/*<span>Select data to be reported</span>*/}
+                                </div>
+                                <div className={"checkbox-selection-btn"}>
+                                    <div className={"checkbox-container"}>
+                                        <Divider horizontal>Measurements</Divider>
+                                        {this.createMeasurementCheckboxes(this.props.units)}
+                                        <div className={"selection-buttons"}>
+                                            <Button
+                                                variant={"outline-success"}
+                                                onClick={() => this.selectAllUnits()}
+                                                size={"sm"}
+                                            >
+                                                Select All
+                                            </Button>
+                                            <Button
+                                                variant={"outline-danger"}
+                                                onClick={() => this.deselectAllUnits()}
+                                                size={"sm"}
+                                            >
+                                                Deselect All
+                                            </Button>
+                                        </div>
+                                        <Divider horizontal>Components</Divider>
+                                        {this.createComponentCheckboxes(this.props.components)}
+                                        <div className={"selection-buttons"}>
+                                            <Button
+                                                variant={"outline-success"}
+                                                onClick={() => this.selectAllComponents()}
+                                                size={"sm"}
+                                            >
+                                                Select All
+                                            </Button>
+                                            <Button
+                                                variant={"outline-danger"}
+                                                onClick={() => this.deselectAllComponents()}
+                                                size={"sm"}
+                                            >
+                                                Deselect All
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className={"gen-button-container"}>
-                                <Button
-                                    type={"submit"}
-                                    variant={"info"}
-                                    className={"gen-button"}
-                                >
-                                    Generate Report
-                                </Button>
-                            </div>
+                        </div>
+                        <div className={"gen-button-container"}>
+                            <Button
+                                type={"submit"}
+                                variant={"info"}
+                                className={"gen-button"}
+                            >
+                                Generate Report
+                            </Button>
                         </div>
                     </form>
                 </div>
