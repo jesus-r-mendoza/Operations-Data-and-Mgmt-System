@@ -51,16 +51,14 @@ def files_and_sizes(start_path):
 	
 	
 def filesize(request):	
-	x=dict(files_and_sizes("c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads"))
+	x=dict(files_and_sizes('c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads'))
 	for i in x:
 		y=str(x.get(i)) + " byte"
 		x[i]=y
-	y1=json.dumps(x)
 	data=dict()
-	data["files"]=y1
-	data["Data"]=True
+	data["files"]=x
+	data["data"]=True
 	data["error"]="None."
-	#print(data)
 	return JsonResponse(data)
 
 
