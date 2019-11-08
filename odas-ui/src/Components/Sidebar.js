@@ -20,7 +20,7 @@ export default class Sidebar extends React.Component {
             isLoading: true,
             currentPage: this.props.page,
             formSubmit: [],
-            satNames: [],
+            satObject: [],
             loadDropdown: true,
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
@@ -43,7 +43,7 @@ export default class Sidebar extends React.Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8000/api/satellites/", {
+        axios.get("http://localhost:8000/api/satellites/?format=json", {
             headers: {
                 'Content-type': "application/json"
             }
@@ -155,19 +155,19 @@ export default class Sidebar extends React.Component {
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
     createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
-    // createSatNameObject(satArray) {
-    //     let nameList = Object.create(Object.prototype, {
-    //         key: {value: satArray.id},
-    //         text: {value: satArray.name},
-    //         value: {value: satArray.id}
-    //     });
-    //
-    //     return nameList;
-    // }
+    createSatNameObject(satArray) {
+        let nameList = Object.create(Object.prototype, {
+            key: {value: satArray.id},
+            text: {value: satArray.name},
+            value: {value: satArray.id}
+        });
+
+        return nameList;
+    }
 
 
     showDropdown (satArray) {
-        let nameList = this.createSatNameObject();
+        let nameList = this.createSatNameObject(satArray);
         // let nameList = this.createDictionary(satArray);
         console.log("SAT NAMES", satArray);
         return (
@@ -195,7 +195,8 @@ export default class Sidebar extends React.Component {
     }
 
     render() {
-        console.log("ARRAY", this.state.satNames);
+        let names = this.state.satObject;
+        console.log("ARRAY", names[0]);
         if (this.state.isLoading === true) {
             return (
                 <LoadSpinner/>
@@ -211,7 +212,7 @@ export default class Sidebar extends React.Component {
                             </div>
                             <div>
                                 <div className={"sidebar-info"}>
-                                    {/*{this.showDropdown(this.state.satNames)}*/}
+                                    {this.showDropdown(names)}
                                     {/*<span>Select data to be reported</span>*/}
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
