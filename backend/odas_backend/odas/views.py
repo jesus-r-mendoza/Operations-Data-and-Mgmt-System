@@ -29,10 +29,7 @@ def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
 # create myView
-
-def sizeView(request):
-    return HttpResponse('Thank you. You know your usage files')
-	
+"""
 def filesize(request):
 	startdir = 'C:/Users/AlbertC/Desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads/'
 	fnames = os.listdir(startdir)
@@ -40,7 +37,33 @@ def filesize(request):
 	sizes = [(path, os.stat(path).st_size) for path in paths]
 	x=dict(sizes)
 	return JsonResponse(x)
+"""	
+def files_and_sizes(start_path):
+    dir_list = [file for file in os.listdir(start_path)]
+    current_dir = []
+    for file in dir_list:
+        path = start_path + "\\" + file
+        if os.path.isdir(path) is True:
+            current_dir.append(files_and_sizes(path))
+        else:
+            current_dir.append((file, os.lstat(path).st_size))
+    return current_dir
 	
+	
+def filesize(request):	
+	x=dict(files_and_sizes("c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads"))
+	for i in x:
+		y=str(x.get(i)) + " byte"
+		x[i]=y
+	y1=json.dumps(x)
+	data=dict()
+	data["files"]=y1
+	data["Data"]=True
+	data["error"]="None."
+	#print(data)
+	return JsonResponse(data)
+
+
 
 # Create your views here.
 @csrf_exempt

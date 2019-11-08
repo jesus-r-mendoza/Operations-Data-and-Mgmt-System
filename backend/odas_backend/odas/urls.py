@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('api/user/<int:user>/storage/', views.filesize, name='filesize'),
 	path('filesize/', views.filesize, name='filesize'),
-	path('sizeView/', views.sizeView, name='sizeView'),
+#	path('sizeView/', views.sizeView, name='sizeView'),
     path('email/', views.index, name='index'),
     path('success/', views.successView, name='success'),
     path('files/', views.file_view, name='file_list'),
