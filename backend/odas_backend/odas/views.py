@@ -44,7 +44,7 @@ def file_view(request):
         'files': files
     })
 
-
+@csrf_exempt
 def upload_view(request):
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
