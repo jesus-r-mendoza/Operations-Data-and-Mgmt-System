@@ -111,6 +111,7 @@
 							var measurementsTime = [];
 							var measurementsUnits = [];
 							var measurementsValue = [];
+							var data = [];
 							
 							var quantity = out.Quantity;
 							var realQuantity = out.Measurements.length;
@@ -133,15 +134,63 @@
 							console.log('Component_Categories: ', measurementsComponent_Category);
 							//ignore
 							console.log('Component_Description: ', measurementsComponent_Description);
-							
-							console.log('Component_Model: ', measurementsComponent_Model);
-							console.log('Component_Name: ', measurementsComponent_Name);
-							
 							//ignore
-							console.log('Time: ', measurementsTime);
+							console.log('Component_Model: ', measurementsComponent_Model);
 							
+							console.log('Component_Name: ', measurementsComponent_Name);
+							console.log('Time: ', measurementsTime);
 							console.log('Units: ', measurementsUnits);
 							console.log('Value: ', measurementsValue);
+							
+							for(var c=0;c<realQuantity;c++){
+								var dataUnit = [];
+								dataUnit.push(measurementsComponent_Category[c]);
+								dataUnit.push(measurementsComponent_Description[c]);
+								dataUnit.push(measurementsComponent_Model[c]);
+								dataUnit.push(measurementsComponent_Name[c]);
+								dataUnit.push(measurementsTime[c]);
+								dataUnit.push(measurementsUnits[c]);
+								dataUnit.push(measurementsValue[c]);
+								data.push(dataUnit);
+							}
+							console.log('Test Formatted Data: ', data);
+							
+							//data.push();
+							
+							for(var a=0;a<measurementsUnits.length;a++){
+								console.log('Unit: ', measurementsUnits[a]);
+								for(var b=0;b<measurementsComponent_Name.length;b++){
+									console.log('Name: ', measurementsComponent_Name[b]);
+									
+									//change this
+									//data.push(measurementsComponent_Name[b]);
+									
+								}
+							}
+							console.log('Test:Data: ', data);
+									
+									function getData() {
+										return data;
+										//return Math.random();
+									}  
+									Plotly.plot('chart',[{y:[getData()],type:'line'}]);
+									var cnt = 0;
+									setInterval(function(){
+										Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+										cnt++;
+										if(cnt > 500) {
+											Plotly.relayout('chart',{
+												xaxis: {
+													range: [cnt-500,cnt]
+												}
+											});
+									}
+									},15);
+									
+								
+							
+							
+							
 							
 						}
 						else if(out.data==false){
