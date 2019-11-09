@@ -41,3 +41,11 @@ class Upload(models.Model):
     upfile = models.FileField(upload_to='files/uploads/')
     def __str__(self):
         return self.description
+		
+class fileinfo(models.Model):
+	timesave = models.DateTimeField(auto_now_add=True)
+	filesize = models.FloatField()
+	filename = models.CharField(max_length=100)
+	user = models.CharField(max_length=20)
+	def __str__(self):
+		return f'{self.timesave}: {self.filesize}: {self.user}'	

@@ -29,15 +29,7 @@ def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
 # create myView
-"""
-def filesize(request):
-	startdir = 'C:/Users/AlbertC/Desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads/'
-	fnames = os.listdir(startdir)
-	paths = [os.path.join(startdir, fname) for fname in fnames]
-	sizes = [(path, os.stat(path).st_size) for path in paths]
-	x=dict(sizes)
-	return JsonResponse(x)
-"""	
+
 def files_and_sizes(start_path):
     dir_list = [file for file in os.listdir(start_path)]
     current_dir = []
