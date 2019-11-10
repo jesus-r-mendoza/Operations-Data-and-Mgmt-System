@@ -184,6 +184,7 @@ def _build_response(query_set_list, add_component=True):
         quantities.append( { comp.name: quant } )
 
     data['Quantities'] = quantities
+    data['comp_specified'] = add_component
     data['data'] = True
     data['error'] = 'None'
     return data
