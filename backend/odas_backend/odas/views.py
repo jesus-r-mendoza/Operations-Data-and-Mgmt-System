@@ -109,7 +109,7 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).filter(component=comp).order_by('-time_measured')[:quantity]
         qs = [sat, (comp, len(measurements), measurements)]
-        data = _build_response(qs)
+        data = _build_response(qs, add_component=False)
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
