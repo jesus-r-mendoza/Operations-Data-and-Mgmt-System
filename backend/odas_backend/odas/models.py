@@ -49,3 +49,13 @@ class fileinfo(models.Model):
 	user = models.CharField(max_length=20)
 	def __str__(self):
 		return f'{self.timesave}: {self.filesize}: {self.user}'	
+	
+class User(models.Model):
+		name = models.CharField(max_length=20)
+		filename = models.CharField(max_length=30)
+		filesize = models.FloatField()
+		created_at = models.DateTimeField(auto_now_add=True)
+		def __str__(self):
+				return f' {self.name}: {self.filename}: {self.filesize}: {self.created_at}'
+#				return '%s %s' % (self.name, self.filename, self.filesize, self.created_at)
+				

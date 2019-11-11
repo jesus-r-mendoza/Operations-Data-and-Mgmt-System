@@ -6,7 +6,7 @@ from .forms import SubscriberForm, UploadForm
 from .models import Upload, Satellite, Component, Measurement, Units
 from django.views.decorators.csrf import csrf_exempt
 import os
-import json
+
 
 @csrf_exempt
 def index(request):
@@ -29,7 +29,7 @@ def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
 # create myView
-
+'''
 def files_and_sizes(start_path):
     dir_list = [file for file in os.listdir(start_path)]
     current_dir = []
@@ -52,9 +52,46 @@ def filesize(request):
 	data["data"]=True
 	data["error"]="None."
 	return JsonResponse(data)
+'''
+#---
+def files_and_sizes(start_path):
+    dir_list = [file for file in os.listdir(start_path)]
+    current_dir = []
+    for file in dir_list:
+        path = start_path + "\\" + file
+        if os.path.isdir(path) is True:
+            current_dir.append(files_and_sizes(path))
+        else:
+            current_dir.append((file, os.lstat(path).st_size))
+    return current_dir
+	
+	
+def filesize(request, user):
+#	try:
+		if user == 1:
+			x=dict(files_and_sizes('c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads'))
+			for i in x:
+				y=str(x.get(i)) + " byte"
+				x[i]=y
+			data=dict()
+			data["files"]=x
+			data["data"]=True
+			data["error"]="None."
+			return JsonResponse(data)
+		else:	
+#	except user.DoesNotExist:
+			return JsonResponse( { 'data': False, 'error': 'No files in uploads folder'} )		
+		
 
 
 
+
+
+
+
+
+
+#---
 # Create your views here.
 @csrf_exempt
 def uploader(request):
@@ -100,7 +137,7 @@ def recent_measurements(request, satellite_id, quantity):
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
-
+		
 def recent_by_component(request, satellite_id, component_id, quantity):
     try:
         if satellite_id < 0:
