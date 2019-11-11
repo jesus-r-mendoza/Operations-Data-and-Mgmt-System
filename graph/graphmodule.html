@@ -154,7 +154,7 @@
 								dataUnit.push(measurementsValue[c]);
 								data.push(dataUnit);
 							}
-							console.log('Test Formatted Data: ', data);
+							console.log('Test Formatted Data Array: ', data);
 							
 							function compare(a,b){
 								if(a.units<b.units){
@@ -166,14 +166,17 @@
 								return 0;
 							}
 							outSort.Measurements.sort(compare);
-					//	console.log('Test Sorted Out: ', outSort.Measurements);
+//						console.log('Test Sorted Out: ', outSort.Measurements);
 							var sortedMeasurements = [];
 							var allUnits = [];
+							var allNames = [];
 							for(var a=0;a<realQuantity;a++){
 								sortedMeasurements.push(outSort.Measurements[a]);
 								allUnits.push(outSort.Measurements[a].units);
+								allNames.push(outSort.Measurements[a].component_name[0]);
 							}
-						console.log('Test SortedMeasurements: ', sortedMeasurements);
+						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
+							
 							const distinct = (value, index, self) => {
 								return self.indexOf(value) === index;
 							}
@@ -181,6 +184,69 @@
 						console.log('Test Distinct Units: ', distinctUnits);
 							var numUniqueUnits = distinctUnits.length;
 						console.log('Test Num Unique Units: ', numUniqueUnits);
+							const distinctNames = allNames.filter(distinct);
+						console.log('Test Distinct Names: ', distinctNames);
+							var numUniqueNames = distinctNames.length;
+						console.log('Test Num Unique Names: ', numUniqueNames);
+						//Alternative
+//						const alternativeDistinctUnits = [...new Set(sortedMeasurements.map(x => x.units))];
+//						console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
+						//Alternative
+							var totalNumGraphs = numUniqueUnits*numUniqueNames;
+						console.log('Total Num Graphs: ', totalNumGraphs);
+							
+							var totalGraphsArray = [];
+							for(var a=0;a<totalNumGraphs;a++){
+								//make dummy positions
+								var dummyGraph = [];
+								totalGraphsArray.push(dummyGraph);
+							}
+						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
+							
+							function compareNames(a,b){
+								if(a.component_name[0]<b.component_name[0]){
+									return -1;
+								}
+								if(a.component_name[0]>b.component_name[0]){
+									return 1;
+								}
+								return 0;
+							}
+							
+							for(var a=0;a<realQuantity;a++){
+							//for all 7 data values
+							//ex. MainCPU2, Degrees Celcius(sic)
+								var subsectionSameUnit = [];
+								for(var b=0;b<numUniqueUnits;b++){
+								//for each unique unit Degrees, GHz, Volts
+								//3 times for each point
+								//ex. Degrees Celcius
+									var c = 0;
+									if(sortedMeasurements[a].units==distinctUnits[b]){
+										//all data points with the same unique unit
+										//matching distinct unit
+										//current point 
+										//ex. MainCPU2, Degrees Celcius. 
+										subsectionSameUnit.push(sortedMeasurements[a]);
+										
+										
+										/*
+										if(sortedMeasurements[a].component_name==distinctNames[c]){
+											//all data points with the same unique name
+											//matching distinct name 
+											
+										}
+										else{
+											c = c+1;
+										}*/
+									}
+									else{	
+									}
+									//when finished with same unique units.
+									//sort by names, then put into total graph array
+									subsectionSameUnit.sort(compareNames);
+								}
+							}
 							
 							
 							//data.push();
@@ -197,6 +263,7 @@
 							}
 							//console.log('Test:Data: ', data);
 									
+								console.log("Test Location A");
 									function getData() {
 										return data;
 										//return Math.random();
@@ -214,6 +281,24 @@
 											});
 									}
 									},15);
+								console.log("Test Location B");
+								var newChart = document.createElement("div");
+								newChart.setAttribute("id", "chart2");
+								document.getElementById("chart").appendChild(newChart);
+									Plotly.plot('chart2',[{y:[getData()],type:'line'}]);
+									var cnt = 0;
+									setInterval(function(){
+										Plotly.extendTraces('chart2',{ y:[[getData()]]}, [0]);
+										cnt++;
+										if(cnt > 500) {
+											Plotly.relayout('chart2',{
+												xaxis: {
+													range: [cnt-500,cnt]
+												}
+											});
+									}
+									},15);
+								console.log("Test Location C");
 									
 								
 							
