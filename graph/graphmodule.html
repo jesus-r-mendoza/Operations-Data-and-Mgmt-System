@@ -104,6 +104,7 @@
 								mydiv.appendChild(newcontent.firstChild);
 							}
 							
+							var outSort = out;
 							var measurementsComponent_Category = [];
 							var measurementsComponent_Description = [];
 							var measurementsComponent_Model = [];
@@ -131,16 +132,16 @@
 								measurementsValue.push(out.Measurements[a].value);
 							}
 							//ignore
-							console.log('Component_Categories: ', measurementsComponent_Category);
+//							console.log('Component_Categories: ', measurementsComponent_Category);
 							//ignore
-							console.log('Component_Description: ', measurementsComponent_Description);
+//							console.log('Component_Description: ', measurementsComponent_Description);
 							//ignore
-							console.log('Component_Model: ', measurementsComponent_Model);
+//							console.log('Component_Model: ', measurementsComponent_Model);
 							
-							console.log('Component_Name: ', measurementsComponent_Name);
-							console.log('Time: ', measurementsTime);
-							console.log('Units: ', measurementsUnits);
-							console.log('Value: ', measurementsValue);
+//							console.log('Component_Name: ', measurementsComponent_Name);
+//							console.log('Time: ', measurementsTime);
+//							console.log('Units: ', measurementsUnits);
+//							console.log('Value: ', measurementsValue);
 							
 							for(var c=0;c<realQuantity;c++){
 								var dataUnit = [];
@@ -155,19 +156,31 @@
 							}
 							console.log('Test Formatted Data: ', data);
 							
+							function compare(a,b){
+								if(a.units<b.units){
+									return -1;
+								}
+								if(a.units>b.units){
+									return 1;
+								}
+								return 0;
+							}
+							outSort.Measurements.sort(compare);
+							console.log('Test Sorted Out: ', outSort.Measurements);
+							
 							//data.push();
 							
 							for(var a=0;a<measurementsUnits.length;a++){
-								console.log('Unit: ', measurementsUnits[a]);
+								//console.log('Unit: ', measurementsUnits[a]);
 								for(var b=0;b<measurementsComponent_Name.length;b++){
-									console.log('Name: ', measurementsComponent_Name[b]);
+									//console.log('Name: ', measurementsComponent_Name[b]);
 									
 									//change this
 									//data.push(measurementsComponent_Name[b]);
 									
 								}
 							}
-							console.log('Test:Data: ', data);
+							//console.log('Test:Data: ', data);
 									
 									function getData() {
 										return data;
