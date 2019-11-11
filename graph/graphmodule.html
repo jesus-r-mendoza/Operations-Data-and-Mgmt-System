@@ -166,7 +166,22 @@
 								return 0;
 							}
 							outSort.Measurements.sort(compare);
-							console.log('Test Sorted Out: ', outSort.Measurements);
+					//	console.log('Test Sorted Out: ', outSort.Measurements);
+							var sortedMeasurements = [];
+							var allUnits = [];
+							for(var a=0;a<realQuantity;a++){
+								sortedMeasurements.push(outSort.Measurements[a]);
+								allUnits.push(outSort.Measurements[a].units);
+							}
+						console.log('Test SortedMeasurements: ', sortedMeasurements);
+							const distinct = (value, index, self) => {
+								return self.indexOf(value) === index;
+							}
+							const distinctUnits = allUnits.filter(distinct);
+						console.log('Test Distinct Units: ', distinctUnits);
+							var numUniqueUnits = distinctUnits.length;
+						console.log('Test Num Unique Units: ', numUniqueUnits);
+							
 							
 							//data.push();
 							
