@@ -29,31 +29,7 @@ def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
 
 # create myView
-'''
-def files_and_sizes(start_path):
-    dir_list = [file for file in os.listdir(start_path)]
-    current_dir = []
-    for file in dir_list:
-        path = start_path + "\\" + file
-        if os.path.isdir(path) is True:
-            current_dir.append(files_and_sizes(path))
-        else:
-            current_dir.append((file, os.lstat(path).st_size))
-    return current_dir
-	
-	
-def filesize(request):	
-	x=dict(files_and_sizes('c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads'))
-	for i in x:
-		y=str(x.get(i)) + " byte"
-		x[i]=y
-	data=dict()
-	data["files"]=x
-	data["data"]=True
-	data["error"]="None."
-	return JsonResponse(data)
-'''
-#---
+
 def files_and_sizes(start_path):
     dir_list = [file for file in os.listdir(start_path)]
     current_dir = []
@@ -67,9 +43,8 @@ def files_and_sizes(start_path):
 	
 	
 def filesize(request, user):
-#	try:
 		if user == 1:
-			x=dict(files_and_sizes('c:/users/albertc/desktop/odasrepo/Operations-Data-and-Mgmt-System/backend/odas_backend/media/files/uploads'))
+			x=dict(files_and_sizes('./media/files/uploads'))
 			for i in x:
 				y=str(x.get(i)) + " byte"
 				x[i]=y
@@ -79,19 +54,9 @@ def filesize(request, user):
 			data["error"]="None."
 			return JsonResponse(data)
 		else:	
-#	except user.DoesNotExist:
 			return JsonResponse( { 'data': False, 'error': 'No files in uploads folder'} )		
 		
 
-
-
-
-
-
-
-
-
-#---
 # Create your views here.
 @csrf_exempt
 def uploader(request):
