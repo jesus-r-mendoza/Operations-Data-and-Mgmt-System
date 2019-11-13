@@ -16,6 +16,16 @@
 	<div class="wrapper">
 		<div id="chart"></div>
 		<div id="chart0"></div>
+		<div id = "bottomchart2">
+		<p id="tablechart2">Table Chart</p>
+		<button id="pause2">Pause</button>
+		<table style="width:100%" id = "traces2">
+			<tr id = "fieldnames2">
+			</tr>
+			<tr id = "data2">
+			</tr>
+		</table>
+		</div>
 		<script src="xml2json.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
@@ -197,10 +207,12 @@
 						console.log('Total Num Graphs: ', totalNumGraphs);
 							
 							var totalGraphsArray = [];
+							var totalGraphsArrayForm = []
 							for(var a=0;a<totalNumGraphs;a++){
 								//make dummy positions
 								var dummyGraph = [];
 								totalGraphsArray.push(dummyGraph);
+								totalGraphsArrayForm.push(dummyGraph);
 							}
 						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
 							
@@ -233,6 +245,17 @@
 												//all data points with the same unique name
 												//matching distinct name 
 												totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+										/*		var dataUnit2 = [];
+												dataUnit2.push(sortedMeasurements[a].component_category[0]);
+												dataUnit2.push(sortedMeasurements[a].component_description[0]);
+												dataUnit2.push(sortedMeasurements[a].component_model[0]);
+												dataUnit2.push(sortedMeasurements[a].component_name[0]);
+												dataUnit2.push(sortedMeasurements[a].time);
+												dataUnit2.push(sortedMeasurements[a].units);
+												dataUnit2.push(sortedMeasurements[a].value);
+												console.log('dataUnit2', dataUnit2);
+												totalGraphsArrayForm[b*numUniqueNames+c].push(dataUnit2);
+											*/
 											}
 											else{
 											}
@@ -251,9 +274,11 @@
 							for(var a=0;a<totalGraphsArray.length;a++){
 								if(totalGraphsArray[a].length>1){
 									totalGraphsArray[a].reverse();
+									
 								}
 							}
 							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
+							console.log('Test Reordered Total Graphs Array Form: ', totalGraphsArrayForm);
 							
 							//Graphing on Plotly for each array
 							var fixChartNumber = 'chart';
@@ -266,7 +291,8 @@
 									for(var b=0;b<totalGraphsArray[a].length;b++){
 										currentData.push(totalGraphsArray[a][b].value);
 									}
-									
+								console.log('Test CurrentData: ', currentData);
+								
 									var newChartNumber = ""+fixChartNumber+(chartNumberExtra).toString();
 								console.log('test New Chart Number: ', newChartNumber);
 									chartNumber = newChartNumber;
@@ -281,11 +307,14 @@
 										//return Math.random();
 									}  
 								console.log('Test ChartNumber: ', chartNumber);
+									//initial plot.
 									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
 									var cnt = 0;
+									//extend new datapoints
 									setInterval(function(){
-										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
+										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [currentData.length-1]);
 										cnt++;
+										//slide along with new data
 										if(cnt > 500) {
 											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
 										}
@@ -293,23 +322,6 @@
 /*								setTimeout(function() {
 								}, (3*1000));*/
 									
-									/*
-									function getData() {
-										return currentData;
-										//return data;
-										//return Math.random();
-									}  
-									chartNumber = 'chart0';
-									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
-									var cnt = 0;
-									setInterval(function(){
-										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
-										cnt++;
-										if(cnt > 500) {
-											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
-										}
-									},15);
-									*/
 									
 								}
 								else{
