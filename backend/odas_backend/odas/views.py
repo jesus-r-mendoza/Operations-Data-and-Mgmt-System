@@ -43,18 +43,23 @@ def files_and_sizes(start_path):
 	
 	
 def filesize(request, user):
+		total1=0#
 		if user == 1:
 			x=dict(files_and_sizes('./media/files/uploads'))
 			for i in x:
 				y=str(x.get(i)) + " byte"
+				total1+=x.get(i)#
 				x[i]=y
+			total=str(total1) + " byte"
 			data=dict()
 			data["files"]=x
 			data["data"]=True
 			data["error"]="None."
+			data["Total"]=total
 			return JsonResponse(data)
-		else:	
-			return JsonResponse( { 'data': False, 'error': 'No files in uploads folder'} )		
+		else:
+			total=str(total1) + " byte"
+			return JsonResponse( { 'data': False, 'error': 'No files in uploads folder', 'total': total} )		
 		
 
 # Create your views here.
