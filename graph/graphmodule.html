@@ -15,6 +15,7 @@
 	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
+		<div id="chart0"></div>
 		<script src="xml2json.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
@@ -255,39 +256,60 @@
 							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
 							
 							//Graphing on Plotly for each array
+							var fixChartNumber = 'chart';
 							var chartNumber = 'chart';
 							var chartNumberExtra = 0;
-							var currentData = [];
 							for(var a=0;a<totalNumGraphs;a++){
+								var currentData = [];
+								//no empty graphs
 								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
-									currentData = totalGraphsArray[a];
+									for(var b=0;b<totalGraphsArray[a].length;b++){
+										currentData.push(totalGraphsArray[a][b].value);
+									}
+									
+									var newChartNumber = ""+fixChartNumber+(chartNumberExtra).toString();
+								console.log('test New Chart Number: ', newChartNumber);
+									chartNumber = newChartNumber;
+									var newChart = document.createElement("div");
+									newChart.setAttribute("id", ""+fixChartNumber+(chartNumberExtra+1).toString());
+									document.getElementById(newChartNumber).appendChild(newChart);
+									chartNumberExtra++;
 									
 									function getData() {
 										return currentData;
 										//return data;
 										//return Math.random();
 									}  
+								console.log('Test ChartNumber: ', chartNumber);
 									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
 									var cnt = 0;
 									setInterval(function(){
 										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
 										cnt++;
 										if(cnt > 500) {
-											Plotly.relayout(chartNumber,{
-												xaxis: {
-													range: [cnt-500,cnt]
-												}
-											});
+											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
 										}
 									},15);
 /*								setTimeout(function() {
-								var newChartNumber = ""+chartNumber+(chartNumberExtra).toString();
-								chartNumber = newChartNumber;
-								var newChart = document.createElement("div");
-								newChart.setAttribute("id", newChartNumber);
-								document.getElementById(chartNumber).appendChild(newChart);
-								chartNumberExtra++;
 								}, (3*1000));*/
+									
+									/*
+									function getData() {
+										return currentData;
+										//return data;
+										//return Math.random();
+									}  
+									chartNumber = 'chart0';
+									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
+									var cnt = 0;
+									setInterval(function(){
+										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
+										cnt++;
+										if(cnt > 500) {
+											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
+										}
+									},15);
+									*/
 									
 								}
 								else{
