@@ -221,33 +221,34 @@
 								//for each unique unit Degrees, GHz, Volts
 								//3 times for each point
 								//ex. Degrees Celcius
-									var c = 0;
-									if(sortedMeasurements[a].units==distinctUnits[b]){
-										//all data points with the same unique unit
-										//matching distinct unit
-										//current point 
-										//ex. MainCPU2, Degrees Celcius. 
-										subsectionSameUnit.push(sortedMeasurements[a]);
+									for(var c=0;c<numUniqueNames;c++){
+							//		var c = 0;
+										if(sortedMeasurements[a].units==distinctUnits[b]){
+											//all data points with the same unique unit
+											//matching distinct unit
+											//current point 
+											//ex. MainCPU2, Degrees Celcius. 
+							//			subsectionSameUnit.push(sortedMeasurements[a]);		
 										
-										
-										/*
-										if(sortedMeasurements[a].component_name==distinctNames[c]){
-											//all data points with the same unique name
-											//matching distinct name 
-											
+											if(sortedMeasurements[a].component_name==distinctNames[c]){
+												//all data points with the same unique name
+												//matching distinct name 
+												totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+											}
+											else{
+							//					c = c+1;
+											}
 										}
-										else{
-											c = c+1;
-										}*/
+										else{	
+										}
+										//when finished with same unique units.
+										//sort by names, then put into total graph array
+							//			subsectionSameUnit.sort(compareNames);
 									}
-									else{	
-									}
-									//when finished with same unique units.
-									//sort by names, then put into total graph array
-									subsectionSameUnit.sort(compareNames);
 								}
 							}
 							
+	console.log('Test Total Graphs Array: ', totalGraphsArray);
 							
 							//data.push();
 							
@@ -262,49 +263,36 @@
 								}
 							}
 							//console.log('Test:Data: ', data);
-									
-								console.log("Test Location A");
-									function getData() {
+							
+							var chartNumber = 'chart';
+							var chartNumberExtra = 0;
+							//for(var a=0;a<totalNumGraphs;a++){
+								function getData() {
 										return data;
 										//return Math.random();
-									}  
-									Plotly.plot('chart',[{y:[getData()],type:'line'}]);
-									var cnt = 0;
-									setInterval(function(){
-										Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
-										cnt++;
-										if(cnt > 500) {
-											Plotly.relayout('chart',{
-												xaxis: {
-													range: [cnt-500,cnt]
-												}
-											});
+								}  
+								Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
+								var cnt = 0;
+								setInterval(function(){
+									Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
+									cnt++;
+									if(cnt > 500) {
+										Plotly.relayout(chartNumber,{
+											xaxis: {
+												range: [cnt-500,cnt]
+											}
+										});
 									}
-									},15);
-								console.log("Test Location B");
+								},15);
+/*								setTimeout(function() {
+								var newChartNumber = ""+chartNumber+(chartNumberExtra).toString();
+								chartNumber = newChartNumber;
 								var newChart = document.createElement("div");
-								newChart.setAttribute("id", "chart2");
-								document.getElementById("chart").appendChild(newChart);
-									Plotly.plot('chart2',[{y:[getData()],type:'line'}]);
-									var cnt = 0;
-									setInterval(function(){
-										Plotly.extendTraces('chart2',{ y:[[getData()]]}, [0]);
-										cnt++;
-										if(cnt > 500) {
-											Plotly.relayout('chart2',{
-												xaxis: {
-													range: [cnt-500,cnt]
-												}
-											});
-									}
-									},15);
-								console.log("Test Location C");
-									
-								
-							
-							
-							
-							
+								newChart.setAttribute("id", newChartNumber);
+								document.getElementById(chartNumber).appendChild(newChart);
+								chartNumberExtra++;
+								}, (3*1000));
+	*/						//}
 						}
 						else if(out.data==false){
 							var mydiv = document.getElementById("toptitle");
