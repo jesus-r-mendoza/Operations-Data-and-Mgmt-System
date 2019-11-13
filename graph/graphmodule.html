@@ -222,21 +222,18 @@
 								//3 times for each point
 								//ex. Degrees Celcius
 									for(var c=0;c<numUniqueNames;c++){
-							//		var c = 0;
 										if(sortedMeasurements[a].units==distinctUnits[b]){
 											//all data points with the same unique unit
 											//matching distinct unit
 											//current point 
 											//ex. MainCPU2, Degrees Celcius. 
 							//			subsectionSameUnit.push(sortedMeasurements[a]);		
-										
 											if(sortedMeasurements[a].component_name==distinctNames[c]){
 												//all data points with the same unique name
 												//matching distinct name 
 												totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
 											}
 											else{
-							//					c = c+1;
 											}
 										}
 										else{	
@@ -247,43 +244,42 @@
 									}
 								}
 							}
+							console.log('Test Total Graphs Array: ', totalGraphsArray);
 							
-	console.log('Test Total Graphs Array: ', totalGraphsArray);
-							
-							//data.push();
-							
-							for(var a=0;a<measurementsUnits.length;a++){
-								//console.log('Unit: ', measurementsUnits[a]);
-								for(var b=0;b<measurementsComponent_Name.length;b++){
-									//console.log('Name: ', measurementsComponent_Name[b]);
-									
-									//change this
-									//data.push(measurementsComponent_Name[b]);
-									
+							//Flip components to list them in correct sequential order.
+							for(var a=0;a<totalGraphsArray.length;a++){
+								if(totalGraphsArray[a].length>1){
+									totalGraphsArray[a].reverse();
 								}
 							}
-							//console.log('Test:Data: ', data);
+							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
 							
+							//Graphing on Plotly for each array
 							var chartNumber = 'chart';
 							var chartNumberExtra = 0;
-							//for(var a=0;a<totalNumGraphs;a++){
-								function getData() {
-										return data;
+							var currentData = [];
+							for(var a=0;a<totalNumGraphs;a++){
+								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
+									currentData = totalGraphsArray[a];
+									
+									function getData() {
+										return currentData;
+										//return data;
 										//return Math.random();
-								}  
-								Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
-								var cnt = 0;
-								setInterval(function(){
-									Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
-									cnt++;
-									if(cnt > 500) {
-										Plotly.relayout(chartNumber,{
-											xaxis: {
-												range: [cnt-500,cnt]
-											}
-										});
-									}
-								},15);
+									}  
+									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
+									var cnt = 0;
+									setInterval(function(){
+										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [0]);
+										cnt++;
+										if(cnt > 500) {
+											Plotly.relayout(chartNumber,{
+												xaxis: {
+													range: [cnt-500,cnt]
+												}
+											});
+										}
+									},15);
 /*								setTimeout(function() {
 								var newChartNumber = ""+chartNumber+(chartNumberExtra).toString();
 								chartNumber = newChartNumber;
@@ -291,8 +287,13 @@
 								newChart.setAttribute("id", newChartNumber);
 								document.getElementById(chartNumber).appendChild(newChart);
 								chartNumberExtra++;
-								}, (3*1000));
-	*/						//}
+								}, (3*1000));*/
+									
+								}
+								else{
+								}
+							}
+							console.log('finish');
 						}
 						else if(out.data==false){
 							var mydiv = document.getElementById("toptitle");
