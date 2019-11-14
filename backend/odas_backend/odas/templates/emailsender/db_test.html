@@ -1,0 +1,26 @@
+{% block content %}
+
+  
+    <h2>Satellites</h2>
+
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>Satellite</th>
+        <th>Mission Description</th>
+        <th>Year Launched</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+      {% for sat in all_sats %}
+        <tr>
+          
+          <td>{{ sat.name }}</td>
+          <td>{{ sat.mission_description }}</td>
+          <td>{{ sat.year_launched }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

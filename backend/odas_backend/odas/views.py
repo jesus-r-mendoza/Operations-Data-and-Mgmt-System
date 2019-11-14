@@ -5,17 +5,24 @@ from django.core.files.storage import FileSystemStorage
 from .forms import SubscriberForm, UploadForm
 from .models import Upload, Satellite, Component, Measurement, Units
 from django.views.decorators.csrf import csrf_exempt
+import os
+from django.conf import settings
 
 @csrf_exempt
 def index(request):
     if request.method == 'GET':
         form = SubscriberForm()
     else:
+        all_sats = Satellite.objects.all()
+        sat_name1= all_sats[0].name
+        desc_1 = all_sats[0].mission_description
+        
+        concant_msg = sat_name1 + desc_1
         form = SubscriberForm(request.POST)
         if form.is_valid():
             subject = form.cleaned_data['subject']
             your_email = form.cleaned_data['your_email']
-            message = form.cleaned_data['message']
+            message = concant_msg
             try:
                 send_mail(subject, message, 'odasreport@gmail.com', [your_email])
             except BadHeaderError:
@@ -25,6 +32,30 @@ def index(request):
 
 def successView(request):
     return HttpResponse('Thank you. You are now subscribed to emails')
+
+def dbemail(request):
+    all_sats = Satellite.objects.all()
+    return render(request, 'emailsender/db_test.html', {
+        'all_sats': all_sats
+    })
+def dbwritefile(request):
+   
+
+    all_sats = Satellite.objects.all()
+    sat_name1= all_sats[0].name
+    desc_1 = all_sats[0].mission_description
+    concant_msg = sat_name1 + desc_1
+    cpath =  os.path.join(settings.MEDIA_ROOT, 'new.txt')       
+
+    file1 = open(cpath, "w")
+
+    toFile = concant_msg
+
+    file1.write(toFile)
+
+    file1.close()
+    return HttpResponse('Thank you. You are now subscribed to emails')
+
 
 
 # Create your views here.
