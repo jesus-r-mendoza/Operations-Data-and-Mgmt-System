@@ -8,6 +8,11 @@ import {Divider, Dropdown} from "semantic-ui-react";
 // Components
 import LoadSpinner from "./LoadSpinner";
 
+let test = [
+    {key: 1, text: "Saturn V", value: 1},
+ {key: 2, text: "PicSat", value: 2},
+{key: 3, text: "Hubble", value: 3},
+ {key: 4, text: "Intel Sat", value: 4}];
 
 export default class Sidebar extends React.Component {
 // TODO Disable generate report button while nothing is selected
@@ -198,8 +203,6 @@ export default class Sidebar extends React.Component {
                                         placeholder={"Satellite"}
                                         options={satellites}
                                         selection
-                                        wrapSelection
-                                        search
                                     />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
@@ -207,13 +210,13 @@ export default class Sidebar extends React.Component {
                                         <Divider horizontal>Measurements</Divider>
                                         {this.createMeasurementCheckboxes(this.props.units)}
                                         <div className={"selection-buttons"}>
-                                            <Button
-                                                variant={"outline-success"}
-                                                onClick={() => this.selectAllUnits()}
-                                                size={"sm"}
-                                            >
-                                                Select All
-                                            </Button>
+                                            {/*<Button*/}
+                                            {/*    variant={"outline-success"}*/}
+                                            {/*    onClick={() => this.selectAllUnits()}*/}
+                                            {/*    size={"sm"}*/}
+                                            {/*>*/}
+                                            {/*    Select All*/}
+                                            {/*</Button>*/}
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllUnits()}
@@ -225,13 +228,13 @@ export default class Sidebar extends React.Component {
                                         <Divider horizontal>Components</Divider>
                                         {this.createComponentCheckboxes(this.props.components)}
                                         <div className={"selection-buttons"}>
-                                            <Button
-                                                variant={"outline-success"}
-                                                onClick={() => this.selectAllComponents()}
-                                                size={"sm"}
-                                            >
-                                                Select All
-                                            </Button>
+                                            {/*<Button*/}
+                                            {/*    variant={"outline-success"}*/}
+                                            {/*    onClick={() => this.selectAllComponents()}*/}
+                                            {/*    size={"sm"}*/}
+                                            {/*>*/}
+                                            {/*    Select All*/}
+                                            {/*</Button>*/}
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllComponents()}

@@ -95,11 +95,11 @@ export default class QueryData extends React.Component {
         return Object.create(Object.prototype, {
             key: {value: satId},
             text: {value: satName},
-            value: {value: satName}
+            value: {value: satId}
         });
     }
 
-    showDropdown (satName, satId) {
+    createSatArray (satName, satId) {
         const nameList = [];
         for(let i = 0; i < satId.length; i++) {
             nameList.push(this.createSatNameObject(satName[i], satId[i]));
@@ -121,7 +121,8 @@ export default class QueryData extends React.Component {
             let components = this.createArray("components");
             let satNames = this.state.satObject.map(function(names) {return names.name});
             let satIds = this.state.satObject.map(function(ids){return ids.id});
-            let satObjects = this.showDropdown(satNames, satIds);
+            let satObjects = this.createSatArray(satNames, satIds);
+            console.log("SATOBJECTS", [...satObjects]);
             return (
                 <div className={"report-container"}>
                     <Sidebar
