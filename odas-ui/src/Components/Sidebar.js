@@ -7,7 +7,12 @@ import {Button} from "react-bootstrap";
 import {Divider} from "semantic-ui-react";
 // Components
 import LoadSpinner from "./LoadSpinner";
-import DropdownComp from "./DropdownComp";
+import {Dropdown} from 'semantic-ui-react';
+
+const options = [
+    {key: 1, text: "Saturn V", value: 1},
+    {key: 2, text: "PicSat", value: 2}
+];
 
 export default class Sidebar extends React.Component {
 // TODO Disable generate report button while nothing is selected
@@ -43,15 +48,18 @@ export default class Sidebar extends React.Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8000/api/satellites/?format=json", {
+        axios.get("http://localhost:8000/api/satellites/", {
             headers: {
                 'Content-type': "application/json"
             }
         })
             .then(res => {
                this.setState({
-                   satNames: res.data
+                   satObject: res.data
                })
+            })
+            .catch(function (err) {
+                console.log(err)
             });
 
         this.setState({
@@ -155,26 +163,21 @@ export default class Sidebar extends React.Component {
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
     createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
-    createSatNameObject(satArray) {
-        let nameList = Object.create(Object.prototype, {
-            key: {value: satArray.id},
-            text: {value: satArray.name},
-            value: {value: satArray.id}
+    createSatNameObject(satName, satId) {
+        return Object.create(Object.prototype, {
+            key: {value: satId},
+            text: {value: satName},
+            value: {value: satName}
         });
-
-        return nameList;
     }
 
+    showDropdown (satName, satId) {
+        const nameList = [];
+        for(let i = 0; i < satId.length; i++) {
+             nameList.push(this.createSatNameObject(satName[i], satId[i]));
+        }
 
-    showDropdown (satArray) {
-        let nameList = this.createSatNameObject(satArray);
-        // let nameList = this.createDictionary(satArray);
-        console.log("SAT NAMES", satArray);
-        return (
-            <DropdownComp
-                optionsList={nameList}
-            />
-        );
+        return nameList;
     }
 
     // TODO Does not route back to the desired page.
@@ -195,8 +198,10 @@ export default class Sidebar extends React.Component {
     }
 
     render() {
-        let names = this.state.satObject;
-        console.log("ARRAY", names[0]);
+        let satNames = this.state.satObject.map(function(names) {return names.name});
+        let satIds = this.state.satObject.map(function(ids){return ids.id});
+        const dropdownList = this.showDropdown(satNames, satIds);
+
         if (this.state.isLoading === true) {
             return (
                 <LoadSpinner/>
@@ -212,8 +217,11 @@ export default class Sidebar extends React.Component {
                             </div>
                             <div>
                                 <div className={"sidebar-info"}>
-                                    {this.showDropdown(names)}
-                                    {/*<span>Select data to be reported</span>*/}
+                                    <Dropdown
+                                        placeholder={"Satellite"}
+                                        options={dropdownList}
+                                        selection
+                                    />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
                                     <div className={"checkbox-container"}>

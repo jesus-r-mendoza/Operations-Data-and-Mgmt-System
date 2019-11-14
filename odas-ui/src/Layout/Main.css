@@ -87,6 +87,10 @@
     padding-right: 10px;
 }
 
+.info-button {
+    border-radius: 100px;
+}
+
 .email-header {
     padding-bottom: 12px;
     padding-right: 8px;

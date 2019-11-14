@@ -52,6 +52,7 @@ export default class Main extends React.Component {
                                         size={"sm"}
                                         variant={"outline-info"}
                                         type={"submit"}
+                                        className={"info-button"}
                                     >
                                         Info
                                     </Button>

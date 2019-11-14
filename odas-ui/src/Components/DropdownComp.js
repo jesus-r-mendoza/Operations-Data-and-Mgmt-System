@@ -12,7 +12,7 @@ const DropdownComp = ({optionsList}) => (
         <Dropdown
             placeholder={"Satellite"}
             selection
-            options={options}
+            options={optionsList}
         />
     </div>
 );
