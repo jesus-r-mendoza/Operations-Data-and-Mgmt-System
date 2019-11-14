@@ -10,6 +10,7 @@ import Documentation from "./Pages/Documentation";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
+import AnalysisSummary from "./Pages/AnalysisSummary";
 
 // TODO object is currently useless
 const routes = [
@@ -31,7 +32,7 @@ const routes = [
                 component: UploadData
             }
         ]
-    }
+    },
 ];
 
 export default class App extends React.Component {
@@ -45,6 +46,7 @@ export default class App extends React.Component {
                     <Route path={"/generate"} component={GenerateData} />
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
+                    <Route path={"/summary"} component={AnalysisSummary} />
                 </div>
             </Router>
         );

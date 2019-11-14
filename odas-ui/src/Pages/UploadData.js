@@ -8,7 +8,7 @@ import "../Layout/UploadData.css"
 import {Button, FormControl} from "react-bootstrap";
 import axios from "axios";
 
-const acceptedExtensions = [".tlm"];
+const acceptedExtensions = [".tlm", ".bin"];
 
 const APIs = [
     {

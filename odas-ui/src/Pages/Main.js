@@ -12,7 +12,7 @@ export default class Main extends React.Component {
         const infoPop = (
             <Popover id={"popover-basic"}>
                 <PopoverContent>
-                    Entering your email will sign you up to receive weekly status reports of your equipment
+                    Sign up to save your work and get weekly reports by email!
                 </PopoverContent>
             </Popover>
         );
@@ -52,7 +52,6 @@ export default class Main extends React.Component {
                                         size={"sm"}
                                         variant={"outline-info"}
                                         type={"submit"}
-                                        className={"info-button"}
                                     >
                                         Info
                                     </Button>

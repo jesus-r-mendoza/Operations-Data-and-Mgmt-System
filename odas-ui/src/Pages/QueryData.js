@@ -20,12 +20,26 @@ export default class QueryData extends React.Component {
         this.state = {
             MEASUREMENTS: [],
             COMPONENTS: [],
+            satObject: [],
             isLoading: true,
         };
     }
 
     // TODO combine axios calls into one
     componentDidMount() {
+        axios.get("http://localhost:8000/api/satellites/", {
+            headers: {
+                'Content-type': "application/json"
+            }
+        })
+            .then(res => {
+                this.setState({
+                    satObject: res.data
+                })
+            })
+            .catch(function (err) {
+                console.log(err)
+            });
         axios.get(APIs[0].unit, {
             headers: {
                 'Content-type': "application/json"
@@ -77,6 +91,23 @@ export default class QueryData extends React.Component {
         }
     }
 
+    createSatNameObject(satName, satId) {
+        return Object.create(Object.prototype, {
+            key: {value: satId},
+            text: {value: satName},
+            value: {value: satName}
+        });
+    }
+
+    showDropdown (satName, satId) {
+        const nameList = [];
+        for(let i = 0; i < satId.length; i++) {
+            nameList.push(this.createSatNameObject(satName[i], satId[i]));
+        }
+
+        return nameList;
+    }
+
     render() {
         if (this.state.isLoading) {
 
@@ -88,9 +119,18 @@ export default class QueryData extends React.Component {
         if (!this.state.isLoading) {
             let units = this.createArray("units");
             let components = this.createArray("components");
+            let satNames = this.state.satObject.map(function(names) {return names.name});
+            let satIds = this.state.satObject.map(function(ids){return ids.id});
+            let satObjects = this.showDropdown(satNames, satIds);
             return (
                 <div className={"report-container"}>
-                    <Sidebar units={units} components={components}>Query a Dataset</Sidebar>
+                    <Sidebar
+                        units={units}
+                        components={components}
+                        satellites={satObjects}
+                    >
+                        Query a Dataset
+                    </Sidebar>
                     <div className={"card-container"}>
                         <ReportCard/>
                     </div>
