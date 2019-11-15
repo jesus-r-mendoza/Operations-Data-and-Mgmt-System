@@ -1,66 +1,87 @@
-import _ from 'lodash'
-import faker from 'faker'
+
 import React, { Component } from 'react'
 import { Button, Dropdown, Grid, Header } from 'semantic-ui-react'
+import axios from "axios";
+import LoadSpinner from "./LoadSpinner";
 
-const getOptions = () =>
-    _.times(3, () => {
-        const name = faker.name.findName();
-        return { key: name, text: name, value: _.snakeCase(name) }
-    });
 
 class DropdownExampleRemote extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isFetching: false,
-            multiple: true,
-            search: true,
             searchQuery: null,
-            value: [],
-            options: getOptions(),
+            value: null,
+            satObjects: [],
+            isLoading: true
         }
     }
 
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        })
+    }
+
     handleChange = (e, { value }) => this.setState({ value });
-    handleSearchChange = (e, { searchQuery }) => this.setState({ searchQuery });
 
     fetchOptions = () => {
         this.setState({ isFetching: true });
 
-        setTimeout(() => {
-            this.setState({ isFetching: false, options: getOptions() });
-            this.selectRandom()
-        }, 500)
-    };
+        axios.get("http://localhost:8000/api/satellites/", {
+            headers: {
+                'Content-type': "application/json"
+            }
+        })
+            .then(res => {
+                setTimeout(() => {
+                    this.setState({
+                        satObjects: res.data,
+                        isFetching: false
+                    })
+                }, 500)
 
-    selectRandom = () => {
-        const { multiple, options } = this.state;
-        const value = _.sample(options).value;
-        this.setState({ value: multiple ? [value] : value })
+            })
+            .catch(function (err) {
+                console.log(err)
+            });
     };
 
     toggleSearch = (e) => this.setState({ search: e.target.checked });
 
-    toggleMultiple = (e) => {
-        const { value } = this.state;
-        const multiple = e.target.checked;
-        // convert the value to/from an array
-        const newValue = multiple ? _.compact([value]) : _.head(value) || '';
-        this.setState({ multiple, value: newValue })
-    };
+    createSatNameObject(satName, satId) {
+        return Object.create(Object.prototype, {
+            key: {value: satId},
+            text: {value: satName},
+            value: {value: satName}
+        });
+    }
+
+    createSatArray (satName, satId) {
+        const nameList = [];
+        for(let i = 0; i < satId.length; i++) {
+            nameList.push(this.createSatNameObject(satName[i], satId[i]));
+        }
+
+        this.setState({
+            satObjects: nameList
+        });
+    }
 
     render() {
-        const { multiple, options, isFetching, search, value } = this.state
+        if (this.state.isLoading) {
+
+            return (
+                <LoadSpinner/>
+            );
+        } else {
+        const { multiple, satObjects, isFetching, search, value } = this.state;
 
         return (
             <Grid>
                 <Grid.Column width={8}>
                     <p>
                         <Button onClick={this.fetchOptions}>Fetch</Button>
-                        <Button onClick={this.selectRandom} disabled={_.isEmpty(options)}>
-                            Random
-                        </Button>
                         <label>
                             <input
                                 type='checkbox'
@@ -81,13 +102,10 @@ class DropdownExampleRemote extends Component {
                     <Dropdown
                         fluid
                         selection
-                        multiple={multiple}
-                        search={search}
-                        options={options}
+                        options={satObjects}
                         value={value}
                         placeholder='Add Users'
                         onChange={this.handleChange}
-                        onSearchChange={this.handleSearchChange}
                         disabled={isFetching}
                         loading={isFetching}
                     />
@@ -98,7 +116,7 @@ class DropdownExampleRemote extends Component {
                 </Grid.Column>
             </Grid>
         )
-    }
+    }}
 }
 
 export default DropdownExampleRemote

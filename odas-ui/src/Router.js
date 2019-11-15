@@ -11,6 +11,7 @@ import Documentation from "./Pages/Documentation";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
 import AnalysisSummary from "./Pages/AnalysisSummary";
+import DropdownExampleRemote from "./Components/SatDropdown";
 
 // TODO object is currently useless
 const routes = [
@@ -46,7 +47,7 @@ export default class App extends React.Component {
                     <Route path={"/generate"} component={GenerateData} />
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
-                    <Route path={"/summary"} component={AnalysisSummary} />
+                    <Route path={"/summary"} component={DropdownExampleRemote} />
                 </div>
             </Router>
         );

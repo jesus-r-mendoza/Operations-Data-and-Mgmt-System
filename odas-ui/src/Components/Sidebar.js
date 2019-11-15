@@ -54,9 +54,12 @@ export default class Sidebar extends React.Component {
             }
         })
             .then(res => {
-               this.setState({
-                   satObject: res.data
-               })
+                setTimeout(() => {
+                    this.setState({
+                        satObject: res.data
+                    })
+                }, 500)
+
             })
             .catch(function (err) {
                 console.log(err)
@@ -203,6 +206,7 @@ export default class Sidebar extends React.Component {
                                         placeholder={"Satellite"}
                                         options={satellites}
                                         selection
+
                                     />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
@@ -210,13 +214,13 @@ export default class Sidebar extends React.Component {
                                         <Divider horizontal>Measurements</Divider>
                                         {this.createMeasurementCheckboxes(this.props.units)}
                                         <div className={"selection-buttons"}>
-                                            {/*<Button*/}
-                                            {/*    variant={"outline-success"}*/}
-                                            {/*    onClick={() => this.selectAllUnits()}*/}
-                                            {/*    size={"sm"}*/}
-                                            {/*>*/}
-                                            {/*    Select All*/}
-                                            {/*</Button>*/}
+                                            <Button
+                                                variant={"outline-success"}
+                                                onClick={() => this.selectAllUnits()}
+                                                size={"sm"}
+                                            >
+                                                Select All
+                                            </Button>
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllUnits()}
@@ -228,13 +232,13 @@ export default class Sidebar extends React.Component {
                                         <Divider horizontal>Components</Divider>
                                         {this.createComponentCheckboxes(this.props.components)}
                                         <div className={"selection-buttons"}>
-                                            {/*<Button*/}
-                                            {/*    variant={"outline-success"}*/}
-                                            {/*    onClick={() => this.selectAllComponents()}*/}
-                                            {/*    size={"sm"}*/}
-                                            {/*>*/}
-                                            {/*    Select All*/}
-                                            {/*</Button>*/}
+                                            <Button
+                                                variant={"outline-success"}
+                                                onClick={() => this.selectAllComponents()}
+                                                size={"sm"}
+                                            >
+                                                Select All
+                                            </Button>
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllComponents()}
