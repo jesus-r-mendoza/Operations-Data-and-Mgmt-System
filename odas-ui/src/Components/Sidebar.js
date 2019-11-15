@@ -185,6 +185,7 @@ export default class Sidebar extends React.Component {
 
     render() {
         let satellites = this.props.satellites;
+
         console.log(satellites);
 
         if (this.state.isLoading === true) {
@@ -204,9 +205,8 @@ export default class Sidebar extends React.Component {
                                 <div className={"sidebar-info"}>
                                     <Dropdown
                                         placeholder={"Satellite"}
-                                        options={satellites}
+                                        options={test}
                                         selection
-
                                     />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>

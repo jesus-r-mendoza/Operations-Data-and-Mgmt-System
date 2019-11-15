@@ -34,6 +34,7 @@
 
 .main-button {
     display: flex;
+    flex-direction: column;
     padding-top: 40px;
     padding-right: 20px;
 }
@@ -66,29 +67,37 @@
     color: white;
 }
 
+.sub-text {
+    font-size: large;
+    color: white;
+    padding-top: 20px;
+}
+
 .email-input {
     display: flex;
     flex-direction: column;
     width: auto;
-    padding-top: 25%;
+    padding-top: 10%;
     padding-right: 25%;
     color: white;
     font-size: large;
-
 }
 
 .email-button-container {
     display: flex;
     flex-direction: row;
     padding-top: 10px;
+    justify-content: space-between;
+    width: 20em;
 }
 
 .email-button {
-    padding-right: 10px;
+    padding-bottom: 10px;
 }
 
-.info-button {
-    border-radius: 50%;
+.modal-btn {
+    padding-top: 7px;
+    width: 100%;
 }
 
 .email-header {

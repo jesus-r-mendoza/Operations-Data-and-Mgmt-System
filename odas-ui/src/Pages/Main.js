@@ -2,13 +2,27 @@ import React from 'react';
 import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Button, FormControl, Popover, OverlayTrigger, PopoverContent} from "react-bootstrap";
+import {Button, Popover, PopoverContent, Modal, Form} from "react-bootstrap";
 import "../Layout/Main.css"
 
 // TODO Check for correct email format
 export default class Main extends React.Component {
-    render() {
+    constructor(props){
+        super(props);
+        this.state = {
+            modalState: false
+        }
+    }
 
+    setModalState(state) {
+        this.setState({
+            modalState: state
+        });
+    }
+
+    // handleSubmit = () =>
+
+    render() {
         const infoPop = (
             <Popover id={"popover-basic"}>
                 <PopoverContent>
@@ -23,70 +37,87 @@ export default class Main extends React.Component {
                     <div className={"main-content"}>
                         <span className={"main-text"}>Welcome to <br/> ODAS Report Generator</span>
                         <div className={"main-button"}>
-                            <Link to={"/query"}>
+                            <span className={"sub-text"}>Get started by signing in</span>
+                            <Link to={""}>
                                 <Button size={"lg"}
                                         variant={"info"}
                                         className={"query-button"}
                                 >
-                                    Query a Dataset
+                                    Generate a Report
                                 </Button>
                             </Link>
-                            {/*Removing this feature for now*/}
-                            {/*<Link to={"/generate"}>*/}
-                            {/*    <Button size={"lg"} variant={"info"}>Generate a Dataset</Button>*/}
-                            {/*</Link>*/}
-                            <Link to={"/upload"}>
-                                <Button size={"lg"} variant={"info"}>Upload a Dataset</Button>
-                            </Link>
                         </div>
-                        <div className={"email-input"}>
-                            <div className={"email-header"}>
-                                <span className={"email-header"}>Sign up to receive email reports</span>
-                                <OverlayTrigger
-                                    trigger={"click"}
-                                    key={"placement"}
-                                    placement={"top"}
-                                    overlay={infoPop}
-                                >
-                                    <Button
-                                        size={"sm"}
-                                        variant={"outline-info"}
-                                        type={"submit"}
-                                    >
-                                        Info
-                                    </Button>
-                                </OverlayTrigger>
-                            </div>
-                            <div className={"email-form"}>
-                                <FormControl type={"text"} placeholder={"Email"} />
-                            </div>
-                            <div>
-                                <FormControl type={"password"} placeholder={"Password"} />
-                            </div>
+                        {/*<div className={"email-input"}>*/}
                             <div className={"email-button-container"}>
                                 <div className={"email-button"}>
                                     <Button
                                         variant={"info"}
                                         type={"submit"}
-                                        onClick={() => console.log("Sign up")}
+                                        size={"lg"}
+                                        onClick={() => this.setModalState(true)}
                                     >
                                         Login
                                     </Button>
                                 </div>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    onClick={() => console.log("Sign up")}
-                                >
-                                    Sign Up
-                                </Button>
+                                <div className={"email-button"}>
+                                    <Button
+                                        variant={"info"}
+                                        type={"submit"}
+                                        size={"lg"}
+                                        onClick={() => this.setModalState(true)}
+                                    >
+                                        Sign up
+                                    </Button>
+                                </div>
+                                <div className={"email-button"}>
+                                    <Link to={""}>
+                                        <Button
+                                            variant={"info"}
+                                            type={"submit"}
+                                            size={"lg"}
+                                        >
+                                            About
+                                        </Button>
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
+                        {/*</div>*/}
                     </div>
                     <div id={"img"} className={"main-image"}>
                         <img src={require("../Images/front-page.gif")} alt={""} />
                     </div>
                 </div>
+                <Modal
+                    size="sm"
+                    show={this.state.modalState}
+                    onHide={() => this.setModalState(false)}
+                    aria-labelledby="example-modal-sizes-title-sm"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-sm">
+                            User Login
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleSubmit}>
+                            <div className={"email-form"}>
+                                <Form.Control type={"text"} placeholder={"Email"} />
+                            </div>
+                            <div>
+                                <Form.Control type={"password"} placeholder={"Password"} />
+                            </div>
+                            <div className={"modal-btn"}>
+                                <Button
+                                    variant={"info"}
+                                    type={"submit"}
+                                    onClick={() => console.log("Submit")}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
             </div>
         );
     }
