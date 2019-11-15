@@ -37,7 +37,10 @@ export default class Main extends React.Component {
                     <div className={"main-content"}>
                         <span className={"main-text"}>Welcome to <br/> ODAS Report Generator</span>
                         <div className={"main-button"}>
-                            <span className={"sub-text"}>Get started by signing in</span>
+                            <span className={"sub-text"}>
+                                Get started by generating a report. <br/>
+                                Sign in to save your reports and receive weekly updates by email.
+                            </span>
                             <Link to={""}>
                                 <Button size={"lg"}
                                         variant={"info"}
@@ -59,16 +62,7 @@ export default class Main extends React.Component {
                                         Login
                                     </Button>
                                 </div>
-                                <div className={"email-button"}>
-                                    <Button
-                                        variant={"info"}
-                                        type={"submit"}
-                                        size={"lg"}
-                                        onClick={() => this.setModalState(true)}
-                                    >
-                                        Sign up
-                                    </Button>
-                                </div>
+
                                 <div className={"email-button"}>
                                     <Link to={""}>
                                         <Button
@@ -112,7 +106,14 @@ export default class Main extends React.Component {
                                     type={"submit"}
                                     onClick={() => console.log("Submit")}
                                 >
-                                    Submit
+                                    Login
+                                </Button>
+                                <Button
+                                    variant={"info"}
+                                    type={"submit"}
+                                    onClick={() => console.log("Submit")}
+                                >
+                                    Register
                                 </Button>
                             </div>
                         </Form>
