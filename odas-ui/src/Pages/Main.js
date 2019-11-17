@@ -36,21 +36,27 @@ export default class Main extends React.Component {
                 <div className={"main-container"}>
                     <div className={"main-content"}>
                         <span className={"main-text"}>Welcome to <br/> ODAS Report Generator</span>
-                        <div className={"main-button"}>
-                            <span className={"sub-text"}>
-                                Get started by generating a report. <br/>
-                                Sign in to save your reports and receive weekly updates by email.
-                            </span>
-                            <Link to={""}>
-                                <Button size={"lg"}
+                        <div className={"user-box"}>
+                            <div className={"main-btns"}>
+                                <span className={"sub-text"}>
+                                    Register to get the fullest experience.
+                                    <ul>
+                                        <li>Generate custom telemetry reports</li>
+                                        <li>Analyze telemetry patterns</li>
+                                        <li>Save reports and summaries</li>
+                                        <li>Receive weekly reports</li>
+                                    </ul>
+                                </span>
+                                <Link to={"/user-dashboard"}>
+                                    <Button
+                                        size={"lg"}
                                         variant={"info"}
                                         className={"query-button"}
-                                >
-                                    Generate a Report
-                                </Button>
-                            </Link>
-                        </div>
-                        {/*<div className={"email-input"}>*/}
+                                    >
+                                        Generate a Report
+                                    </Button>
+                                </Link>
+                            </div>
                             <div className={"email-button-container"}>
                                 <div className={"email-button"}>
                                     <Button
@@ -75,14 +81,14 @@ export default class Main extends React.Component {
                                     </Link>
                                 </div>
                             </div>
-                        {/*</div>*/}
+                        </div>
                     </div>
                     <div id={"img"} className={"main-image"}>
                         <img src={require("../Images/front-page.gif")} alt={""} />
                     </div>
                 </div>
                 <Modal
-                    size="sm"
+                    size="med"
                     show={this.state.modalState}
                     onHide={() => this.setModalState(false)}
                     aria-labelledby="example-modal-sizes-title-sm"
@@ -100,7 +106,7 @@ export default class Main extends React.Component {
                             <div>
                                 <Form.Control type={"password"} placeholder={"Password"} />
                             </div>
-                            <div className={"modal-btn"}>
+                            <Modal.Footer className={"modal-btn"}>
                                 <Button
                                     variant={"info"}
                                     type={"submit"}
@@ -115,7 +121,7 @@ export default class Main extends React.Component {
                                 >
                                     Register
                                 </Button>
-                            </div>
+                            </Modal.Footer>
                         </Form>
                     </Modal.Body>
                 </Modal>

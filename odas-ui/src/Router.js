@@ -10,7 +10,7 @@ import Documentation from "./Pages/Documentation";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
-import AnalysisSummary from "./Pages/AnalysisSummary";
+import Dashboard from "./Pages/Dashboard";
 import DropdownExampleRemote from "./Components/SatDropdown";
 
 // TODO object is currently useless
@@ -47,7 +47,7 @@ export default class App extends React.Component {
                     <Route path={"/generate"} component={GenerateData} />
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
-                    <Route path={"/summary"} component={DropdownExampleRemote} />
+                    <Route path={"/user-dashboard"} component={Dashboard} />
                 </div>
             </Router>
         );

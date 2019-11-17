@@ -1,15 +1,19 @@
 import React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import LoadSpinner from "../Components/LoadSpinner";
-// import "../Layout/AnalysisSummary.css"
 
-export default class AnalysisSummary extends React.Component {
-
+export default class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
             isLoading: true
         });
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        })
     }
 
     render() {
@@ -19,8 +23,7 @@ export default class AnalysisSummary extends React.Component {
             )
         }
         return(
-            <div className={"document-page"}>
-                <h1>SUMMARY PAGE</h1>
+            <div className={"container"}>
             </div>
         );
     }

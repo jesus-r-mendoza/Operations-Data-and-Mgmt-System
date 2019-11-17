@@ -15,11 +15,16 @@ export default class Header extends React.Component {
                     <NavDropdown title={"Generate a Report"}>
                         <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                         <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
-                        {/*<NavDropdown.Item href={"/generate"}>Generate a Dataset</NavDropdown.Item>*/}
                     </NavDropdown>
                     <NavItem>
                         <Link to={"/documentation"}>
                             Documentation
+                        </Link>
+                    </NavItem>
+                    <span className={"link-text"}>{"\xa0"}|{"\xa0"}</span>
+                    <NavItem>
+                        <Link to={""}>
+                            Sign in
                         </Link>
                     </NavItem>
                 </Container>
