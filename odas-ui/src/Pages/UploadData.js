@@ -10,12 +10,11 @@ import axios from "axios";
 
 const acceptedExtensions = [".tlm", ".bin"];
 
-const APIs = [
-    {
-        unit: "http://localhost:8000/api/units/",
-        component: "http://localhost:8000/api/components/"
-    }
-];
+const apis = {
+    unit: "http://localhost:8000/api/units/",
+    component: "http://localhost:8000/api/components/",
+    satellites: "http://localhost:8000/api/satellites/"
+};
 
 export default class UploadData extends React.Component {
 
@@ -26,45 +25,24 @@ export default class UploadData extends React.Component {
             currentPage: "upload",
             selectedFile: "File Name",
             loaded: 1,
+            fileSubmit: false,
             MEASUREMENTS: [],
             COMPONENTS: [],
         };
     }
 
     componentDidMount() {
-        axios.get(APIs[0].unit, {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
-                    this.setState({
-                        MEASUREMENTS: res.data
-                    })
-                }
-            )
-            .catch(function (err) {
-                console.log(err);
+        axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
+            .then(axios.spread((...responses) => {
+                this.setState({
+                    MEASUREMENTS: responses[0].data,
+                    COMPONENTS: responses[1].data,
+                    satObjects: responses[2].data
+                })
+            }))
+            .catch(err => {
+                console.log(err)
             });
-
-        axios.get(APIs[0].component, {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
-                    this.setState({
-                        COMPONENTS: res.data
-                    })
-                }
-            )
-            .catch(function (err) {
-                console.log(err);
-            });
-
-        this.setState({
-            isLoading: false
-        });
 
         this.setState({
             isLoading: false
@@ -79,16 +57,17 @@ export default class UploadData extends React.Component {
         });
     }
 
-    onChangeHandler = event => {
+    onFileChangeHandler = event => {
         let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
         let fileName = event.target.files[0].name;
-
         let extension = extractExtension.exec(fileName)[0];
+
         console.log(extension);
         if (acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0].name,
-                loaded: 1
+                loaded: 1,
+                fileSubmit: true
             });
         } else {
             this.setState({
@@ -155,7 +134,7 @@ export default class UploadData extends React.Component {
                                     name="logFile"
                                     data-multiple-caption="{count} files selected"
                                     multiple
-                                    onChange={this.onChangeHandler}
+                                    onChange={this.onFileChangeHandler}
                                 />
                             </div>
                         </div>
@@ -163,6 +142,7 @@ export default class UploadData extends React.Component {
                     <Button
                         variant={"primary"}
                         className={"submit-btn"}
+                        disabled={!this.state.fileSubmit}
                         onClick={() => this.goToReport()}
                     >
                         Submit

@@ -43,7 +43,7 @@ export default class Main extends React.Component {
                                     <ul>
                                         <li>Generate custom telemetry reports</li>
                                         <li>Analyze telemetry patterns</li>
-                                        <li>Save reports and summaries</li>
+                                        <li>Save custom reports and summaries</li>
                                         <li>Receive weekly reports</li>
                                     </ul>
                                 </span>

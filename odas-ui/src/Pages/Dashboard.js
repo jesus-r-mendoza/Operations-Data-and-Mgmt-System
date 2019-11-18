@@ -1,13 +1,16 @@
 import React from 'react';
+import { connect } from "react-redux"
 import "bootstrap/dist/css/bootstrap.min.css";
 import LoadSpinner from "../Components/LoadSpinner";
 
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
             isLoading: true
         });
+
+        console.log(this.props)
     }
 
     componentDidMount() {
@@ -28,3 +31,12 @@ export default class Dashboard extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    // console.log(state);
+
+    return state;
+};
+
+// Connect returns a function and second parenthesis invokes returned function
+export default connect(mapStateToProps)(Dashboard)

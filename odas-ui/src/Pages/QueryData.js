@@ -7,12 +7,11 @@ import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import axios from "axios";
 
-const APIs = [
-    {
-        unit: "http://localhost:8000/api/units/",
-        component: "http://localhost:8000/api/components/"
-    }
-];
+const apis = {
+    unit: "http://localhost:8000/api/units/",
+    component: "http://localhost:8000/api/components/",
+    satellites: "http://localhost:8000/api/satellites/"
+};
 
 export default class QueryData extends React.Component {
     constructor(props) {
@@ -27,47 +26,16 @@ export default class QueryData extends React.Component {
 
     // TODO combine axios calls into one
     componentDidMount() {
-        axios.get("http://localhost:8000/api/satellites/", {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
+        axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
+            .then(axios.spread((...responses) => {
                 this.setState({
-                    satObject: res.data
+                    MEASUREMENTS: responses[0].data,
+                    COMPONENTS: responses[1].data,
+                    satObjects: responses[2].data
                 })
-            })
-            .catch(function (err) {
+            }))
+            .catch(err => {
                 console.log(err)
-            });
-        axios.get(APIs[0].unit, {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
-                    this.setState({
-                        MEASUREMENTS: res.data
-                    })
-                }
-            )
-            .catch(function (err) {
-                console.log(err);
-            });
-
-        axios.get(APIs[0].component, {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
-                    this.setState({
-                        COMPONENTS: res.data
-                    })
-                }
-            )
-            .catch(function (err) {
-                console.log(err);
             });
 
         this.setState({
