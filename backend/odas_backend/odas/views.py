@@ -25,6 +25,8 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
 
         qs = [sat, (comp, len(measurements), measurements)]
         if comp == None:
+            print('\ncomp =',comp)
+            print('\ncomp =', qs[1][0],comp,'\n')
             data = _build_response(qs)
         else:
             data = _build_response(qs, add_component=False)
@@ -75,11 +77,13 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
         for id in component_ids:
             try:
                 comp = Component.objects.get(pk=id)
+                if comp.satellite != sat:
+                    raise Component.DoesNotExist()
                 meas = measurements.filter(component=comp).order_by('-time_measured')[:quantity]
                 querys.append( (comp, len(meas), meas) )
             except Component.DoesNotExist:
                 # add to list of comps not exists
-                comp_not_exist.append( { id: f'Component of this ID does not exist on {sat.name}'} )
+                comp_not_exist.append(id)
         
         if len(comp_not_exist) == len(component_ids):
             return JsonResponse( { 'data': False, 'error': 'Component(s) Does not exist' } )
@@ -87,7 +91,7 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
         data = _build_response( querys )
         
         if len(comp_not_exist) > 0:
-            data['Quantities'] += comp_not_exist
+            data['Quantities']['DNE'] = comp_not_exist
 
         return JsonResponse(data)
 
@@ -106,17 +110,23 @@ def _build_response(query_set_list, add_component=True):
         },
         'Measurements': []
     }
-    quantities = []
+    quantities = {}
     for (comp, quant, qs) in query_set_list[1:]:
         if comp == None:
             reassign_comp = True
         else:
             reassign_comp = False
+            quantities[comp.name] = quant
         for measurement in qs:
             entry = {}
             if add_component:
                 if reassign_comp:
                     comp = measurement.component
+                    if quantities.get(comp.name):
+                        quantities[comp.name] += 1
+                    else:
+                        quantities[comp.name] = 1
+
                 entry['component_name'] = comp.name,
                 entry['component_model'] = comp.model,
                 entry['component_category'] = comp.category,
@@ -127,8 +137,6 @@ def _build_response(query_set_list, add_component=True):
             entry['value'] = measurement.value
 
             data['Measurements'].append(entry)
-        
-        quantities.append( { comp.name: quant } )
 
     data['Quantities'] = quantities
     data['comp_specified'] = add_component
