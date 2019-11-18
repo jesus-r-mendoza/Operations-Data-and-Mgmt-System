@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('', include('odas.urls')),
+    path('', include('report_gen.urls'))
 ]
 
 if settings.DEBUG:
