@@ -13,3 +13,6 @@ GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the **
 GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite
 GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component
 GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite
+POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request
+POST | files/upload/ | Uploads the specified file to our **ODAS** servers
+POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers
