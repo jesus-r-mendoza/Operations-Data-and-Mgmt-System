@@ -1,22 +1,28 @@
 import React from 'react';
 import { connect } from "react-redux"
-import "bootstrap/dist/css/bootstrap.min.css";
+import { fetchUnits } from "../Actions";
+// Components
 import LoadSpinner from "../Components/LoadSpinner";
+// Stylesheets
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            isLoading: true
+            isLoading: true,
+            testing: null
         });
 
-        console.log(this.props)
+
     }
 
     componentDidMount() {
         this.setState({
             isLoading: false
-        })
+        });
+
+        this.props.fetchUnits()
     }
 
     render() {
@@ -25,6 +31,12 @@ class Dashboard extends React.Component {
                 <LoadSpinner />
             )
         }
+        const test = this.props;
+        console.log(test);
+        // for(let i = 0; i < test.length; i++) {
+        //     console.log(test[i].id, test[i].name);
+        // }
+
         return(
             <div className={"container"}>
             </div>
@@ -33,10 +45,9 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => {
-    // console.log(state);
-
-    return state;
+    // return state;
+    return {sats: state.sats};
 };
 
 // Connect returns a function and second parenthesis invokes returned function
-export default connect(mapStateToProps)(Dashboard)
+export default connect(mapStateToProps, { fetchUnits })(Dashboard)

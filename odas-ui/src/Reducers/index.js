@@ -1,11 +1,14 @@
 import { combineReducers } from 'redux';
 
-const satelliteReducer = () => {
-    return [
-        {id: 1, name: 'Hubble'},
-        {id: 2, name: 'Saturn V'},
-        {id: 3, name: 'Pic Sat'}
-    ]
+const satelliteReducer = (state = [], action) => {
+    switch (action.type) {
+        case 'FETCH_UNITS':
+            return [...state, action.payload];
+        case 'FETCH_COMPS':
+            return [...state, action.payload];
+        default:
+            return state;
+    }
 };
 
 const selectedSatReducer = (selectedSat = null, action) => {
