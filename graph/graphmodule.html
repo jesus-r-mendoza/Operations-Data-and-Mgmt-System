@@ -52,7 +52,10 @@
 */			
 			var request = new Request(
 //TEST 3
-			'http://127.0.0.1:8000/api/satellites/1/recent/7/');
+			//'http://127.0.0.1:8000/api/satellites/1/recent/7/');
+			//'http://127.0.0.1:8000/api/satellites/4/recent/100/');
+			//'http://127.0.0.1:8000/api/satellites/3/recent/100/');
+			'http://127.0.0.1:8000/api/recent/100/');
 			//'http://127.0.0.1:8000/api/satellites/2/recent/7/');
 //TEST 1
 //			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
@@ -280,7 +283,34 @@
 							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
 							console.log('Test Reordered Total Graphs Array Form: ', totalGraphsArrayForm);
 							
-							//Graphing on Plotly for each array
+							//Alternative
+							
+							var altcurrentData = [];
+							for(var a=0;a<totalNumGraphs;a++){
+								//no empty graphs
+								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
+									for(var b=0;b<totalGraphsArray[a].length;b++){
+										altcurrentData.push(totalGraphsArray[a][b].value);
+									}
+								}
+							}
+							function getData() {
+								return altcurrentData;//Math.random();
+							}  
+							Plotly.plot('chart',[{y:[getData()],type:'line'}]);
+							var cnt = 0;
+							setInterval(function(){
+								Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+								cnt++;
+								if(cnt > 500) {
+									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
+								}
+							},15);
+							
+							//Alternative
+							
+							
+/*							//Graphing on Plotly for each array
 							var fixChartNumber = 'chart';
 							var chartNumber = 'chart';
 							var chartNumberExtra = 0;
@@ -319,14 +349,16 @@
 											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
 										}
 									},15);
-/*								setTimeout(function() {
-								}, (3*1000));*/
-									
+								//setTimeout(function() {
+								//}, (3*1000));									
 									
 								}
 								else{
 								}
 							}
+							//Graphing Plotly ends.
+*/						
+							
 							console.log('finish');
 						}
 						else if(out.data==false){
