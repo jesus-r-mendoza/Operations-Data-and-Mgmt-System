@@ -7,7 +7,6 @@
     border: 0;
     font-size: large;
     box-shadow: 1px 1px 1px black;
-    height: 6vh;
 }
 
 .nav-items {
@@ -33,8 +32,9 @@
 /*Main page*/
 .main-page {
     background-color: #141e28;
-    justify-content: center;
     height: 95vh;
+    width: 100vw;
+    position: fixed;
 }
 
 .user-box {
