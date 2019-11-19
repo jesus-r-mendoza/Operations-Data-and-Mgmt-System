@@ -12,9 +12,20 @@
 	</script>
 	</head>
 	<body>
-	<div class="navbar"><span>Real-Time Telemetry Data</span></div>
+	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
+		<div id="chart0"></div>
+		<div id = "bottomchart2">
+		<p id="tablechart2">Table Chart</p>
+		<button id="pause2">Pause</button>
+		<table style="width:100%" id = "traces2">
+			<tr id = "fieldnames2">
+			</tr>
+			<tr id = "data2">
+			</tr>
+		</table>
+		</div>
 		<script src="xml2json.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
@@ -26,7 +37,9 @@
 			var keysValues = [];
 			var json = "";
 			//var myList = document.querySelector('ul');
-			
+
+//TEST 4
+/*			
 			$.ajax({
 				method: 'GET',
 //WARNING: ALWAYS ADD/REMOVE API KEY
@@ -36,8 +49,15 @@
 					console.log(html);
 				}
 			})
-			
+*/			
 			var request = new Request(
+//TEST 3
+			//'http://127.0.0.1:8000/api/satellites/1/recent/7/');
+			//'http://127.0.0.1:8000/api/satellites/4/recent/100/');
+			//'http://127.0.0.1:8000/api/satellites/3/recent/100/');
+			'http://127.0.0.1:8000/api/recent/100/');
+			//'http://127.0.0.1:8000/api/satellites/2/recent/7/');
+//TEST 1
 //			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
 	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
 	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
@@ -46,14 +66,15 @@
 	//Satellite observatories: mms1,mms2
 	//Time range: 20190101T000000Z,20190101T001000Z
 	//Coordinate systems: gse,geo
+//TEST 2
 //WARNING: ALWAYS ADD/REMOVE API KEY testType = 2
-			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
+//			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
 			//'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 			//app.get('/YourPath/:parameterName', 
 			//function (req, res) {
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
-//				.then(res => res.json()) //testType = 1
-				.then(res => res.text()) //testType = 2
+				.then(res => res.json()) //testType = 1, 3
+/*				.then(res => res.text()) //testType = 2
 				.then(text => {
 //				console.log(text);
 			//from xmljson_test.html
@@ -82,10 +103,302 @@
 //				console.log('jsontest');
 //				console.log(json);
 				})
+*/
 				.then((out) => {
-					var testType = 2;
+					var testType = 3;
+					
+					//------------- odas api json ------------------------------
+					if(testType==3){
+						console.log('test full API', out);
+						if(out.data==true){
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = out.Satellite.name+": "+out.Satellite.year_launched;
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							
+							var outSort = out;
+							var measurementsComponent_Category = [];
+							var measurementsComponent_Description = [];
+							var measurementsComponent_Model = [];
+							var measurementsComponent_Name = [];
+							var measurementsTime = [];
+							var measurementsUnits = [];
+							var measurementsValue = [];
+							var data = [];
+							
+							var quantity = out.Quantity;
+							var realQuantity = out.Measurements.length;
+							var checkQuantities = false;
+							if(quantity==realQuantity){
+								checkQuantities = true;
+							}
+							console.log('Test: Quantities Match? : ', checkQuantities);
+							
+							for(var a=0;a<realQuantity;a++){
+								measurementsComponent_Category.push(out.Measurements[a].component_category[0]);
+								measurementsComponent_Description.push(out.Measurements[a].component_description[0]);
+								measurementsComponent_Model.push(out.Measurements[a].component_model[0]);
+								measurementsComponent_Name.push(out.Measurements[a].component_name[0]);
+								measurementsTime.push(out.Measurements[a].time);
+								measurementsUnits.push(out.Measurements[a].units);
+								measurementsValue.push(out.Measurements[a].value);
+							}
+							//ignore
+//							console.log('Component_Categories: ', measurementsComponent_Category);
+							//ignore
+//							console.log('Component_Description: ', measurementsComponent_Description);
+							//ignore
+//							console.log('Component_Model: ', measurementsComponent_Model);
+							
+//							console.log('Component_Name: ', measurementsComponent_Name);
+//							console.log('Time: ', measurementsTime);
+//							console.log('Units: ', measurementsUnits);
+//							console.log('Value: ', measurementsValue);
+							
+							for(var c=0;c<realQuantity;c++){
+								var dataUnit = [];
+								dataUnit.push(measurementsComponent_Category[c]);
+								dataUnit.push(measurementsComponent_Description[c]);
+								dataUnit.push(measurementsComponent_Model[c]);
+								dataUnit.push(measurementsComponent_Name[c]);
+								dataUnit.push(measurementsTime[c]);
+								dataUnit.push(measurementsUnits[c]);
+								dataUnit.push(measurementsValue[c]);
+								data.push(dataUnit);
+							}
+							console.log('Test Formatted Data Array: ', data);
+							
+							function compare(a,b){
+								if(a.units<b.units){
+									return -1;
+								}
+								if(a.units>b.units){
+									return 1;
+								}
+								return 0;
+							}
+							outSort.Measurements.sort(compare);
+//						console.log('Test Sorted Out: ', outSort.Measurements);
+							var sortedMeasurements = [];
+							var allUnits = [];
+							var allNames = [];
+							for(var a=0;a<realQuantity;a++){
+								sortedMeasurements.push(outSort.Measurements[a]);
+								allUnits.push(outSort.Measurements[a].units);
+								allNames.push(outSort.Measurements[a].component_name[0]);
+							}
+						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
+							
+							const distinct = (value, index, self) => {
+								return self.indexOf(value) === index;
+							}
+							const distinctUnits = allUnits.filter(distinct);
+						console.log('Test Distinct Units: ', distinctUnits);
+							var numUniqueUnits = distinctUnits.length;
+						console.log('Test Num Unique Units: ', numUniqueUnits);
+							const distinctNames = allNames.filter(distinct);
+						console.log('Test Distinct Names: ', distinctNames);
+							var numUniqueNames = distinctNames.length;
+						console.log('Test Num Unique Names: ', numUniqueNames);
+						//Alternative
+//						const alternativeDistinctUnits = [...new Set(sortedMeasurements.map(x => x.units))];
+//						console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
+						//Alternative
+							var totalNumGraphs = numUniqueUnits*numUniqueNames;
+						console.log('Total Num Graphs: ', totalNumGraphs);
+							
+							var totalGraphsArray = [];
+							var totalGraphsArrayForm = []
+							for(var a=0;a<totalNumGraphs;a++){
+								//make dummy positions
+								var dummyGraph = [];
+								totalGraphsArray.push(dummyGraph);
+								totalGraphsArrayForm.push(dummyGraph);
+							}
+						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
+							
+							function compareNames(a,b){
+								if(a.component_name[0]<b.component_name[0]){
+									return -1;
+								}
+								if(a.component_name[0]>b.component_name[0]){
+									return 1;
+								}
+								return 0;
+							}
+							
+							for(var a=0;a<realQuantity;a++){
+							//for all 7 data values
+							//ex. MainCPU2, Degrees Celcius(sic)
+								var subsectionSameUnit = [];
+								for(var b=0;b<numUniqueUnits;b++){
+								//for each unique unit Degrees, GHz, Volts
+								//3 times for each point
+								//ex. Degrees Celcius
+									for(var c=0;c<numUniqueNames;c++){
+										if(sortedMeasurements[a].units==distinctUnits[b]){
+											//all data points with the same unique unit
+											//matching distinct unit
+											//current point 
+											//ex. MainCPU2, Degrees Celcius. 
+							//			subsectionSameUnit.push(sortedMeasurements[a]);		
+											if(sortedMeasurements[a].component_name==distinctNames[c]){
+												//all data points with the same unique name
+												//matching distinct name 
+												totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+										/*		var dataUnit2 = [];
+												dataUnit2.push(sortedMeasurements[a].component_category[0]);
+												dataUnit2.push(sortedMeasurements[a].component_description[0]);
+												dataUnit2.push(sortedMeasurements[a].component_model[0]);
+												dataUnit2.push(sortedMeasurements[a].component_name[0]);
+												dataUnit2.push(sortedMeasurements[a].time);
+												dataUnit2.push(sortedMeasurements[a].units);
+												dataUnit2.push(sortedMeasurements[a].value);
+												console.log('dataUnit2', dataUnit2);
+												totalGraphsArrayForm[b*numUniqueNames+c].push(dataUnit2);
+											*/
+											}
+											else{
+											}
+										}
+										else{	
+										}
+										//when finished with same unique units.
+										//sort by names, then put into total graph array
+							//			subsectionSameUnit.sort(compareNames);
+									}
+								}
+							}
+							console.log('Test Total Graphs Array: ', totalGraphsArray);
+							
+							//Flip components to list them in correct sequential order.
+							for(var a=0;a<totalGraphsArray.length;a++){
+								if(totalGraphsArray[a].length>1){
+									totalGraphsArray[a].reverse();
+									
+								}
+							}
+							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
+							console.log('Test Reordered Total Graphs Array Form: ', totalGraphsArrayForm);
+							
+							//Alternative
+							
+							var altcurrentData = [];
+							for(var a=0;a<totalNumGraphs;a++){
+								//no empty graphs
+								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
+									for(var b=0;b<totalGraphsArray[a].length;b++){
+										altcurrentData.push(totalGraphsArray[a][b].value);
+									}
+								}
+							}
+							function getData() {
+								return altcurrentData;//Math.random();
+							}  
+							Plotly.plot('chart',[{y:[getData()],type:'line'}]);
+							var cnt = 0;
+							setInterval(function(){
+								Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+								cnt++;
+								if(cnt > 500) {
+									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
+								}
+							},15);
+							
+							//Alternative
+							
+							
+/*							//Graphing on Plotly for each array
+							var fixChartNumber = 'chart';
+							var chartNumber = 'chart';
+							var chartNumberExtra = 0;
+							for(var a=0;a<totalNumGraphs;a++){
+								var currentData = [];
+								//no empty graphs
+								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
+									for(var b=0;b<totalGraphsArray[a].length;b++){
+										currentData.push(totalGraphsArray[a][b].value);
+									}
+								console.log('Test CurrentData: ', currentData);
+								
+									var newChartNumber = ""+fixChartNumber+(chartNumberExtra).toString();
+								console.log('test New Chart Number: ', newChartNumber);
+									chartNumber = newChartNumber;
+									var newChart = document.createElement("div");
+									newChart.setAttribute("id", ""+fixChartNumber+(chartNumberExtra+1).toString());
+									document.getElementById(newChartNumber).appendChild(newChart);
+									chartNumberExtra++;
+									
+									function getData() {
+										return currentData;
+										//return data;
+										//return Math.random();
+									}  
+								console.log('Test ChartNumber: ', chartNumber);
+									//initial plot.
+									Plotly.plot(chartNumber,[{y:[getData()],type:'line'}]);
+									var cnt = 0;
+									//extend new datapoints
+									setInterval(function(){
+										Plotly.extendTraces(chartNumber,{ y:[[getData()]]}, [currentData.length-1]);
+										cnt++;
+										//slide along with new data
+										if(cnt > 500) {
+											Plotly.relayout(chartNumber,{xaxis: {range: [cnt-500,cnt]}});
+										}
+									},15);
+								//setTimeout(function() {
+								//}, (3*1000));									
+									
+								}
+								else{
+								}
+							}
+							//Graphing Plotly ends.
+*/						
+							
+							console.log('finish');
+						}
+						else if(out.data==false){
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = "Error";
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							var node = document.createElement("p");
+							var node2 = document.createElement("p");
+							var textnode = document.createTextNode(out.error);
+							var textnode2 = document.createTextNode(out.error);
+							node.appendChild(textnode);
+							node2.appendChild(textnode2);
+							document.getElementById("toptitle").appendChild(node);
+							document.getElementById("tablechart").appendChild(node2);
+							
+						}
+						else{
+							var mydiv = document.getElementById("toptitle");
+							var newcontent = document.createElement('div');
+							newcontent.innerHTML = "Error";
+							while (newcontent.firstChild) {
+								mydiv.appendChild(newcontent.firstChild);
+							}
+							var node = document.createElement("p");
+							var node2 = document.createElement("p");
+							var textnode = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
+							var textnode2 = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
+							node.appendChild(textnode);
+							node2.appendChild(textnode2);
+							document.getElementById("toptitle").appendChild(node);
+							document.getElementById("tablechart").appendChild(node2);
+						}
+					}
+					
+					//--------------odas api json ----------------
 					//--------------testdata2.json ---------------
-					if(testType==2){
+					else if(testType==2){
 					out = JSON.parse(json);
 					//var stringJSON = JSON.stringify(out);
 					//console.log(typeof(stringJSON));
@@ -318,8 +631,8 @@ console.log('New row', cnt);
 					},200); //update every 200 seconds.
 					console.log('finish');
 					}
-					//--------------testdata2.json-----------------
-					//------------github testdata.txt--------------
+//					//--------------testdata2.json-----------------
+//					//------------github testdata.txt--------------
 					else if (testType==1){
 					//res.setHeader('Access-Control-Allow-Origin', 'https://sscweb.sci.gsfc.nasa.gov/WebServices/REST/json/results/themis2.json.txt');
 					console.log('Status Code: ', out.Result.StatusCode);
@@ -470,7 +783,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 		</script>
 	</div>
 	<div id = "bottomchart">
-	<p>Table Chart</p>
+	<p id="tablechart">Table Chart</p>
 	<button id="pause">Pause</button>
 	<table style="width:100%" id = "traces">
 			<tr id = "fieldnames">
