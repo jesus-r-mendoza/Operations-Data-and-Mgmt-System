@@ -14,13 +14,6 @@ register_converter(converters.ManyIdConverter, 'many-id')
 register_converter(converters.DateTimeConverter, 'dt')
 
 urlpatterns = [
-    path('email/', views.index, name='index'),
-    path('success/', views.successView, name='success'),
-    path('files/', views.file_view, name='file_list'),
-    path('satest/', views.dbemail, name='db_test'),
-    path('writetest/', views.dbwritefile, name='db_test'),
-    path('files/upload/', views.upload_view, name='upload_file'),
-    path('files/<int:pk>/', views.delete_file, name='delete_file'),
     path('api/sat/<int:satellite_id>/recent/<int:quantity>/', views.recent_measurements, name='recent'),
     path('api/sat/<int:satellite_id>/comp/<int:component_id>/recent/<int:quantity>/', views.recent_by_component, name='recent_by_comp'),
     path('api/sat/<int:satellite_id>/comp/', views.components_of_satellite, name='sat_comp'),

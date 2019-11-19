@@ -1,94 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.core.mail import send_mail,BadHeaderError
-from django.core.files.storage import FileSystemStorage
-from .forms import SubscriberForm, UploadForm
-from .models import Upload, Satellite, Component, Measurement, Units
-from django.views.decorators.csrf import csrf_exempt
-import os
-from django.conf import settings
-
-@csrf_exempt
-def index(request):
-    if request.method == 'GET':
-        form = SubscriberForm()
-    else:
-        all_sats = Satellite.objects.all()
-        sat_name1= all_sats[0].name
-        desc_1 = all_sats[0].mission_description
-        
-        concant_msg = sat_name1 + desc_1
-        form = SubscriberForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data['subject']
-            your_email = form.cleaned_data['your_email']
-            message = concant_msg
-            try:
-                send_mail(subject, message, 'odasreport@gmail.com', [your_email])
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return redirect('success')
-    return render(request, 'emailsender/index.html', {'form': form})
-
-def successView(request):
-    return HttpResponse('Thank you. You are now subscribed to emails')
-
-def dbemail(request):
-    all_sats = Satellite.objects.all()
-    return render(request, 'emailsender/db_test.html', {
-        'all_sats': all_sats
-    })
-  
-def dbwritefile(request):
-    all_sats = Satellite.objects.all()
-    sat_name1= all_sats[0].name
-    desc_1 = all_sats[0].mission_description
-    concant_msg = sat_name1 + desc_1
-    cpath =  os.path.join(settings.MEDIA_ROOT, 'new.txt')       
-
-    file1 = open(cpath, "w")
-
-    toFile = concant_msg
-
-    file1.write(toFile)
-
-    file1.close()
-    return HttpResponse('Thank you. You are now subscribed to emails')
-
-# Create your views here.
-@csrf_exempt
-def uploader(request):
-    context = {}
-    if request.method =='POST':
-        file_uploaded = request.FILES['fileinput']
-        fs = FileSystemStorage()
-        fname= fs.save(file_uploaded.name, file_uploaded)
-        context['url'] = fs.url(fname)
-    return render(request,'fileio/uploader.html', context)
-
-def file_view(request):
-    files = Upload.objects.all()
-    return render(request, 'fileio/file_list.html', {
-        'files': files
-    })
-
-@csrf_exempt
-def upload_view(request):
-    if request.method == 'POST':
-        form = UploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('file_list')
-    else:
-        form = UploadForm()
-    return render(request, 'fileio/upload_file.html', {
-        'form': form
-    })
-def delete_file(request, pk):
-    if request.method == 'POST':
-        user_file = Upload.objects.get(pk=pk)
-        user_file.delete()
-    return redirect('file_list')
+from .models import Satellite, Component, Measurement, Units
 
 def components_of_satellite(request, satellite_id):
     try:
@@ -113,6 +25,8 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
 
         qs = [sat, (comp, len(measurements), measurements)]
         if comp == None:
+            print('\ncomp =',comp)
+            print('\ncomp =', qs[1][0],comp,'\n')
             data = _build_response(qs)
         else:
             data = _build_response(qs, add_component=False)
@@ -163,11 +77,13 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
         for id in component_ids:
             try:
                 comp = Component.objects.get(pk=id)
+                if comp.satellite != sat:
+                    raise Component.DoesNotExist()
                 meas = measurements.filter(component=comp).order_by('-time_measured')[:quantity]
                 querys.append( (comp, len(meas), meas) )
             except Component.DoesNotExist:
                 # add to list of comps not exists
-                comp_not_exist.append( { id: f'Component of this ID does not exist on {sat.name}'} )
+                comp_not_exist.append(id)
         
         if len(comp_not_exist) == len(component_ids):
             return JsonResponse( { 'data': False, 'error': 'Component(s) Does not exist' } )
@@ -175,7 +91,7 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
         data = _build_response( querys )
         
         if len(comp_not_exist) > 0:
-            data['Quantities'] += comp_not_exist
+            data['Quantities']['DNE'] = comp_not_exist
 
         return JsonResponse(data)
 
@@ -194,17 +110,23 @@ def _build_response(query_set_list, add_component=True):
         },
         'Measurements': []
     }
-    quantities = []
+    quantities = {}
     for (comp, quant, qs) in query_set_list[1:]:
         if comp == None:
             reassign_comp = True
         else:
             reassign_comp = False
+            quantities[comp.name] = quant
         for measurement in qs:
             entry = {}
             if add_component:
                 if reassign_comp:
                     comp = measurement.component
+                    if quantities.get(comp.name):
+                        quantities[comp.name] += 1
+                    else:
+                        quantities[comp.name] = 1
+
                 entry['component_name'] = comp.name,
                 entry['component_model'] = comp.model,
                 entry['component_category'] = comp.category,
@@ -215,8 +137,6 @@ def _build_response(query_set_list, add_component=True):
             entry['value'] = measurement.value
 
             data['Measurements'].append(entry)
-        
-        quantities.append( { comp.name: quant } )
 
     data['Quantities'] = quantities
     data['comp_specified'] = add_component
