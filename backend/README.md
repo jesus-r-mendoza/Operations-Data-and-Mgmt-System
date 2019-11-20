@@ -22,7 +22,7 @@ POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers
 
 ## Examples
 
-For these example links to work, be sure that the backend server is running on your local machine. To learn how to run the backend server, click [here](##Running-the-Backend-Server).
+For these example links to work, be sure that the backend server is running on your local machine. To learn how to run the backend server, click [here](#Running-the-Backend-Server).
 
 > [`api/sat/`](http://127.0.0.1:8000/api/sat/)
 
@@ -74,7 +74,7 @@ This should also launch a new virtual environment. If you've already installed t
 ### Step 4
 Navigate to the `odas_backend/` directory
 
-> `$ odas_backend`
+> `$ cd odas_backend`
 
 ### Step 5
 Run the server
