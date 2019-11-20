@@ -31,7 +31,7 @@ export default class QueryData extends React.Component {
                 this.setState({
                     MEASUREMENTS: responses[0].data,
                     COMPONENTS: responses[1].data,
-                    satObjects: responses[2].data
+                    satObject: responses[2].data
                 })
             }))
             .catch(err => {
@@ -61,9 +61,8 @@ export default class QueryData extends React.Component {
 
     createSatNameObject(satName, satId) {
         return Object.create(Object.prototype, {
-            key: {value: satId},
-            text: {value: satName},
-            value: {value: satId}
+            value: {value: satId},
+            label: {value: satName}
         });
     }
 
@@ -72,7 +71,6 @@ export default class QueryData extends React.Component {
         for(let i = 0; i < satId.length; i++) {
             nameList.push(this.createSatNameObject(satName[i], satId[i]));
         }
-
         return nameList;
     }
 
@@ -89,14 +87,13 @@ export default class QueryData extends React.Component {
             let components = this.createArray("components");
             let satNames = this.state.satObject.map(function(names) {return names.name});
             let satIds = this.state.satObject.map(function(ids){return ids.id});
-            let satObjects = this.createSatArray(satNames, satIds);
-            console.log("SATOBJECTS", [...satObjects]);
+            let satList = this.createSatArray(satNames, satIds);
             return (
                 <div className={"report-container"}>
                     <Sidebar
                         units={units}
                         components={components}
-                        satellites={satObjects}
+                        satellites={satList}
                     >
                         Query a Dataset
                     </Sidebar>

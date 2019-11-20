@@ -20,17 +20,7 @@ export default class Main extends React.Component {
         });
     }
 
-    // handleSubmit = () =>
-
     render() {
-        const infoPop = (
-            <Popover id={"popover-basic"}>
-                <PopoverContent>
-                    Sign up to save your work and get weekly reports by email!
-                </PopoverContent>
-            </Popover>
-        );
-
         return (
             <div className={"main-page"}>
                 <div className={"main-container"}>

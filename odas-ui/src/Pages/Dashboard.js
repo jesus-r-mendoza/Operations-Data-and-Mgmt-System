@@ -6,6 +6,7 @@ import LoadSpinner from "../Components/LoadSpinner";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -13,16 +14,14 @@ class Dashboard extends React.Component {
             isLoading: true,
             testing: null
         });
-
-
     }
 
     componentDidMount() {
+        this.props.fetchUnits();
+
         this.setState({
             isLoading: false
         });
-
-        this.props.fetchUnits()
     }
 
     render() {
@@ -33,19 +32,16 @@ class Dashboard extends React.Component {
         }
         const test = this.props;
         console.log(test);
-        // for(let i = 0; i < test.length; i++) {
-        //     console.log(test[i].id, test[i].name);
-        // }
 
-        return(
+        return (
             <div className={"container"}>
+
             </div>
         );
     }
 }
 
 const mapStateToProps = state => {
-    // return state;
     return {sats: state.sats};
 };
 

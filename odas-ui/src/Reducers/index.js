@@ -6,6 +6,8 @@ const satelliteReducer = (state = [], action) => {
             return [...state, action.payload];
         case 'FETCH_COMPS':
             return [...state, action.payload];
+        case 'FETCH_SATS':
+            return [...state, action.payload];
         default:
             return state;
     }
