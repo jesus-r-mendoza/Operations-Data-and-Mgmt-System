@@ -5,16 +5,16 @@
 ---
 Method | Endpoint | Description | JSON Response
 --- | --- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites | [Serialized](###Serialized)
-GET | api/comp/ | Get ***all*** of the components | [Serialized](###Serialized)
-GET | api/meas/ | Get ***all*** of the measurements | [Serialized](###Serialized)
-GET | api/units/ | Get ***all*** of the units | [Serialized](###Serialized)
-GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](###Serialized)
-GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](###Unspecified-Components)
-GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite | [Specified Component](###Specified-Component)
-GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite | [Unspecified Components](###Unspecified-Components)
-GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](###Unspecified-Components)
-GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](###Specified-Component)
+GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized)
+GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized)
+GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized)
+GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized)
+GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized)
+GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components)
+GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite | [Specified Component](#Specified-Component)
+GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite | [Unspecified Components](#Unspecified-Components)
+GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components)
+GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component)
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request
 POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request
 POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers
