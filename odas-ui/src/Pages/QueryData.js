@@ -2,6 +2,7 @@ import React from 'react';
 //Components
 import ReportCard from "../Components/ReportCard";
 // Stylesheets
+import { Container, Row, Col } from "react-bootstrap";
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
@@ -97,9 +98,14 @@ export default class QueryData extends React.Component {
                     >
                         Query a Dataset
                     </Sidebar>
-                    <div className={"card-container"}>
-                        <ReportCard/>
-                    </div>
+                    {/*className={"card-container"}*/}
+                    <Container>
+                        <Row>
+                            <Col lg>
+                                <ReportCard/>
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
             );
         }
