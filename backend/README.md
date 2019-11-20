@@ -3,17 +3,18 @@
 ### The following guide provides details about available **API** endpoints
 
 ---
-Method | Endpoint | Description
---- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites
-GET | api/comp/ | Get ***all*** of the components
-GET | api/meas/ | Get ***all*** of the measurements
-GET | api/units/ | Get ***all*** of the units
-GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regarless of component
-GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite
-GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite
-GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component
-GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite
+Method | Endpoint | Description | JSON Response
+--- | --- | --- | ---
+GET | api/sat/ | Get ***all*** of the satellites | [Serialized](###Serialized)
+GET | api/comp/ | Get ***all*** of the components | [Serialized](###Serialized)
+GET | api/meas/ | Get ***all*** of the measurements | [Serialized](###Serialized)
+GET | api/units/ | Get ***all*** of the units | [Serialized](###Serialized)
+GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](###Serialized)
+GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](###Unspecified-Components)
+GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite | [Specified Component](###Specified-Component)
+GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite | [Unspecified Components](###Unspecified-Components)
+GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](###Unspecified-Components)
+GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](###Specified-Component)
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request
 POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request
 POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers
@@ -30,6 +31,8 @@ For these example links to work, be sure that the backend server is running on y
 > [`api/meas/`](http://127.0.0.1:8000/api/meas/)
 
 > [`api/units/`](http://127.0.0.1:8000/api/units/)
+
+> [`api/sat/1/comp/`](http://127.0.0.1:8000/api/sat/1/comp/)
 
 > [`api/sat/1/recent/20/`](http://127.0.0.1:8000/api/sat/1/recent/20/)
 
@@ -77,3 +80,139 @@ Navigate to the `odas_backend/` directory
 Run the server
 
 > `$ python manage.py runserver`
+
+---
+
+## JSON Reponses
+
+### Serialized
+A `Serialized` response means that the server simply responds with a list of all records, each item in the list is a serialzation of a particular record. Each item contains all of the attributes that describe that object. For example, the serialization of a Satellite would be as such:
+
+```json
+{
+    "id": 1,
+    "name": "Sample",
+    "mission_description": "Sample mission",
+    "year_launched": "2019-10-07T04:08:29.600910Z"
+}
+```
+
+Refer to the most recent Database schema diagram for details regarding object attributes
+
+### Unspecified Components
+An `Unspecified Components` response means that the server will provide only the measurement data ***AND*** the serialized component for each measurement. This is because, the requested `url` could result with data from multiple components, so we cannot omit the component serialization. Along with the list of measurements, the Satellite is also returned, since it might be of use for the front end. Here is an example response.
+
+```json
+{
+    "Satellite": {
+        "name": "Sample",
+        "mission_description": "Sample mission",
+        "year_launched": "2019-10-07T04:08:29.600910Z"
+    },
+    "Measurements": [
+        {
+            "component_name": [
+                "Comp 1"
+            ],
+            "component_model": [
+                "Sample"
+            ],
+            "component_category": [
+                "Sample"
+            ],
+            "component_description": [
+                "Sample"
+            ],
+            "units": "Sample",
+            "time": "2019-10-25T16:42:38.348Z",
+            "value": 1.0
+        },
+        {
+            "component_name": [
+                "Comp 2"
+            ],
+            "component_model": [
+                "Sample"
+            ],
+            "component_category": [
+                "Sample"
+            ],
+            "component_description": [
+                "Sample"
+            ],
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 2.0
+        }
+    ],
+    "Quantities": {
+        "Comp 1": 1,
+        "Comp 2": 1
+    },
+    "comp_specified": true,
+    "data": true,
+    "error": "None"
+}
+```
+
+In the case of the multi-component endpoint, if a component id does not exist, or does not belong to the specified satellite like [`api/sat/1/comp/1+2+3+4+5/recent/10/`](http://127.0.0.1:8000/api/sat/1/comp/1+2+3+4+5/recent/10/) (here the component with `id = 3` and `id = 4` do not belong to the satellite with `id = 1`), then an additional parameter will appear in the `Quantites` section. This value will contain a list of all of the id's of the components that don't exist and/or belong to the specified satellite. Here is an example of what the `Quantities` attribute will look like in this case.
+
+```json
+{
+    ...,
+    "Quantities": {
+        "Comp 1": 1,
+        "Comp 2": 1,
+        "DNE": [
+            3,
+            4
+        ]
+    },
+    ...
+}
+```
+
+
+### Specified Component
+An `Specified Components` response means that the server will provide only the measurement data, the `url` indicates which component's measurements should be returned. In this case, we can omit the component serialization, since the requester *knows* that the measurements belong to the same component. Along with the list of measurements, the Satellite is also returned, since it might be of use for the front end. Here is an example response. Here is an example response.
+
+```json
+{
+    "Satellite": {
+        "name": "Sample",
+        "mission_description": "Sample mission",
+        "year_launched": "2019-10-07T04:08:29.600910Z"
+    },
+    "Measurements": [
+        {
+            "units": "Sample",
+            "time": "2019-10-25T16:42:38.348Z",
+            "value": 1.0
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.1
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.2
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.3
+        }
+    ],
+    "Quantities": {
+        "Comp 1": 1
+    },
+    "comp_specified": false,
+    "data": true,
+    "error": "None"
+}
+```
+
+### Both Uspecified and Specified
+You may have noticed two lingering attributes that were also returned for both of these types of responses. In both cases, the will always be at least two specified attributes, `data` and `error`. These two are always specified. In case that a request was successful, `data` will be `true` and `error` will be `None`. However, if a response is unsuccessfull, `data` will return `false` and `error` will have an associated error message. In addition, to assist the frontend in distinguishing these two responses, the `comp_specified` attribute states whether the serialized component accompanies every measurement. `true` for `Unspecified` responses (since a serilization of the compnent is included with each measurement). And `false` for `Specified` responses, since they are omitted in these responses.
