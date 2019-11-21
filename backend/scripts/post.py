@@ -5,6 +5,8 @@ email_site = 'http://localhost:8000/email/'
 file_site = 'http://localhost:8000/files/upload/'
 delete_site = 'http://localhost:8000/files/<int:pk>/'
 register_site = 'http://localhost:8000/register/'
+login_site = 'http://localhost:8000/login/'
+logout_site = 'http://localhost:8000/logout/'
 
 # x = {
 #     'your_email': 'richardbalbuena1337@gmail.com',
@@ -14,11 +16,13 @@ register_site = 'http://localhost:8000/register/'
 
 x = {
     'username': 'joe1',
-    'pass': 'test',
-    'email': 'joe@test.com'
+    'pass': 'test'
+    # 'email': 'j@t.com'
 }
 
-res = requests.post(url=register_site, data=x)
+# x = { 'uid': 6 }
+
+res = requests.post(url=login_site, data=x)
 print(res.text)
 
 #with open(os.path.join(sys.path[0], 'sample.txt'), 'rb') as f:

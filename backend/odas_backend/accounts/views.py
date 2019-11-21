@@ -34,3 +34,33 @@ def register(request):
             'data': False, 
             'error': 'Details not provided' 
         })
+
+@csrf_exempt
+def logout(request):
+    usr = int(request.POST.get('uid'))
+
+    if usr:
+        try:
+            user = User.objects.get(pk=usr)
+            tkn = Token.objects.get(user=user)
+            Token.objects.get(user=user).delete()
+            data = {
+                'id': user.id,
+                'username': user.username,
+                'token': tkn.key,
+                'data': True,
+                'error': 'None',
+                'log': 'Successfully logged out'
+            }
+            return JsonResponse(data)
+        except IntegrityError:
+            return JsonResponse({ 'data': False, 'error': 'Login with this username already exists' })
+        except Token.DoesNotExist:
+            return JsonResponse({ 'data': False, 'error': 'Cant logout when no one is logged in' })
+    else:
+        return JsonResponse({
+            'usr': usr,
+            'psw': psw,
+            'data': False, 
+            'error': 'Details not provided' 
+        })
