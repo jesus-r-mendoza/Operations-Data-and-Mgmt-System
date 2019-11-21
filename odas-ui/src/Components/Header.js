@@ -9,17 +9,22 @@ export default class Header extends React.Component {
         return (
             <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
                 <NavbarBrand href={"/"}>
-                    <span className={"title-text"}>Operations Data and Management System</span>
+                    <span className={"title-text"}>Operations Data Management System</span>
                 </NavbarBrand>
                 <Container className={"justify-content-end"}>
                     <NavDropdown title={"Generate a Report"}>
                         <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                         <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
-                        {/*<NavDropdown.Item href={"/generate"}>Generate a Dataset</NavDropdown.Item>*/}
                     </NavDropdown>
                     <NavItem>
                         <Link to={"/documentation"}>
                             Documentation
+                        </Link>
+                    </NavItem>
+                    <span className={"link-text"}>{"\xa0"}|{"\xa0"}</span>
+                    <NavItem>
+                        <Link to={""}>
+                            Sign in
                         </Link>
                     </NavItem>
                 </Container>

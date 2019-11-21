@@ -9,8 +9,6 @@
     border-top: 0;
     display: flex;
     flex-direction: column;
-    /*overflow: scroll;*/
-    /*overflow-x: hidden;*/
     overflow-y: scroll;
     position: sticky;
     position: -webkit-sticky;
@@ -24,18 +22,20 @@
     font-weight: bold;
     margin-top: 5px;
     margin-bottom: 10px;
-    /*box-shadow: 0 1px 2px 0 darkgray;*/
     box-shadow: 1px 1px 1px lightgray;
     padding-bottom: 10px;
 }
 
-.sidebar-info {
-    display: flex;
-    justify-content: center;
-    font-size: large;
-    color: #606060;
-    margin-bottom: 10px;
-    font-weight: bold;
+.dropdown-style {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*font-size: large;*/
+    /*color: #606060;*/
+    /*margin-bottom: 10px;*/
+    /*font-weight: bold;*/
+    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
 }
 
 /*Buttons*/
@@ -52,11 +52,9 @@
 .gen-button-container {
     display: flex;
     justify-content: center;
-    /*box-shadow: 1px 0 1px lightgray;*/
     background-color: #f4f3f1;
     box-shadow: 1px 1px 1px 0 lightgray inset;
     bottom: 0;
-    /*position: absolute;*/
     width: 100%;
 }
 

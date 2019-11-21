@@ -5,11 +5,13 @@ import axios from 'axios';
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
 import {Divider} from "semantic-ui-react";
+import Select from 'react-select';
 // Components
 import LoadSpinner from "./LoadSpinner";
-import DropdownComp from "./DropdownComp";
+import { connect } from 'react-redux';
+import { fetchSatellites } from "../Actions";
 
-export default class Sidebar extends React.Component {
+class Sidebar extends React.Component {
 // TODO Disable generate report button while nothing is selected
 
     constructor(props) {
@@ -22,6 +24,7 @@ export default class Sidebar extends React.Component {
             formSubmit: [],
             satObject: [],
             loadDropdown: true,
+            satPlaceHolder: "Satellite",
             measurementCheckboxes: MEASUREMENTS.reduce(
                 (options, option) => ({
                     ...options,
@@ -37,21 +40,26 @@ export default class Sidebar extends React.Component {
                 {}
             ),
         };
-
-        console.log(this.props.page);
-
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8000/api/satellites/?format=json", {
+        // test = this.props.fetchSatellites();
+
+        axios.get("http://localhost:8000/api/satellites/", {
             headers: {
                 'Content-type': "application/json"
             }
         })
             .then(res => {
-               this.setState({
-                   satNames: res.data
-               })
+                setTimeout(() => {
+                    this.setState({
+                        satObject: res.data
+                    })
+                }, 500)
+
+            })
+            .catch(function (err) {
+                console.log(err)
             });
 
         this.setState({
@@ -63,8 +71,6 @@ export default class Sidebar extends React.Component {
         this.setState({
             currentPage: "upload"
         });
-
-        console.log(this.state.currentPage)
     }
 
     selectAllUnitCheckboxes = isSelected => {
@@ -155,28 +161,6 @@ export default class Sidebar extends React.Component {
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
     createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
-    createSatNameObject(satArray) {
-        let nameList = Object.create(Object.prototype, {
-            key: {value: satArray.id},
-            text: {value: satArray.name},
-            value: {value: satArray.id}
-        });
-
-        return nameList;
-    }
-
-
-    showDropdown (satArray) {
-        let nameList = this.createSatNameObject(satArray);
-        // let nameList = this.createDictionary(satArray);
-        console.log("SAT NAMES", satArray);
-        return (
-            <DropdownComp
-                optionsList={nameList}
-            />
-        );
-    }
-
     // TODO Does not route back to the desired page.
     renderBackArrow(page) {
         if(page === "renderReport") {
@@ -194,9 +178,15 @@ export default class Sidebar extends React.Component {
         }
     }
 
+    dropDownChange = e => {
+        this.setState({
+            satPlaceHolder: e.label
+        })
+    };
+
     render() {
-        let names = this.state.satObject;
-        console.log("ARRAY", names[0]);
+        let satellites = this.props.satellites;
+
         if (this.state.isLoading === true) {
             return (
                 <LoadSpinner/>
@@ -211,9 +201,14 @@ export default class Sidebar extends React.Component {
                                 <span>{this.props.children}</span>
                             </div>
                             <div>
-                                <div className={"sidebar-info"}>
-                                    {this.showDropdown(names)}
-                                    {/*<span>Select data to be reported</span>*/}
+                                <div className={"dropdown-style"}>
+                                    <Select
+                                        name="form-field-name"
+                                        value="one"
+                                        options={satellites}
+                                        onChange={this.dropDownChange}
+                                        placeholder={this.state.satPlaceHolder}
+                                    />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
                                     <div className={"checkbox-container"}>
@@ -272,5 +267,11 @@ export default class Sidebar extends React.Component {
         }
     }
 }
+
+const mapStateToProps = state => {
+    return {sats: state.name};
+};
+
+export default connect(mapStateToProps, { fetchSatellites })(Sidebar)
 
 // TODO Bring api calls back into sidebar

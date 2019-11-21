@@ -151,4 +151,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL= False
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ('http://*', 'https://*')
+CORS_ORIGIN_WHITELIST = ('http://*', 'https://*', 'http://localhost:3000')

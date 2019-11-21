@@ -1,13 +1,17 @@
 /*Navigation*/
 .nav-bar {
     display: flex;
-    justify-content: flex-end;
     background: #141e28;
     opacity: 100%;
     z-index: 1;
     border: 0;
     font-size: large;
     box-shadow: 1px 1px 1px black;
+}
+
+.nav-items {
+    display: flex;
+    justify-content: space-between;
 }
 
 .title-text {
@@ -17,6 +21,10 @@
     color: lightgray;
 }
 
+.link-text {
+    color: white;
+}
+
 .paths-container{
     width: 100%;
 }
@@ -24,18 +32,30 @@
 /*Main page*/
 .main-page {
     background-color: #141e28;
-    justify-content: center;
     height: 95vh;
+    width: 100vw;
+    position: fixed;
+}
+
+.user-box {
+    background: #141e28;
+    border-radius: 10px;
+    width: 29em;
+    height: 23em;
+    padding-left: 30px;
+    margin-top: 30px;
+    box-shadow: 0 4px 5px darkgray inset;
 }
 
 .main-text {
     color: white;
 }
 
-.main-button {
+.main-btns {
     display: flex;
-    padding-top: 40px;
-    padding-right: 20px;
+    flex-direction: column;
+    padding-top: 20px;
+    width: 27em;
 }
 
 .query-button {
@@ -66,25 +86,40 @@
     color: white;
 }
 
+.sub-text {
+    font-size: large;
+    color: #ffffff;
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
 .email-input {
     display: flex;
     flex-direction: column;
     width: auto;
-    padding-top: 25%;
+    padding-top: 10%;
     padding-right: 25%;
     color: white;
     font-size: large;
-
 }
 
 .email-button-container {
     display: flex;
     flex-direction: row;
-    padding-top: 10px;
+    justify-content: space-between;
+    padding-top: 15px;
+    width: 12em;
 }
 
 .email-button {
-    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+.modal-btn {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 7px;
+    width: 100%;
 }
 
 .email-header {
@@ -93,8 +128,9 @@
 }
 
 .main-content {
-    padding-top: 2%;
-    width: 30%
+    padding-top: 5%;
+    padding-left: 6%;
+    width: 40%;
 }
 
 .email-form {

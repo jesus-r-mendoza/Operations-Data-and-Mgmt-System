@@ -4,12 +4,12 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import Header from "./Components/Header";
 import Main from "./Pages/Main";
 import QueryData from "./Pages/QueryData";
-import GenerateData from "./Pages/GenerateData";
 import UploadData from "./Pages/UploadData";
 import Documentation from "./Pages/Documentation";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
+import Dashboard from "./Pages/Dashboard";
 
 // TODO object is currently useless
 const routes = [
@@ -31,10 +31,19 @@ const routes = [
                 component: UploadData
             }
         ]
-    }
+    },
 ];
 
 export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            satObject: [],
+            MEASUREMENTS: [],
+            COMPONENTS: []
+        }
+    }
+
     render() {
         return (
             <Router>
@@ -42,9 +51,9 @@ export default class App extends React.Component {
                 <div>
                     <Route path={"/"} exact component={Main} />
                     <Route path={"/query"} component={QueryData} />
-                    <Route path={"/generate"} component={GenerateData} />
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
+                    <Route path={"/user-dashboard"} component={Dashboard} />
                 </div>
             </Router>
         );
