@@ -21,6 +21,8 @@ const selectedSatReducer = (selectedSat = null, action) => {
     return selectedSat
 };
 
+
+
 export default combineReducers({
    sats: satelliteReducer,
    selectedSat: selectedSatReducer

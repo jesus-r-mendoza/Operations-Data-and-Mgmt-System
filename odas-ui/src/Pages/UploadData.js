@@ -5,18 +5,21 @@ import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import "../Layout/UploadData.css"
-import {Button, FormControl} from "react-bootstrap";
+import {Button, FormControl, Container, Row, Col} from "react-bootstrap";
 import axios from "axios";
+// Redux
+import {postFile} from "../Actions";
+import {connect} from "react-redux";
 
-const acceptedExtensions = [".tlm", ".bin"];
+const acceptedExtensions = [".tlm", ".bin", ".txt"];
 
 const apis = {
     unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/components/",
-    satellites: "http://localhost:8000/api/satellites/"
+    component: "http://localhost:8000/api/comp/",
+    satellites: "http://localhost:8000/api/sat/"
 };
 
-export default class UploadData extends React.Component {
+class UploadData extends React.Component {
 
     constructor(props) {
         super(props);
@@ -24,6 +27,7 @@ export default class UploadData extends React.Component {
             isLoading: true,
             currentPage: "upload",
             selectedFile: "File Name",
+            fileState: null,
             loaded: 1,
             fileSubmit: false,
             MEASUREMENTS: [],
@@ -66,6 +70,7 @@ export default class UploadData extends React.Component {
         if (acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0].name,
+                fileState: event.target.files[0],
                 loaded: 1,
                 fileSubmit: true
             });
@@ -76,6 +81,15 @@ export default class UploadData extends React.Component {
         }
 
         console.log(event.target.files[0].name);
+    };
+
+    handleFileSubmit = e => {
+        let formData = new FormData();
+        let file = this.state.fileState;
+        formData.append('upfile', file);
+        formData.append('name', "Check");
+        this.props.postFile(formData);
+
     };
 
     showErrorMessage(loaded) {
@@ -103,6 +117,8 @@ export default class UploadData extends React.Component {
             return values;
         }
     }
+
+
 
     renderFileInput() {
         if (this.state.currentPage === "upload") {
@@ -143,7 +159,7 @@ export default class UploadData extends React.Component {
                         variant={"primary"}
                         className={"submit-btn"}
                         disabled={!this.state.fileSubmit}
-                        onClick={() => this.goToReport()}
+                        onClick={() => this.handleFileSubmit()}
                     >
                         Submit
                     </Button>
@@ -153,9 +169,9 @@ export default class UploadData extends React.Component {
 
         else if (this.state.currentPage === "renderReport") {
             return (
-                <div className={"card-container"}>
+                <Container>
                     <ReportCard/>
-                </div>
+                </Container>
             );
         }
     }
@@ -185,3 +201,9 @@ export default class UploadData extends React.Component {
         }
     }
 }
+
+const mapStateToProps = state => {
+    return state;
+};
+
+export default connect(mapStateToProps, { postFile })(UploadData)
