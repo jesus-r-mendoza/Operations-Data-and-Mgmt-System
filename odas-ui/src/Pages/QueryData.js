@@ -99,13 +99,15 @@ export default class QueryData extends React.Component {
                         Query a Dataset
                     </Sidebar>
                     {/*className={"card-container"}*/}
-                    <Container>
-                        <Row>
-                            <Col lg>
-                                <ReportCard/>
-                            </Col>
-                        </Row>
-                    </Container>
+                    <div>
+                        <Container>
+                            <Row>
+                                <Col lg>
+                                    <ReportCard/>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </div>
                 </div>
             );
         }
