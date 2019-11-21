@@ -1,3 +1,36 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from django.db.utils import IntegrityError
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
+@csrf_exempt
+def register(request):
+    usr = request.POST.get('username')
+    psw = request.POST.get('pass')
+    eml = request.POST.get('email')
+
+    if usr and psw and eml:
+        try:
+            user = User.objects.create(username=usr, password=psw, email=eml)
+            tkn = Token.objects.create(user=user)
+            data = {
+                'id': user.id,
+                'username': user.username,
+                'token': tkn.key,
+                'data': True,
+                'error': 'None'
+            }
+            return JsonResponse(data)
+        except IntegrityError:
+            return JsonResponse({ 'data': False, 'error': 'User with this username already exists' })
+    else:
+        return JsonResponse({
+            'usr': usr,
+            'psw': psw,
+            'eml': eml,
+            'data': False, 
+            'error': 'Details not provided' 
+        })
