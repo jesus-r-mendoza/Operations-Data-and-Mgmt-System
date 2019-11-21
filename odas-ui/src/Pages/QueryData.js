@@ -10,8 +10,8 @@ import axios from "axios";
 
 const apis = {
     unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/components/",
-    satellites: "http://localhost:8000/api/satellites/"
+    component: "http://localhost:8000/api/comp/",
+    satellites: "http://localhost:8000/api/sat/"
 };
 
 export default class QueryData extends React.Component {
