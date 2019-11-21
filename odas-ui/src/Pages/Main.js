@@ -20,17 +20,7 @@ export default class Main extends React.Component {
         });
     }
 
-    // handleSubmit = () =>
-
     render() {
-        const infoPop = (
-            <Popover id={"popover-basic"}>
-                <PopoverContent>
-                    Sign up to save your work and get weekly reports by email!
-                </PopoverContent>
-            </Popover>
-        );
-
         return (
             <div className={"main-page"}>
                 <div className={"main-container"}>
@@ -43,7 +33,7 @@ export default class Main extends React.Component {
                                     <ul>
                                         <li>Generate custom telemetry reports</li>
                                         <li>Analyze telemetry patterns</li>
-                                        <li>Save reports and summaries</li>
+                                        <li>Save custom reports and summaries</li>
                                         <li>Receive weekly reports</li>
                                     </ul>
                                 </span>
