@@ -61,8 +61,10 @@ def login(request):
 
 @csrf_exempt
 def logout(request):
-    usr = int(request.POST.get('uid'))
-
+    try:
+        usr = int(request.POST.get('uid'))
+    except TypeError:
+        return JsonResponse( { 'data': False, 'error': 'User ID not provided' } )
     if usr:
         try:
             user = User.objects.get(pk=usr)

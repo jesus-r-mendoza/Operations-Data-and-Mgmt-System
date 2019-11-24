@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def components_of_satellite(request, satellite_id):
+    print('User =', request.user, request.user.id, '\nToken =', request.auth.key)
+
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         components = Component.objects.filter(satellite=sat)
