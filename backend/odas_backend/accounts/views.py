@@ -11,7 +11,7 @@ def register(request):
     usr = request.POST.get('username')
     psw = request.POST.get('pass')
     eml = request.POST.get('email')
-
+    # With Postman add header, content-type: application/json -> form-data
     if usr and psw and eml:
         try:
             user = User.objects.create(username=usr, password=psw, email=eml)

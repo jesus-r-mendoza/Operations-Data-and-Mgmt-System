@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .models import Satellite, Component, Measurement, Units
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def components_of_satellite(request, satellite_id):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
