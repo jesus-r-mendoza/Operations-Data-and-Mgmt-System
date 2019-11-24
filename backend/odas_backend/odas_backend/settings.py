@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware'
 ]
 
 ROOT_URLCONF = 'odas_backend.urls'
@@ -151,4 +152,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL= False
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ('http://*', 'https://*', 'http://localhost:3000')
+CORS_ORIGIN_WHITELIST = ['http://*', 'https://*']

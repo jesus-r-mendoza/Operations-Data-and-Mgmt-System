@@ -1,29 +1,35 @@
 import React from 'react';
+// Redux
+// import {postFile} from "../Actions";
+// import {connect} from "react-redux";
+import {reduxForm} from "redux-form";
 //Components
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import "../Layout/UploadData.css"
-import {Button, FormControl} from "react-bootstrap";
+import {Button, FormControl, Container} from "react-bootstrap";
 import axios from "axios";
 
-const acceptedExtensions = [".tlm", ".bin"];
+const acceptedExtensions = [".tlm", ".bin", ".txt"];
+// const fileForm = reduxForm({
+//     form: 'file'
+// });
 
 const apis = {
     unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/components/",
-    satellites: "http://localhost:8000/api/satellites/"
+    component: "http://localhost:8000/api/comp/",
+    satellites: "http://localhost:8000/api/sat/"
 };
 
-export default class UploadData extends React.Component {
-
+class UploadData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoading: true,
             currentPage: "upload",
-            selectedFile: "File Name",
+            selectedFile: "Select a file",
             loaded: 1,
             fileSubmit: false,
             MEASUREMENTS: [],
@@ -65,7 +71,7 @@ export default class UploadData extends React.Component {
         console.log(extension);
         if (acceptedExtensions.includes(extension)) {
             this.setState({
-                selectedFile: event.target.files[0].name,
+                selectedFile: event.target.files[0],
                 loaded: 1,
                 fileSubmit: true
             });
@@ -73,11 +79,35 @@ export default class UploadData extends React.Component {
             this.setState({
                 loaded: 0
             });
+            console.log("No file selected");
         }
 
-        console.log(event.target.files[0].name);
+        console.log(fileName);
     };
 
+    handleFileSubmit = () => {
+        let fileForm = new FormData();
+        let upfile = this.state.selectedFile;
+        fileForm.append("upfile", upfile);
+        console.log(fileForm.get("upfile"));
+
+        axios.post('http://localhost:8000/files/upload/', {
+            data: {
+                message: 'Hi',
+                upfile: fileForm
+            }
+        }, {
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+            .then(
+                res =>console.log(res),
+                error => console.log(error)
+            )
+    };
+    
     showErrorMessage(loaded) {
         if(loaded === 0) {
             return(
@@ -104,6 +134,8 @@ export default class UploadData extends React.Component {
         }
     }
 
+
+
     renderFileInput() {
         if (this.state.currentPage === "upload") {
             return (
@@ -118,7 +150,7 @@ export default class UploadData extends React.Component {
                                     disabled
                                     type={"text"}
                                     name={"data-file"}
-                                    placeholder={this.state.selectedFile}
+                                    placeholder={this.state.selectedFile.name}
                                     className={"input-box"}
                                 />
                             <div className={"upload-btn-wrapper"}>
@@ -143,7 +175,7 @@ export default class UploadData extends React.Component {
                         variant={"primary"}
                         className={"submit-btn"}
                         disabled={!this.state.fileSubmit}
-                        onClick={() => this.goToReport()}
+                        onClick={() => this.handleFileSubmit()}
                     >
                         Submit
                     </Button>
@@ -152,9 +184,21 @@ export default class UploadData extends React.Component {
         }
 
         else if (this.state.currentPage === "renderReport") {
+            let units = this.createArray("units");
+            let components = this.createArray("components");
+
             return (
-                <div className={"card-container"}>
-                    <ReportCard/>
+                <div>
+                    <Sidebar
+                        page={this.state.currentPage}
+                        units={units}
+                        components={components}
+                    >
+                        Upload a Dataset
+                    </Sidebar>
+                    <Container>
+                        <ReportCard/>
+                    </Container>
                 </div>
             );
         }
@@ -168,20 +212,17 @@ export default class UploadData extends React.Component {
         }
 
         if(!this.state.isLoading) {
-            let units = this.createArray("units");
-            let components = this.createArray("components");
+
             return (
                 <div className={"report-container"}>
-                    <Sidebar
-                        page={this.state.currentPage}
-                        units={units}
-                        components={components}
-                    >
-                        Upload a Dataset
-                    </Sidebar>
                     {this.renderFileInput()}
                 </div>
             );
         }
     }
 }
+
+
+export default reduxForm({
+    form: 'file'
+})(UploadData)

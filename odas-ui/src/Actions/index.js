@@ -1,7 +1,10 @@
 import SatApi from "../Apis/SatApi"
+// const postHeaders = {
+//     'Content-Type': 'multipart/form-data'
+// };
 
 export const fetchUnits = () => async dispatch => {
-    // Needed exact URL including the slashes?
+    // Needed exact URL including the slashes
         const response = await SatApi.get("api/units/", {
             method: "GET",
             headers: {
@@ -15,7 +18,7 @@ export const fetchUnits = () => async dispatch => {
 
 export const fetchComponents = () => async dispatch => {
     // Needed exact URL including the slashes?
-    const response = await SatApi.get("api/components/", {
+    const response = await SatApi.get("api/comp/", {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -28,7 +31,7 @@ export const fetchComponents = () => async dispatch => {
 
 export const fetchSatellites = () => async dispatch => {
     // Needed exact URL including the slashes?
-    const response = await SatApi.get("api/satellites/", {
+    const response = await SatApi.get("api/sat/", {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -38,6 +41,19 @@ export const fetchSatellites = () => async dispatch => {
 
     dispatch({type: "FETCH_SATS", payload: response.data});
 };
+
+export function postFile (file) {
+    console.log(file);
+    return (dispatch, getState) => {
+        dispatch({type: "REQUEST STARTED"});
+
+        SatApi.post("files/upload/", {data: file})
+            .then(
+                res => dispatch({type: "REQUEST_ACCEPTED", payload: res}),
+                error => dispatch({type: "REQUEST_FAILED", error: error})
+            )
+    }
+}
 
 export const selectSatellite = (satellite) => {
     return {
