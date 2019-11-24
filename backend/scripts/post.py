@@ -14,15 +14,15 @@ logout_site = 'http://localhost:8000/logout/'
 #     'message': 'implemented cors headers for django'
 # }
 
-x = {
-    'username': 'joe1',
-    'pass': 'test'
-    # 'email': 'j@t.com'
-}
+# x = {
+#     'username': 'joe',
+#     'pass': 'test'
+# #     'email': 'j@t.com'
+# }
 
-# x = { 'uid': 6 }
+x = { 'uid': 6 }
 
-res = requests.post(url=login_site, data=x)
+res = requests.post(url=logout_site, data=x)
 print(res.text)
 
 #with open(os.path.join(sys.path[0], 'sample.txt'), 'rb') as f:

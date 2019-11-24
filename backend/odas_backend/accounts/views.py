@@ -15,6 +15,8 @@ def register(request):
     if usr and psw and eml:
         try:
             user = User.objects.create(username=usr, password=psw, email=eml)
+            user.set_password(user.password)
+            user.save()
             tkn = Token.objects.create(user=user)
             data = {
                 'id': user.id,
@@ -28,9 +30,31 @@ def register(request):
             return JsonResponse({ 'data': False, 'error': 'User with this username already exists' })
     else:
         return JsonResponse({
-            'usr': usr,
-            'psw': psw,
-            'eml': eml,
+            'data': False, 
+            'error': 'Details not provided' 
+        })
+
+@csrf_exempt
+def login(request):
+    usr = request.POST.get('username')
+    psw = request.POST.get('pass')
+
+    if usr and psw:
+        try:
+            user = authenticate(username=usr, password=psw)
+            tkn = Token.objects.get_or_create(user=user)
+            data = {
+                'id': user.id,
+                'username': user.username,
+                'token': tkn[0].key,
+                'data': True,
+                'error': 'None'
+            }
+            return JsonResponse(data)
+        except IntegrityError:
+            return JsonResponse({ 'data': False, 'error': 'Username and/or password are not correct' })
+    else:
+        return JsonResponse({
             'data': False, 
             'error': 'Details not provided' 
         })
@@ -57,10 +81,10 @@ def logout(request):
             return JsonResponse({ 'data': False, 'error': 'Login with this username already exists' })
         except Token.DoesNotExist:
             return JsonResponse({ 'data': False, 'error': 'Cant logout when no one is logged in' })
+        except ValueError:
+            return JsonResponse( { 'data': False, 'error': 'User ID not provided as number format' } )
     else:
         return JsonResponse({
-            'usr': usr,
-            'psw': psw,
             'data': False, 
             'error': 'Details not provided' 
         })

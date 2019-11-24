@@ -79,6 +79,10 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 WSGI_APPLICATION = 'odas_backend.wsgi.application'
 
 
