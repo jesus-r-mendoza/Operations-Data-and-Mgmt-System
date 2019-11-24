@@ -9,7 +9,7 @@ export default class Header extends React.Component {
         return (
             <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
                 <NavbarBrand href={"/"}>
-                    <span className={"title-text"}>Operations Data Management System</span>
+                    <span className={"title-text"}>Operations Data Analysis and Management System</span>
                 </NavbarBrand>
                 <Container className={"justify-content-end"}>
                     <NavDropdown title={"Generate a Report"}>

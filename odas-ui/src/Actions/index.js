@@ -4,7 +4,7 @@ const postHeaders = {
 };
 
 export const fetchUnits = () => async dispatch => {
-    // Needed exact URL including the slashes?
+    // Needed exact URL including the slashes
         const response = await SatApi.get("api/units/", {
             method: "GET",
             headers: {
@@ -47,7 +47,7 @@ export function postFile (file) {
     return (dispatch, getState) => {
         dispatch({type: "REQUEST STARTED"});
 
-        SatApi.post("files/upload/", {data: file}, postHeaders)
+        SatApi.post("files/upload/", {data: file})
             .then(
                 res => dispatch({type: "REQUEST_ACCEPTED", payload: res}),
                 error => dispatch({type: "REQUEST_FAILED", error: error})

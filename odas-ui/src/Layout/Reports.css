@@ -12,25 +12,21 @@
 
 /*Card formatting*/
 .card {
-    width: 33%;
-    height: 400px;
+    width: 600px;
+    height: 350px;
     margin-top: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     /*border: solid red 3px;*/
 }
 
 .card-container {
-    /*display: flex;*/
-    /*justify-content: center;*/
     width: 100vw;
     height: 100vh;
     position: relative;
-    /*border: solid yellow 3px;*/
 }
 
 .graph-report {
-    width: fit-content;
-    height: auto;
-    /*border: solid black 3px;*/
+    position: relative;
+    overflow: hidden;
 }
 
