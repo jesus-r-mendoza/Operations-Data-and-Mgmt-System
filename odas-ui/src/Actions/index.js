@@ -1,7 +1,7 @@
 import SatApi from "../Apis/SatApi"
-const postHeaders = {
-    'Content-Type': 'multipart/form-data'
-};
+// const postHeaders = {
+//     'Content-Type': 'multipart/form-data'
+// };
 
 export const fetchUnits = () => async dispatch => {
     // Needed exact URL including the slashes

@@ -1,4 +1,8 @@
 import React from 'react';
+// Redux
+// import {postFile} from "../Actions";
+// import {connect} from "react-redux";
+import {reduxForm} from "redux-form";
 //Components
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
@@ -7,10 +11,6 @@ import ReportCard from "../Components/ReportCard";
 import "../Layout/UploadData.css"
 import {Button, FormControl, Container} from "react-bootstrap";
 import axios from "axios";
-// Redux
-// import {postFile} from "../Actions";
-// import {connect} from "react-redux";
-import {reduxForm} from "redux-form";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt"];
 // const fileForm = reduxForm({
@@ -24,7 +24,6 @@ const apis = {
 };
 
 class UploadData extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -80,6 +79,7 @@ class UploadData extends React.Component {
             this.setState({
                 loaded: 0
             });
+            console.log("No file selected");
         }
 
         console.log(fileName);
@@ -96,18 +96,18 @@ class UploadData extends React.Component {
                 message: 'Hi',
                 upfile: fileForm
             }
-            }, {
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            })
+        }, {
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
             .then(
                 res =>console.log(res),
                 error => console.log(error)
             )
     };
-
+    
     showErrorMessage(loaded) {
         if(loaded === 0) {
             return(

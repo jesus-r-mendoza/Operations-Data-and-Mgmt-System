@@ -1,11 +1,12 @@
 import React from 'react';
+//Redux
 import { connect } from "react-redux"
 import { fetchUnits } from "../Actions";
 // Components
 import LoadSpinner from "../Components/LoadSpinner";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import "../Layout/Dashboard.css";
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -28,16 +29,17 @@ class Dashboard extends React.Component {
         if(this.state.isLoading) {
             return (
                 <LoadSpinner />
-            )
+            );
+        } else {
+            const test = this.props;
+            console.log(test);
+
+            return (
+                <div className={"dash-container"}>
+
+                </div>
+            );
         }
-        const test = this.props;
-        console.log(test);
-
-        return (
-            <div className={"container"}>
-
-            </div>
-        );
     }
 }
 
