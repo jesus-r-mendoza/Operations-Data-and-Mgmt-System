@@ -5,10 +5,18 @@ from django.contrib.auth import authenticate
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Invite
 import odas_backend.settings as settings
+from django.utils.crypto import get_random_string
 
 @csrf_exempt
-def register(request):
+def register(request, code):
+
+    try:
+        invite = Invite.objects.get(link=code)
+    except Invite.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Invitation Link is invalid' } )
+
     usr = request.POST.get('username')
     psw = request.POST.get('pass')
     eml = request.POST.get('email')
@@ -16,12 +24,14 @@ def register(request):
     if usr and psw and eml:
         try:
             user = User.objects.create(username=usr, password=psw, email=eml)
+            user.groups.add(invite.organization)
             user.set_password(user.password)
             user.save()
             tkn = Token.objects.create(user=user)
             data = {
                 'id': user.id,
                 'username': user.username,
+                'organization': user.groups.all()[0].name,
                 'token': tkn.key,
                 'data': True,
                 'error': 'None'
@@ -44,7 +54,15 @@ def register_org(request):
         if psw and psw == settings.CREATE_ORG_PASSWORD:
             if org_name:
                 try:
-                    Group.objects.create(name=org_name)
+                    org = Group.objects.create(name=org_name)
+                    unique = False
+                    while not unique:
+                        invite_code = get_random_string()
+                        try:
+                            Invite.objects.create(organization=org, link=invite_code)
+                            unique = True
+                        except IntegrityError:
+                            unique = False
 
                     return JsonResponse( { 'data': True, 'error': 'None' } )
                 except IntegrityError:
