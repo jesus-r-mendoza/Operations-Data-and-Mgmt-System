@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import odas_backend.settings as settings
 
 @csrf_exempt
 def register(request):
@@ -33,6 +34,27 @@ def register(request):
             'data': False, 
             'error': 'Details not provided' 
         })
+
+@csrf_exempt
+def register_org(request):
+    if request.method == 'POST':
+        org_name = request.POST.get('org_name')
+        psw = request.POST.get('pass')
+        
+        if psw and psw == settings.CREATE_ORG_PASSWORD:
+            if org_name:
+                try:
+                    Group.objects.create(name=org_name)
+
+                    return JsonResponse( { 'data': True, 'error': 'None' } )
+                except IntegrityError:
+                    return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
+            else:
+                return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
+        else:
+            return JsonResponse( { 'data': False, 'error': 'Password not provided or incorrect' } )
+    else:
+        return JsonResponse( { 'data': False, 'error': 'Only POST methods allowed' } )
 
 @csrf_exempt
 def login(request):
