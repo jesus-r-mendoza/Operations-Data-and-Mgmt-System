@@ -10,19 +10,15 @@ import odas_backend.settings as settings
 from django.utils.crypto import get_random_string
 
 @csrf_exempt
-def register(request, code):
-
-    try:
-        invite = Invite.objects.get(link=code)
-    except Invite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Invitation Link is invalid' } )
-
+def register(request):
     usr = request.POST.get('username')
     psw = request.POST.get('pass')
     eml = request.POST.get('email')
+    inv = request.POST.get('code')
     # With Postman add header, content-type: application/json -> form-data
-    if usr and psw and eml:
+    if usr and psw and eml and inv:
         try:
+            invite = Invite.objects.get(link=inv)
             user = User.objects.create(username=usr, password=psw, email=eml)
             user.groups.add(invite.organization)
             user.set_password(user.password)
@@ -39,6 +35,8 @@ def register(request, code):
             return JsonResponse(data)
         except IntegrityError:
             return JsonResponse({ 'data': False, 'error': 'User with this username already exists' })
+        except Invite.DoesNotExist:
+            return JsonResponse( { 'data': False, 'error': 'Invitation Link is invalid' } )
     else:
         return JsonResponse({
             'data': False, 
