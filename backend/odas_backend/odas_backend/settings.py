@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'odas',
     'report_gen',
+    'accounts',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
 ]
 
@@ -77,6 +79,10 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'odas_backend.wsgi.application'
 
@@ -116,6 +122,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -152,4 +164,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL= False
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ['http://*', 'https://*']
+
+CORS_ORIGIN_WHITELIST = ('http://*', 'https://*', 'http://localhost:3000')
+
+CREATE_ORG_PASSWORD = credentials['create_org_pswd']

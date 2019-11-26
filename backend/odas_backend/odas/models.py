@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import Group
 
-# Create your models here.
 class Satellite(models.Model):
     name = models.CharField(max_length=64)
     mission_description = models.CharField(max_length=512)
     year_launched = models.DateTimeField(auto_now_add=True)
+    organization = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.id}: {self.name}'
