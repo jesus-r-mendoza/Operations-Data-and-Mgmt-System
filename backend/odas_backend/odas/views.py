@@ -22,11 +22,16 @@ def components_of_satellite(request, satellite_id):
     except Group.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=None):
     try:
         if from_date[0] != 'from' or to_date[0] != 'to':
             return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
         sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         measurements = Measurement.objects.filter(satellite=sat).filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
         if component_id == None:
             comp = None
@@ -45,6 +50,8 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
 
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Group.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
 def recent_measurements(request, satellite_id, quantity):
     try:
