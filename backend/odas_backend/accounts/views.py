@@ -19,22 +19,24 @@ def register(request):
     eml = request.POST.get('email')
     inv = request.POST.get('code')
     # With Postman add header, content-type: application/json -> form-data
-    if usr and psw and eml and inv:
+    if usr and psw and eml:
         try:
-            invite = Invite.objects.get(link=inv)
             user = User.objects.create(username=usr, password=psw, email=eml)
-            user.groups.add(invite.organization)
             user.set_password(user.password)
+            if inv:
+                invite = Invite.objects.get(link=inv)
+                user.groups.add(invite.organization)
             user.save()
             tkn = Token.objects.create(user=user)
             data = {
                 'id': user.id,
                 'username': user.username,
-                'organization': user.groups.all()[0].name,
                 'token': tkn.key,
                 'data': True,
                 'error': 'None'
             }
+            if inv:
+                data['organization'] = user.groups.all()[0].name
             return JsonResponse(data)
         except IntegrityError:
             return JsonResponse({ 'data': False, 'error': 'User with this username already exists' })
@@ -58,6 +60,7 @@ def register_org(request):
         if org_name:
             try:
                 org = Group.objects.create(name=org_name)
+                request.user.groups.add(org)
                 unique = False
                 while not unique:
                     invite_code = get_random_string()
@@ -67,7 +70,7 @@ def register_org(request):
                     except IntegrityError:
                         unique = False
 
-                return JsonResponse( { 'data': True, 'error': 'None' } )
+                return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
             except IntegrityError:
                 return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
         else:
