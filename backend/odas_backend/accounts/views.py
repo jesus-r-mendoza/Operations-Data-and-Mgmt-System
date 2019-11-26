@@ -45,7 +45,7 @@ def register(request):
     else:
         return JsonResponse({
             'data': False, 
-            'error': 'Details not provided: Must provide username, pass, email, and code' 
+            'error': 'Details not provided: Must provide username, pass, email; code (optional)' 
         })
 
 @csrf_exempt
