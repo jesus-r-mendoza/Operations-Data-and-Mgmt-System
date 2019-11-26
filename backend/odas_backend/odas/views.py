@@ -4,20 +4,23 @@ from .models import Satellite, Component, Measurement, Units
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.contrib.auth.models import User, Group
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def components_of_satellite(request, satellite_id):
-    print('User =', request.user, request.user.id, '\nToken =', request.auth.key)
-
     try:
         sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         components = Component.objects.filter(satellite=sat)
         data = _build_comp_response(components)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Group.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
 def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=None):
     try:
