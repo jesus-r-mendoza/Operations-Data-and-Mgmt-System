@@ -55,28 +55,28 @@ def register(request):
 def register_org(request):
     org_name = request.POST.get('org_name')
     psw = request.POST.get('pass')
-    
-    if psw and psw == settings.CREATE_ORG_PASSWORD:
-        if org_name:
-            try:
-                org = Group.objects.create(name=org_name)
-                request.user.groups.add(org)
-                unique = False
-                while not unique:
-                    invite_code = get_random_string()
-                    try:
-                        Invite.objects.create(organization=org, link=invite_code)
-                        unique = True
-                    except IntegrityError:
-                        unique = False
 
-                return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
-            except IntegrityError:
-                return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
-        else:
-            return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
-    else:
+    if not org_name:
+        return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
+
+    if not psw or psw != settings.CREATE_ORG_PASSWORD:
         return JsonResponse( { 'data': False, 'error': 'Password not provided or incorrect' } )
+    
+    try:
+        org = Group.objects.create(name=org_name)
+        request.user.groups.add(org)
+        unique = False
+        while not unique:
+            invite_code = get_random_string()
+            try:
+                Invite.objects.create(organization=org, link=invite_code)
+                unique = True
+            except IntegrityError:
+                unique = False
+
+        return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
+    except IntegrityError:
+        return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
 
 @csrf_exempt
 def login(request):
