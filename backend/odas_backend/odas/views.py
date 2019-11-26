@@ -37,12 +37,12 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
             comp = None
         else:
             comp = Component.objects.get(pk=component_id)
+            if comp.satellite != sat:
+                raise Component.DoesNotExist()
             measurements = measurements.filter(component = comp)
 
         qs = [sat, (comp, len(measurements), measurements)]
         if comp == None:
-            print('\ncomp =',comp)
-            print('\ncomp =', qs[1][0],comp,'\n')
             data = _build_response(qs)
         else:
             data = _build_response(qs, add_component=False)
@@ -50,6 +50,8 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
 
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Component.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist or does not belong to this Satellite'} )
     except Group.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
@@ -82,7 +84,8 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         if not request.user.groups.filter(name=sat.organization.name).exists():
             return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         comp = Component.objects.get(pk=component_id)
-
+        if comp.satellite != sat:
+            raise Component.DoesNotExist()
         if quantity < 1:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
         # Take the specified amount of the  most recent measurements for the given satellite
@@ -94,7 +97,7 @@ def recent_by_component(request, satellite_id, component_id, quantity):
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
     except Component.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
+        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist or does not belong to this Satellite'} )
     except Group.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
@@ -139,16 +142,26 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
 
 def _build_response(query_set_list, add_component=True):
     # query_set_list[0] contains Satellite obj
-    if not len(query_set_list) > 1 or query_set_list[1][1] == 0:
+    if not len(query_set_list) > 1:
         return { 'data': False, 'error': 'Satellite has no measurements fitting those parameters' }
     data = {
         'Satellite': {
             'name': query_set_list[0].name,
             'mission_description': query_set_list[0].mission_description,
             'year_launched': query_set_list[0].year_launched 
-        },
-        'Measurements': []
+        }
     }
+    if not add_component:
+        comp = query_set_list[1][0]
+        data['Component'] = {
+            'name': comp.name,
+            'model': comp.model,
+            'category': comp.category,
+            'description': comp.description
+        }
+    
+    data['Measurements'] = []
+
     quantities = {}
     for (comp, quant, qs) in query_set_list[1:]:
         if comp == None:
