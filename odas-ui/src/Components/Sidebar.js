@@ -45,7 +45,7 @@ class Sidebar extends React.Component {
     componentDidMount() {
         // test = this.props.fetchSatellites();
 
-        axios.get("http://localhost:8000/api/satellites/", {
+        axios.get("http://localhost:8000/api/sat/", {
             headers: {
                 'Content-type': "application/json"
             }

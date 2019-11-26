@@ -20,10 +20,10 @@ logout_site = 'http://localhost:8000/logout/'
 # #     'email': 'j@t.com'
 # }
 
-x = { 'uid': 6 }
+# x = { 'uid': 6 }
 
-res = requests.post(url=logout_site, data=x)
-print(res.text)
+# res = requests.post(url=logout_site, data=x)
+# print(res.text)
 
 #with open(os.path.join(sys.path[0], 'sample.txt'), 'rb') as f:
     #xx={
@@ -33,8 +33,7 @@ print(res.text)
 
     #}
 
-
-# files = {'upfile' : open('sample.txt','rb')}
-# values = {'description': 'testing from cors'}
-# file_res = requests.post(url=file_site, files=files, data=values)
-# print(file_res.text)
+files = {'upfile' : open('sample.txt','rb')}
+values = {'description': 'testing file upload'}
+file_res = requests.post(url=file_site, files=files, data=values)
+print(file_res.text)

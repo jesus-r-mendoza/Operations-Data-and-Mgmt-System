@@ -12,27 +12,27 @@ import "./Layout/Main.css";
 import Dashboard from "./Pages/Dashboard";
 
 // TODO object is currently useless
-const routes = [
-    {
-        path: "/query",
-        component: QueryData,
-        routes: [
-            {
-                path: "/query/report"
-            }
-        ]
-    },
-    {
-        path: "/upload",
-        component: UploadData,
-        routes: [
-            {
-                path: "/upload/report",
-                component: UploadData
-            }
-        ]
-    },
-];
+// const routes = [
+//     {
+//         path: "/query",
+//         component: QueryData,
+//         routes: [
+//             {
+//                 path: "/query/report"
+//             }
+//         ]
+//     },
+//     {
+//         path: "/upload",
+//         component: UploadData,
+//         routes: [
+//             {
+//                 path: "/upload/report",
+//                 component: UploadData
+//             }
+//         ]
+//     },
+// ];
 
 export default class App extends React.Component {
     constructor(props) {

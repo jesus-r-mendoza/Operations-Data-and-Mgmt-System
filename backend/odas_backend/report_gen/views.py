@@ -75,16 +75,18 @@ def file_view(request):
 
 @csrf_exempt
 def upload_view(request):
-    if request.method == 'POST':
-        form = UploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('file_list')
+    if request.method == 'POST':        
+        upfile = request.FILES.get('upfile')
+        desc = request.POST.get('description')
+        
+        if upfile and desc:
+            Upload.objects.create(upfile=upfile, description=desc)
+        else:
+            return JsonResponse( { 'data': False, 'error': 'Must provide both: upfile and description' } )
+
+        return JsonResponse( { 'data': True, 'error': 'None' } )
     else:
-        form = UploadForm()
-    return render(request, 'fileio/upload_file.html', {
-        'form': form
-    })
+        return JsonResponse( { 'data': False, 'error': 'only POST requests allowed' } )
 
 def delete_file(request, pk):
     if request.method == 'POST':

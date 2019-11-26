@@ -1,6 +1,6 @@
 /*Sidebar container*/
 .sidebar {
-    height: 88vh;
+    height: 87vh;
     width: 22em;
     z-index: auto;
     left: 0;
@@ -27,12 +27,6 @@
 }
 
 .dropdown-style {
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*font-size: large;*/
-    /*color: #606060;*/
-    /*margin-bottom: 10px;*/
-    /*font-weight: bold;*/
     width: 100%;
     padding-left: 12px;
     padding-right: 12px;

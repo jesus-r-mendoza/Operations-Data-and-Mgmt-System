@@ -2,7 +2,6 @@
 .report-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     position: fixed;
     height: 100vh;
     width: 100vw;
@@ -11,21 +10,21 @@
 
 /*Card formatting*/
 .card {
-    width: 33%;
-    height: 400px;
+    width: 600px;
+    height: 350px;
     margin-top: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
+    /*border: solid red 3px;*/
 }
 
 .card-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
 }
 
 .graph-report {
-    width: fit-content;
-    height: auto;
+    position: relative;
+    overflow: hidden;
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Button, Popover, PopoverContent, Modal, Form} from "react-bootstrap";
+import {Button, Modal, Form} from "react-bootstrap";
 import "../Layout/Main.css"
 
 // TODO Check for correct email format

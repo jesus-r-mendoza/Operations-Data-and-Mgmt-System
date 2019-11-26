@@ -13,6 +13,11 @@ const satelliteReducer = (state = [], action) => {
     }
 };
 
+// const fileReducer = action => {
+//     console.log(action.payload);
+//     return action.payload
+// };
+
 const selectedSatReducer = (selectedSat = null, action) => {
     if (action.type === "SAT_SELECTED") {
         return action.payload
@@ -21,7 +26,10 @@ const selectedSatReducer = (selectedSat = null, action) => {
     return selectedSat
 };
 
+
+
 export default combineReducers({
-   sats: satelliteReducer,
-   selectedSat: selectedSatReducer
+    // file: fileReducer,
+    sats: satelliteReducer,
+    selectedSat: selectedSatReducer,
 });
