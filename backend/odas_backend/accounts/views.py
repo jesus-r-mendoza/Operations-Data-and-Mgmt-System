@@ -8,6 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Invite
 import odas_backend.settings as settings
 from django.utils.crypto import get_random_string
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 @csrf_exempt
 def register(request):
@@ -44,33 +47,33 @@ def register(request):
         })
 
 @csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def register_org(request):
-    if request.method == 'POST':
-        org_name = request.POST.get('org_name')
-        psw = request.POST.get('pass')
-        
-        if psw and psw == settings.CREATE_ORG_PASSWORD:
-            if org_name:
-                try:
-                    org = Group.objects.create(name=org_name)
-                    unique = False
-                    while not unique:
-                        invite_code = get_random_string()
-                        try:
-                            Invite.objects.create(organization=org, link=invite_code)
-                            unique = True
-                        except IntegrityError:
-                            unique = False
+    org_name = request.POST.get('org_name')
+    psw = request.POST.get('pass')
+    
+    if psw and psw == settings.CREATE_ORG_PASSWORD:
+        if org_name:
+            try:
+                org = Group.objects.create(name=org_name)
+                unique = False
+                while not unique:
+                    invite_code = get_random_string()
+                    try:
+                        Invite.objects.create(organization=org, link=invite_code)
+                        unique = True
+                    except IntegrityError:
+                        unique = False
 
-                    return JsonResponse( { 'data': True, 'error': 'None' } )
-                except IntegrityError:
-                    return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
-            else:
-                return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
+                return JsonResponse( { 'data': True, 'error': 'None' } )
+            except IntegrityError:
+                return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
         else:
-            return JsonResponse( { 'data': False, 'error': 'Password not provided or incorrect' } )
+            return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
     else:
-        return JsonResponse( { 'data': False, 'error': 'Only POST methods allowed' } )
+        return JsonResponse( { 'data': False, 'error': 'Password not provided or incorrect' } )
 
 @csrf_exempt
 def login(request):
@@ -97,34 +100,9 @@ def login(request):
             'error': 'Details not provided' 
         })
 
-@csrf_exempt
-def logout(request):
-    try:
-        usr = int(request.POST.get('uid'))
-    except TypeError:
-        return JsonResponse( { 'data': False, 'error': 'User ID not provided' } )
-    if usr:
-        try:
-            user = User.objects.get(pk=usr)
-            tkn = Token.objects.get(user=user)
-            Token.objects.get(user=user).delete()
-            data = {
-                'id': user.id,
-                'username': user.username,
-                'token': tkn.key,
-                'data': True,
-                'error': 'None',
-                'log': 'Successfully logged out'
-            }
-            return JsonResponse(data)
-        except IntegrityError:
-            return JsonResponse({ 'data': False, 'error': 'Login with this username already exists' })
-        except Token.DoesNotExist:
-            return JsonResponse({ 'data': False, 'error': 'Cant logout when no one is logged in' })
-        except ValueError:
-            return JsonResponse( { 'data': False, 'error': 'User ID not provided as number format' } )
-    else:
-        return JsonResponse({
-            'data': False, 
-            'error': 'Details not provided' 
-        })
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout(request):    
+    request.auth.delete()
+    return JsonResponse({ 'data': True, 'error': 'None' })
