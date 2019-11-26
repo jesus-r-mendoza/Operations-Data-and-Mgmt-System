@@ -1,3 +1,9 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 /*Navigation*/
 .nav-bar {
     display: flex;
@@ -7,6 +13,7 @@
     border: 0;
     font-size: large;
     box-shadow: 1px 1px 1px black;
+    position: fixed;
 }
 
 .nav-items {

@@ -1,12 +1,36 @@
-/*Container*/
-.report-container {
-    display: flex;
-    flex-direction: row;
-    position: fixed;
+html, body {
+    margin: 0;
+    padding: 0;
     height: 100vh;
     width: 100vw;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
+
+/*Reports*/
+.report-container {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    width: 100vw;
+    overflow-y: scroll;
+    /*border: solid green 3px;*/
+}
+
+.report-body {
+    display: flex;
+    flex-direction: column;
+    /*border: solid black 3px;*/
+}
+
+.report-header {
+    width: 100vw;
+    height: 100px;
+    position: sticky;
+    background-color: #f4f3f1;
+    box-shadow: 0 2px 3px 0 darkgray;
+     /*border: solid blue 3px;*/
+ }
 
 /*Card formatting*/
 .card {
@@ -14,13 +38,12 @@
     height: 350px;
     margin-top: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
-    /*border: solid red 3px;*/
 }
 
 .card-container {
     width: 100vw;
     height: 100vh;
-    position: relative;
+    /*border: solid red 3px;*/
 }
 
 .graph-report {

@@ -1,17 +1,19 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 /*Sidebar container*/
 .sidebar {
-    height: 87vh;
+    height: 88vh;
     width: 22em;
-    z-index: auto;
-    left: 0;
     background-color: #f4f3f1;
     box-shadow: 0 2px 2px 0 darkgray inset;
-    border-top: 0;
-    display: flex;
-    flex-direction: column;
     overflow-y: scroll;
     position: sticky;
     position: -webkit-sticky;
+    bottom: 0;
 }
 
 .sidebar-title {
@@ -47,8 +49,9 @@
     display: flex;
     justify-content: center;
     background-color: #f4f3f1;
-    box-shadow: 1px 1px 1px 0 lightgray inset;
+    box-shadow: 1px 1px 4px 0 lightgray inset;
     bottom: 0;
+    padding-bottom: 10px;
     width: 100%;
 }
 
