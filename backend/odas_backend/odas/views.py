@@ -53,9 +53,14 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
     except Group.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def recent_measurements(request, satellite_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         if quantity < 1:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
         # Take the specified amount of the  most recent measurements for the given satellite
@@ -65,10 +70,17 @@ def recent_measurements(request, satellite_id, quantity):
         return JsonResponse(data)
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Group.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def recent_by_component(request, satellite_id, component_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         comp = Component.objects.get(pk=component_id)
 
         if quantity < 1:
@@ -83,10 +95,17 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
     except Component.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist'} )
+    except Group.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def recent_by_many_components(request, satellite_id, component_ids, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         measurements = Measurement.objects.filter(satellite=sat)
         querys = [sat] # list will be in this format: [sat, (comp, size, qs), (comp, size, qs), ...]
         if quantity < 1:
@@ -115,6 +134,8 @@ def recent_by_many_components(request, satellite_id, component_ids, quantity):
 
     except Satellite.DoesNotExist:
         return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+    except Group.DoesNotExist:
+        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
 
 def _build_response(query_set_list, add_component=True):
     # query_set_list[0] contains Satellite obj
