@@ -312,8 +312,9 @@
 							}
 							console.log('AltCurrentData:', altcurrentData);
 							
+							var testIndex = 3; //example.
 							console.log('Example Specific Unit-Name: GHz-MainCPU1');
-							exampleGraphData = totalGraphsArray[3]; //example. 3 
+							exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
 							console.log('Example Graph Data: ', exampleGraphData);
 							exampleTime = [];
 							exampleValue = [];
@@ -323,7 +324,24 @@
 							}
 				console.log('ExampleTime', exampleTime);
 				console.log('ExampleValue', exampleValue);
-							
+
+							var table = document.getElementById("traces");
+							var row = table.insertRow(table.rows.length-1); //insert row at bottom
+							var initialDataArray = totalGraphsArray[testIndex];
+						console.log('Test Initial Data Array', initialDataArray);
+							//for(var a=0;a<initialDataArray[0].length;a++){
+								//tableKeys.push(Object.keys(initialDataArray[0][a]));
+								tableKeys = Object.keys(initialDataArray[0]);
+							//}
+							for(var b=0;b<tableKeys.length;b++){
+								var cellAdd = row.insertCell(b);
+								//console.log('tableKeysb', tableKeys[b]);
+								var toChart = tableKeys[b];
+								cellAdd.innerHTML = (toChart);
+							}
+				
+							var tableKeys = [];
+							var tableLog = [];
 							var paused = false;
 							var alreadyStopped = false;
 							function getX(count){
@@ -335,13 +353,14 @@
 									if(alreadyStopped==false){
 										console.log('End of Data.');
 										paused = true;
-										clearInterval(interval);
+										//clearInterval(interval);
 										alreadyStopped=true;
 									}
 								}
 							}
 							function getY(count){
 								if(exampleValue[count]!=null){
+									getData(count);
 									//console.log('Y Plot: ', exampleValue[count]);
 									return exampleValue[count];
 								}
@@ -349,17 +368,30 @@
 									if(alreadyStopped==false){
 										console.log('End of Data.');
 										paused = true;
-										clearInterval(interval);
+										//clearInterval(interval);
 										alreadyStopped = true;
 									}
 								}
 							}
-							function getData() {
-								return exampleValue;//altcurrentData;//Math.random();
+							function getData(cnt) {
+								console.log('New row', cnt);
+									var table = document.getElementById("traces");
+									var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+									for(var r=1;r<initialDataArray.length;r++){//24 times down by column
+										tableKeys = Object.values(initialDataArray[r]);
+										for(var a=0;a<tableKeys.length;a++){
+											var cellAdd = row.insertCell(a);
+											//console.log('multipleTraces', multipleTraces[a]);
+											var toChart = tableKeys[a];
+											cellAdd.innerHTML = (toChart);
+										}
+									}
+								//return exampleValue;//altcurrentData;//Math.random();
 							}  
 							Plotly.plot('chart',[{y:[getY(0)],x:[getX(0)],type:'line'}]);
+							
 							var cnt = 0;
-					
+							
 							document.getElementById("pause").addEventListener("click", pause);
 							function pause() {
 								console.log('Stop enabled.');
@@ -367,35 +399,23 @@
 							}	
 						
 			var interval = 	setInterval(function(){
-								if(cnt<exampleGraphData){ //10 rows
-						console.log('New row', cnt);
-								var table = document.getElementById("traces");
-								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-								//}
-								//console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
-								for(var r=0;r<masterSingleDataArrayLength;r++){//24 times down by column
-							//if(cnt<dataLength){
-							console.log('getData',getData(cnt,r)); //0..10, 0..24
-								multipleTraces.push(getData(cnt,r)); //0..10, 0..24
-							//console.log('dataLength', dataLength);//10
-							//console.log('multTracestest1', multipleTraces.length);//1..24
-							if(cnt<masterSingleDataArrayLength-1){
-								if(r==masterSingleDataArrayLength-1){
-							//console.log('multTraceestest2', multipleTraces.length);//24
-									for(var a=0;a<masterSingleDataArrayLength;a++){
-										var cellAdd = row.insertCell(a);
-							console.log('multipleTraces', multipleTraces[a]);
-								//if(multipleTraces.length<dataLength){
-										var toChart = multipleTraces[a];
-										cellAdd.innerHTML = (toChart);
-								//	}
+								/*if(cnt<exampleGraphData){ //10 rows
+									console.log('New row', cnt);
+									var table = document.getElementById("traces");
+									var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+									for(var r=1;r<initialDataArray.length;r++){//24 times down by column
+										tableKeys = Object.values(initialDataArray[r]);
+										for(var a=0;a<tableKeys.length;a++){
+											var cellAdd = row.insertCell(a);
+											//console.log('multipleTraces', multipleTraces[a]);
+											var toChart = tableKeys[a];
+											cellAdd.innerHTML = (toChart);
+										}
 									}
-								}
-							}
-						}
-						}
+								}*/
 								//[0] at the end of extendTraces because only 1 example trace.
 								Plotly.extendTraces('chart',{ y:[[getY(cnt+1)]], x:[[getX(cnt+1)]]}, [0]); 
+								
 								cnt++;
 								if(cnt > 500) {
 									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}, yaxis: {range: [Math.min(exampleValue),Math.max(exampleValue)]}});
