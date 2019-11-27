@@ -118,7 +118,7 @@
 						if(out.data==true){
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
-							newcontent.innerHTML = out.Satellite.name+": "+out.Satellite.year_launched;
+							newcontent.innerHTML = out.Satellite.name+": Launched "+out.Satellite.year_launched;
 							while (newcontent.firstChild) {
 								mydiv.appendChild(newcontent.firstChild);
 							}
@@ -313,8 +313,7 @@
 							console.log('AltCurrentData:', altcurrentData);
 							
 							console.log('Example Specific Unit-Name: GHz-MainCPU1');
-							var exampleGraph = [];
-							exampleGraphData = totalGraphsArray[3]; //example.
+							exampleGraphData = totalGraphsArray[3]; //example. 3 
 							console.log('Example Graph Data: ', exampleGraphData);
 							exampleTime = [];
 							exampleValue = [];
@@ -322,30 +321,37 @@
 								exampleTime.push(exampleGraphData[a].time); //x
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
+				console.log('ExampleTime', exampleTime);
+				console.log('ExampleValue', exampleValue);
 							
 							var paused = false;
+							var alreadyStopped = false;
 							function getX(count){
 								if(exampleTime[count]!=null){
-									console.log('X Plot: ',exampleTime[count]);
+									//console.log('X Plot: ',exampleTime[count]);
 									return exampleTime[count];
 								}
 								else{
-									console.log('End of Data.');
-									paused = true;
-									clearInterval(interval);
-									console.log('Stopped!');
+									if(alreadyStopped==false){
+										console.log('End of Data.');
+										paused = true;
+										clearInterval(interval);
+										alreadyStopped=true;
+									}
 								}
 							}
 							function getY(count){
 								if(exampleValue[count]!=null){
-									console.log('Y Plot: ', exampleValue[count]);
+									//console.log('Y Plot: ', exampleValue[count]);
 									return exampleValue[count];
 								}
 								else{
-									console.log('End of Data.');
-									paused = true;
-									clearInterval(interval);
-									console.log('Stopped!');
+									if(alreadyStopped==false){
+										console.log('End of Data.');
+										paused = true;
+										clearInterval(interval);
+										alreadyStopped = true;
+									}
 								}
 							}
 							function getData() {
@@ -356,11 +362,38 @@
 					
 							document.getElementById("pause").addEventListener("click", pause);
 							function pause() {
-								console.log('Pause enabled.');
+								console.log('Stop enabled.');
 								paused = true;
 							}	
 						
 			var interval = 	setInterval(function(){
+								if(cnt<exampleGraphData){ //10 rows
+						console.log('New row', cnt);
+								var table = document.getElementById("traces");
+								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+								//}
+								//console.log('masterSingleDataArrayLength', masterSingleDataArrayLength);
+								for(var r=0;r<masterSingleDataArrayLength;r++){//24 times down by column
+							//if(cnt<dataLength){
+							console.log('getData',getData(cnt,r)); //0..10, 0..24
+								multipleTraces.push(getData(cnt,r)); //0..10, 0..24
+							//console.log('dataLength', dataLength);//10
+							//console.log('multTracestest1', multipleTraces.length);//1..24
+							if(cnt<masterSingleDataArrayLength-1){
+								if(r==masterSingleDataArrayLength-1){
+							//console.log('multTraceestest2', multipleTraces.length);//24
+									for(var a=0;a<masterSingleDataArrayLength;a++){
+										var cellAdd = row.insertCell(a);
+							console.log('multipleTraces', multipleTraces[a]);
+								//if(multipleTraces.length<dataLength){
+										var toChart = multipleTraces[a];
+										cellAdd.innerHTML = (toChart);
+								//	}
+									}
+								}
+							}
+						}
+						}
 								//[0] at the end of extendTraces because only 1 example trace.
 								Plotly.extendTraces('chart',{ y:[[getY(cnt+1)]], x:[[getX(cnt+1)]]}, [0]); 
 								cnt++;
@@ -370,7 +403,7 @@
 								if(paused == true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(interval);
-									console.log('Paused!');
+									console.log('Stopped!');
 								}
 							},15);
 							
@@ -851,7 +884,7 @@ console.log('chartValuesFields length', chartValuesFields.length, 'chartValuesFi
 	</div>
 	<div id = "bottomchart">
 	<p id="tablechart">Table Chart</p>
-	<button id="pause">Pause</button>
+	<button id="pause">Stop Graph</button>
 	<table style="width:100%" id = "traces">
 			<tr id = "fieldnames">
 			</tr>
