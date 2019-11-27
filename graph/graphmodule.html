@@ -59,7 +59,8 @@
 		//	'http://127.0.0.1:8000/api/sat/2/recent/7/');
 		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');
 		// 	'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/');
-		 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');
+		 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');//true
+		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');//true
 		//	'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/');
 //TEST 1
 //			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
@@ -315,11 +316,20 @@
 							var exampleGraph = [];
 							exampleGraphData = totalGraphsArray[3];
 							console.log('Example Graph Data: ', exampleGraphData);
+							exampleTime = [];
+							exampleValue = [];
+							for(var a=0;a<exampleGraphData.length;a++){
+								exampleTime.push(exampleGraphData[a].time); //x
+								exampleValue.push(exampleGraphData[a].value); //y
+							}
 							
+							function getX(){
+								return exampleTime;
+							}
 							function getData() {
-								return altcurrentData;//Math.random();
+								return exampleValue;//altcurrentData;//Math.random();
 							}  
-							Plotly.plot('chart',[{y:[getData()],type:'line'}]);
+							Plotly.plot('chart',[{y:[getData()],x:[getX()],type:'line'}]);
 							var cnt = 0;
 							var paused = false;
 					
@@ -331,7 +341,8 @@
 						
 							
 							setInterval(function(){
-								Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+								//[0] at the end of extendTraces because only 1 example trace.
+								Plotly.extendTraces('chart',{ y:[[getData()]], x:[getX()]}, [0]); 
 								cnt++;
 								if(cnt > 500) {
 									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
