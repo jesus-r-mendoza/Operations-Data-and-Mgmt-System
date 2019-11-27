@@ -314,7 +314,7 @@
 							
 							console.log('Example Specific Unit-Name: GHz-MainCPU1');
 							var exampleGraph = [];
-							exampleGraphData = totalGraphsArray[3];
+							exampleGraphData = totalGraphsArray[3]; //example.
 							console.log('Example Graph Data: ', exampleGraphData);
 							exampleTime = [];
 							exampleValue = [];
@@ -323,37 +323,55 @@
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
 							
-							function getX(){
-								return exampleTime;
+							var paused = false;
+							function getX(count){
+								if(exampleTime[count]!=null){
+									console.log('X Plot: ',exampleTime[count]);
+									return exampleTime[count];
+								}
+								else{
+									console.log('End of Data.');
+									paused = true;
+									clearInterval(interval);
+									console.log('Stopped!');
+								}
+							}
+							function getY(count){
+								if(exampleValue[count]!=null){
+									console.log('Y Plot: ', exampleValue[count]);
+									return exampleValue[count];
+								}
+								else{
+									console.log('End of Data.');
+									paused = true;
+									clearInterval(interval);
+									console.log('Stopped!');
+								}
 							}
 							function getData() {
 								return exampleValue;//altcurrentData;//Math.random();
 							}  
-							Plotly.plot('chart',[{y:[getData()],x:[getX()],type:'line'}]);
+							Plotly.plot('chart',[{y:[getY(0)],x:[getX(0)],type:'line'}]);
 							var cnt = 0;
-							var paused = false;
 					
-					document.getElementById("pause").addEventListener("click", pause);
-					function pause() {
-						console.log('Pause enabled.');
-						paused = true;
-						}	
+							document.getElementById("pause").addEventListener("click", pause);
+							function pause() {
+								console.log('Pause enabled.');
+								paused = true;
+							}	
 						
-							
-							setInterval(function(){
+			var interval = 	setInterval(function(){
 								//[0] at the end of extendTraces because only 1 example trace.
-								Plotly.extendTraces('chart',{ y:[[getData()]], x:[getX()]}, [0]); 
+								Plotly.extendTraces('chart',{ y:[[getY(cnt+1)]], x:[[getX(cnt+1)]]}, [0]); 
 								cnt++;
 								if(cnt > 500) {
-									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
+									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}, yaxis: {range: [Math.min(exampleValue),Math.max(exampleValue)]}});
 								}
-								
 								if(paused == true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(interval);
 									console.log('Paused!');
 								}
-								
 							},15);
 							
 							//Alternative
