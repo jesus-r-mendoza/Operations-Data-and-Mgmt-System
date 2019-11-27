@@ -17,9 +17,9 @@
 		<div id="chart"></div>
 		<div id="chart0"></div>
 		<div id = "bottomchart2">
-		<p id="tablechart2">Table Chart</p>
+<!--		<p id="tablechart2">Table Chart</p>
 		<button id="pause2">Pause</button>
-		<table style="width:100%" id = "traces2">
+-->		<table style="width:100%" id = "traces2">
 			<tr id = "fieldnames2">
 			</tr>
 			<tr id = "data2">
@@ -55,8 +55,12 @@
 			//'http://127.0.0.1:8000/api/satellites/1/recent/7/');
 			//'http://127.0.0.1:8000/api/satellites/4/recent/100/');
 			//'http://127.0.0.1:8000/api/satellites/3/recent/100/');
-			'http://127.0.0.1:8000/api/recent/100/');
-			//'http://127.0.0.1:8000/api/satellites/2/recent/7/');
+			//	'http://127.0.0.1:8000/api/recent/100/');
+		//	'http://127.0.0.1:8000/api/sat/2/recent/7/');
+		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');
+		// 	'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/');
+		 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');
+		//	'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/');
 //TEST 1
 //			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
 	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
@@ -117,7 +121,9 @@
 							while (newcontent.firstChild) {
 								mydiv.appendChild(newcontent.firstChild);
 							}
-							
+							var compSpecified = false;
+							compSpecified = out.comp_specified;
+							console.log('Component Specified?: ', compSpecified);
 							var outSort = out;
 							var measurementsComponent_Category = [];
 							var measurementsComponent_Description = [];
@@ -128,7 +134,7 @@
 							var measurementsValue = [];
 							var data = [];
 							
-							var quantity = out.Quantity;
+							var quantity = out.Quantities; //Quantity has been replaced; therefore, quantity test should always fail.
 							var realQuantity = out.Measurements.length;
 							var checkQuantities = false;
 							if(quantity==realQuantity){
@@ -137,10 +143,12 @@
 							console.log('Test: Quantities Match? : ', checkQuantities);
 							
 							for(var a=0;a<realQuantity;a++){
+								if(compSpecified == true){
 								measurementsComponent_Category.push(out.Measurements[a].component_category[0]);
 								measurementsComponent_Description.push(out.Measurements[a].component_description[0]);
 								measurementsComponent_Model.push(out.Measurements[a].component_model[0]);
 								measurementsComponent_Name.push(out.Measurements[a].component_name[0]);
+								}
 								measurementsTime.push(out.Measurements[a].time);
 								measurementsUnits.push(out.Measurements[a].units);
 								measurementsValue.push(out.Measurements[a].value);
@@ -159,10 +167,12 @@
 							
 							for(var c=0;c<realQuantity;c++){
 								var dataUnit = [];
+								if(compSpecified == true){
 								dataUnit.push(measurementsComponent_Category[c]);
 								dataUnit.push(measurementsComponent_Description[c]);
 								dataUnit.push(measurementsComponent_Model[c]);
 								dataUnit.push(measurementsComponent_Name[c]);
+								}
 								dataUnit.push(measurementsTime[c]);
 								dataUnit.push(measurementsUnits[c]);
 								dataUnit.push(measurementsValue[c]);
@@ -187,7 +197,9 @@
 							for(var a=0;a<realQuantity;a++){
 								sortedMeasurements.push(outSort.Measurements[a]);
 								allUnits.push(outSort.Measurements[a].units);
+								if(compSpecified == true){
 								allNames.push(outSort.Measurements[a].component_name[0]);
+								}
 							}
 						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
 							
@@ -207,6 +219,9 @@
 //						console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
 						//Alternative
 							var totalNumGraphs = numUniqueUnits*numUniqueNames;
+							if(compSpecified == false){
+								totalNumGraphs = numUniqueUnits;
+							}
 						console.log('Total Num Graphs: ', totalNumGraphs);
 							
 							var totalGraphsArray = [];
@@ -294,17 +309,37 @@
 									}
 								}
 							}
+							console.log('AltCurrentData:', altcurrentData);
+							
+							console.log('Example Specific Unit-Name: GHz-MainCPU1');
+							
 							function getData() {
 								return altcurrentData;//Math.random();
 							}  
 							Plotly.plot('chart',[{y:[getData()],type:'line'}]);
 							var cnt = 0;
+							var paused = false;
+					
+					document.getElementById("pause").addEventListener("click", pause);
+					function pause() {
+						console.log('Pause enabled.');
+						paused = true;
+						}	
+						
+							
 							setInterval(function(){
 								Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
 								cnt++;
 								if(cnt > 500) {
 									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}});
 								}
+								
+								if(paused == true){
+									document.getElementById("pause").innerHTML = "Paused";//Date();
+									clearInterval(interval);
+									console.log('Paused!');
+								}
+								
 							},15);
 							
 							//Alternative
