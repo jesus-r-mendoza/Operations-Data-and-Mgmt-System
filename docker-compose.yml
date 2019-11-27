@@ -7,3 +7,12 @@ services:
         volumes:
             - ./backend:/odas/backend
         command: bash -c "cd odas/backend/odas_backend/ && python manage.py runserver 0.0.0.0:8000"
+    frontend:
+        image: node:12
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./odas-ui:/odas/odas-ui
+        command: bash -c "cd odas/odas-ui && npm install && npm start"
+        depends_on:
+            - backend
