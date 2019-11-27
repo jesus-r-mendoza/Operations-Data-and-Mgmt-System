@@ -5,5 +5,5 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - ./:/odas
+            - ./backend:/odas/backend
         command: bash -c "cd odas/backend/odas_backend/ && python manage.py runserver 0.0.0.0:8000"
