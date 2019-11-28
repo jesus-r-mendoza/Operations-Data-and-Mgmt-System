@@ -5,7 +5,6 @@ def get_creds():
             for line in cfg:
                 parts = line[:-1].split('::')
                 creds[parts[0]] = parts[1]
-                print(line, parts)
         return creds
     except FileNotFoundError:
         print("""
