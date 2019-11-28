@@ -26,20 +26,20 @@ GET | logout/ | User must be logged in to log out, only need to pass authorizati
 
 ## Authentication
 
-When a user creates an account, backend's response will contain an authorication token that will be needed to acces other api endpoints. The frontend is in charge of storing this token and providing it in the `Authorization` header as part of every request (POST and GET) which requires it (see table above). This token may be stored as a cookie or in some other way. The value of this `Authorization` header must contain the word `Token` followed by a space, and the token value.
+When a user creates an account, backend's response will contain an authorization token that will be needed to acces other api endpoints. The frontend is in charge of storing this token and providing it in the `Authorization` header as part of every request (POST and GET) which requires it (see table above). This token may be stored as a cookie or in some other way. The value of this `Authorization` header must contain the word `Token` followed by a space, and the token value.
 
 Example Header:
 
 Header | Value
 --- | ---
-Content-type: |  `Authorization` <br>
-value: | `Token d9e1rd2a220eef50j6cb032c1f90e254177a9ed`
+Content-type |  `Authorization` <br>
+value | `Token d9e1rd2a220eef50j6cb032c1f90e254177a9ed`
 
 If this were a POST request and you also needed to provide other details, then you can include the following header.
 
 Header | Value
 --- | ---
-Content-type: | application/json
+Content-type | application/json
 
 and in the body of the request, provide the key value pairs of the data.
 
