@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,Http404, FileResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
@@ -91,3 +91,12 @@ def delete_file(request, pk):
         user_file = Upload.objects.get(pk=pk)
         user_file.delete()
     return redirect('file_list')
+
+def download_view(request, url):
+    try:
+        response = FileResponse(open(url, 'rb'))
+        response['content_type'] = "application/octet-stream"
+        response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
+        return response
+    except Exception:
+        raise Http404
