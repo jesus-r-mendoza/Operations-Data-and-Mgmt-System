@@ -3,22 +3,46 @@
 ### The following guide provides details about available **API** endpoints
 
 ---
-Method | Endpoint | Description | JSON Response
---- | --- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized)
-GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized)
-GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized)
-GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized)
-GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized)
-GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components)
-GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite | [Specified Component](#Specified-Component)
-GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite | [Unspecified Components](#Unspecified-Components)
-GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components)
-GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component)
-POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request
+Method | Endpoint | Description | JSON Response | Rquires Authentication
+--- | --- | --- | --- | ---
+GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized) | No
+GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized) | No
+GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized) | No
+GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized) | No
+GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized) | Yes
+GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
+GET | api/sat/\<sat id>/comp/\<comp id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments of the specified component, for the specified satellite | [Specified Component](#Specified-Component) | Yes
+GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<quantity>/ | Gets (up to) the ***quantity*** most recent measurements for each of the specified components, of the specified satellite | [Unspecified Components](#Unspecified-Components) | Yes
+GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
+GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component) | Yes
+POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request | | Not yet
 POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request
-POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers
+POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers | | Not yet
+POST | register/ | Allows a user to sign up to use ODAS, must provide **username**, **email**, and **pass** in POST request to sign up. Optionally, if **code** is provided, (this is the 12 char invite code), then a user can sign up and will automatically be added to the organization which provided that invite code | | No
+POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
+POST | login/ | Allows user to login, returns authentication token if login successful. Must provide **username** and **pass** in POST request | | No
+GET | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
 ---
+
+## Authentication
+
+When a user creates an account, backend's response will contain an authorication token that will be needed to acces other api endpoints. The frontend is in charge of storing this token and providing it in the `Authorization` header as part of every request (POST and GET) which requires it (see table above). This token may be stored as a cookie or in some other way. The value of this `Authorization` header must contain the word `Token` followed by a space, and the token value.
+
+Example Header:
+
+Header | Value
+--- | ---
+Content-type: |  `Authorization` <br>
+value: | `Token d9e1rd2a220eef50j6cb032c1f90e254177a9ed`
+
+If this were a POST request and you also needed to provide other details, then you can include the following header.
+
+Header | Value
+--- | ---
+Content-type: | application/json
+
+and in the body of the request, provide the key value pairs of the data.
+
 
 ## Examples
 
