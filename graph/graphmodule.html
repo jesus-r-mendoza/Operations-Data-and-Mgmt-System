@@ -59,7 +59,7 @@
 		//	'http://127.0.0.1:8000/api/sat/2/recent/7/');
 		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');
 		// 	'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/');
-		// 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');//true
+	//	 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');//true
 		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');//true
 		//	'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/'); //false
 			'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=now/');//false
@@ -345,7 +345,7 @@
 								console.log('Example Specific Unit-Name(Specified): GHz-MainCPU1');
 							}
 							else{
-								testIndex = 0;
+								testIndex = 1;
 								console.log('Texample Unspecified Unit-Name(Specified): ');
 							}
 							exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
@@ -408,18 +408,19 @@
 								}
 							}
 							function getData(cnt) {
-								console.log('New row', cnt);
+						//console.log('New row', cnt);
 									var table = document.getElementById("traces");
 									var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-									for(var r=1;r<initialDataArray.length;r++){//24 times down by column
-										tableKeys = Object.values(initialDataArray[r]);
+						//console.log('test initialDataArray', initialDataArray);
+									//for(var r=1;r<initialDataArray.length;r++){//24 times down by column
+						//console.log('test tableKeys', Object.values(initialDataArray[cnt]));
+										tableKeys = Object.values(initialDataArray[cnt]);
 										for(var a=0;a<tableKeys.length;a++){
 											var cellAdd = row.insertCell(a);
-											//console.log('multipleTraces', multipleTraces[a]);
 											var toChart = tableKeys[a];
 											cellAdd.innerHTML = (toChart);
 										}
-									}
+									//}
 								//return exampleValue;//altcurrentData;//Math.random();
 							}  
 							Plotly.plot('chart',[{y:[getY(0)],x:[getX(0)],type:'line'}]);
