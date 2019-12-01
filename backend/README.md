@@ -16,7 +16,7 @@ GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<q
 GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
 GET| api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component) | Yes
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request | | Not yet
-POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request
+POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Not yet
 POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers | | Not yet
 POST | register/ | Allows a user to sign up to use ODAS, must provide **username**, **email**, and **pass** in POST request to sign up. Optionally, if **code** is provided, (this is the 12 char invite code), then a user can sign up and will automatically be added to the organization which provided that invite code | | No
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
@@ -73,6 +73,29 @@ For these example links to work, be sure that the backend server is running on y
 > [`api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/`](http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/)
 
 ---
+
+## Running ODAS with Docker
+
+### Step 1
+Install Docker. To learn how to install docker click [here](https://www.docker.com/products/docker-desktop). You'll see a button to install Docker Desktop; you'll need to create an account with Docker Hub if you don't already have one. Also make sure you have docker-compose installed with it.
+
+### Step 2
+If you don't have the ODAS repository, clone it using:
+
+> `$ git clone https://github.com/jesus-r-mendoza/Operations-Data-and-Mgmt-System.git`
+
+then, change directory into the repository's base directory using:
+
+> `$ cd Operations-Data-and-Mgmt-System`
+
+### Step 3
+Once your in the base directory, simply run:
+
+> `$ docker-compose up`
+
+This will run both the frontend and backend containers. 
+
+For testing purposes, the backend container is accessible through your container's ip or localhost at port 8000; and the frontend container is accessible through your container's ip or localhost at port 3000.
 
 ## Running the Backend Server
 
