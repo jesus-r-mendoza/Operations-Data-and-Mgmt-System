@@ -45,7 +45,7 @@ html, body {
     border-radius: 10px;
     height: 40px;
     position: absolute;
-    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .back-btn {
@@ -56,6 +56,13 @@ html, body {
 .recent-selector {
     width: 100px;
     height: 41px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.header-text {
+    color: #606060;
+    font-weight: bold;
     margin-left: 20px;
 }
 

@@ -1,11 +1,25 @@
 import { combineReducers } from 'redux';
 
-const satelliteReducer = (state = [], action) => {
+const unitsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_UNITS':
             return [...state, action.payload];
+        default:
+            return state;
+    }
+};
+
+const componentsReducer = (state = [], action) => {
+    switch (action.type) {
         case 'FETCH_COMPS':
             return [...state, action.payload];
+        default:
+            return state;
+    }
+};
+
+const satelliteReducer = (state = [], action) => {
+    switch (action.type) {
         case 'FETCH_SATS':
             return [...state, action.payload];
         default:
@@ -51,7 +65,9 @@ const selectEndDateReducer = (date = new Date(), action) => {
 };
 
 export default combineReducers({
-    sats: satelliteReducer,
+    satObjects: satelliteReducer,
+    units: unitsReducer,
+    components: componentsReducer,
     selectedSat: selectedSatReducer,
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,

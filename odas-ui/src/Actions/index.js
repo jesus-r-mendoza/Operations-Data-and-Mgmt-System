@@ -24,7 +24,7 @@ export const fetchComponents = () => async dispatch => {
         }
     });
 
-    dispatch({type: "FETCH_COMP", payload: response.data});
+    dispatch({type: "FETCH_COMPS", payload: response.data});
 };
 
 // Get satellite objects from API

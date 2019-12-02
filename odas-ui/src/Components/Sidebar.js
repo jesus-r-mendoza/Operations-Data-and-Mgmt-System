@@ -1,6 +1,5 @@
 import React from 'react';
 import CheckComponent from "./CheckComponent";
-import axios from 'axios';
 // Stylesheets
 import '../Layout/Sidebar.css'
 import {Button} from "react-bootstrap";
@@ -10,11 +9,9 @@ import Select from 'react-select';
 import LoadSpinner from "./LoadSpinner";
 // Redux
 import { connect } from 'react-redux';
-import { fetchSatellites } from "../Actions";
+import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions/ApiCalls";
 
 class Sidebar extends React.Component {
-// TODO Disable generate report button while nothing is selected
-
     constructor(props) {
         super(props);
         let MEASUREMENTS = this.props.units;
@@ -172,13 +169,13 @@ class Sidebar extends React.Component {
                                         <Divider horizontal>Measurements</Divider>
                                         {this.createMeasurementCheckboxes(this.props.units)}
                                         <div className={"selection-buttons"}>
-                                            <Button
-                                                variant={"outline-success"}
-                                                onClick={() => this.selectAllUnits()}
-                                                size={"sm"}
-                                            >
-                                                Select All
-                                            </Button>
+                                            {/*<Button*/}
+                                            {/*    variant={"outline-success"}*/}
+                                            {/*    onClick={() => this.selectAllUnits()}*/}
+                                            {/*    size={"sm"}*/}
+                                            {/*>*/}
+                                            {/*    Select All*/}
+                                            {/*</Button>*/}
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllUnits()}
@@ -190,13 +187,13 @@ class Sidebar extends React.Component {
                                         <Divider horizontal>Components</Divider>
                                         {this.createComponentCheckboxes(this.props.components)}
                                         <div className={"selection-buttons"}>
-                                            <Button
-                                                variant={"outline-success"}
-                                                onClick={() => this.selectAllComponents()}
-                                                size={"sm"}
-                                            >
-                                                Select All
-                                            </Button>
+                                            {/*<Button*/}
+                                            {/*    variant={"outline-success"}*/}
+                                            {/*    onClick={() => this.selectAllComponents()}*/}
+                                            {/*    size={"sm"}*/}
+                                            {/*>*/}
+                                            {/*    Select All*/}
+                                            {/*</Button>*/}
                                             <Button
                                                 variant={"outline-danger"}
                                                 onClick={() => this.deselectAllComponents()}
@@ -226,9 +223,11 @@ class Sidebar extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return {sats: state.name};
+    return {
+        sats: state.name
+    };
 };
 
-export default connect(mapStateToProps, { fetchSatellites })(Sidebar)
+export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents })(Sidebar)
 
 // TODO Bring api calls back into sidebar

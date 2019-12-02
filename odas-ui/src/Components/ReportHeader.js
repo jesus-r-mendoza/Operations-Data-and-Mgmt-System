@@ -25,7 +25,7 @@ class ReportHeader extends React.Component {
                 <div className={"report-header-btn"}>
                     <div>
                         <button>
-                            <img className={"back-btn"} src={require('../Images/back1.png')} />
+                            <img className={"back-btn"} src={require('../Images/back1.png')} alt={""}/>
                         </button>
                     </div>
                     <Select

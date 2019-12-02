@@ -1,7 +1,7 @@
 import React from 'react';
 //Redux
 import { connect } from "react-redux"
-import { fetchUnits } from "../Actions";
+import { fetchUnits, fetchComponents, fetchSatellites } from "../Actions";
 // Components
 import LoadSpinner from "../Components/LoadSpinner";
 // Stylesheets
@@ -18,7 +18,9 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
+        this.props.fetchSatellites();
         this.props.fetchUnits();
+        this.props.fetchComponents();
 
         this.setState({
             isLoading: false
@@ -44,8 +46,12 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => {
-    return {sats: state.sats};
+    return {
+        units: state.units,
+        components: state.components,
+        satObjects: state.satObjects
+    };
 };
 
 // Connect returns a function and second parenthesis invokes returned function
-export default connect(mapStateToProps, { fetchUnits })(Dashboard)
+export default connect(mapStateToProps, { fetchUnits, fetchComponents, fetchSatellites })(Dashboard)
