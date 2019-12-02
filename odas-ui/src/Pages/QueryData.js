@@ -4,7 +4,6 @@ import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
 // Stylesheets
-import { Container, Row, Col } from "react-bootstrap";
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";

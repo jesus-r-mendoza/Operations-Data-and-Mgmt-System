@@ -23,13 +23,31 @@ const selectedSatReducer = (selectedSat = null, action) => {
         return action.payload
     }
 
-    return selectedSat
+    return selectedSat;
 };
 
+const selectedRecentReducer = (recent = 10, action) => {
+    if (action.type === "RECENT_SELECTED") {
+        return action.payload
+    }
 
+    return recent;
+};
+
+const selectDateReducer = (date = new Date(), action) => {
+    switch (action.type) {
+        case 'START_DATE_SELECTED':
+            return action.payload;
+        case 'END_DATE_SELECTED':
+            return action.payload;
+        default:
+            return date;
+    }
+};
 
 export default combineReducers({
-    // file: fileReducer,
     sats: satelliteReducer,
     selectedSat: selectedSatReducer,
+    selectRecent: selectedRecentReducer,
+    selectDate: selectDateReducer
 });

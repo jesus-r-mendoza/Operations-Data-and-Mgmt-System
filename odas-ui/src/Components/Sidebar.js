@@ -8,6 +8,7 @@ import {Divider} from "semantic-ui-react";
 import Select from 'react-select';
 // Components
 import LoadSpinner from "./LoadSpinner";
+// Redux
 import { connect } from 'react-redux';
 import { fetchSatellites } from "../Actions";
 
@@ -22,7 +23,6 @@ class Sidebar extends React.Component {
             isLoading: true,
             currentPage: this.props.page,
             formSubmit: [],
-            satObject: [],
             loadDropdown: true,
             satPlaceHolder: "Satellite",
             measurementCheckboxes: MEASUREMENTS.reduce(
@@ -43,33 +43,8 @@ class Sidebar extends React.Component {
     }
 
     componentDidMount() {
-        // test = this.props.fetchSatellites();
-
-        axios.get("http://localhost:8000/api/sat/", {
-            headers: {
-                'Content-type': "application/json"
-            }
-        })
-            .then(res => {
-                setTimeout(() => {
-                    this.setState({
-                        satObject: res.data
-                    })
-                }, 500)
-
-            })
-            .catch(function (err) {
-                console.log(err)
-            });
-
         this.setState({
             isLoading: false
-        });
-    }
-
-    goBack() {
-        this.setState({
-            currentPage: "upload"
         });
     }
 
@@ -161,23 +136,6 @@ class Sidebar extends React.Component {
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
     createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
-    // TODO Does not route back to the desired page.
-    renderBackArrow(page) {
-        if(page === "renderReport") {
-            return (
-                <div className={"back-arrow-container"}>
-                    {/*<button className={"back-arrow-btn"} />*/}
-                        <img
-                            src={require("../Images/back-arrow.png")}
-                            alt={""}
-                            className={"back-arrow"}
-                            onClick={() => this.goBack()}
-                        />
-                </div>
-            );
-        }
-    }
-
     dropDownChange = e => {
         this.setState({
             satPlaceHolder: e.label
@@ -197,7 +155,6 @@ class Sidebar extends React.Component {
                     <form onSubmit={this.handleFormSubmit}>
                         <div className={"sidebar"}>
                             <div className={"sidebar-title"}>
-                                {/*{this.renderBackArrow(this.props.page)}*/}
                                 <span>{this.props.children}</span>
                             </div>
                             <div>

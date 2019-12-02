@@ -25,19 +25,34 @@ html, body {
 
 .report-header {
     width: 100vw;
-    height: 100px;
+    height: 60px;
     position: sticky;
     background-color: #f4f3f1;
     box-shadow: 0 2px 3px 0 darkgray;
      /*border: solid blue 3px;*/
  }
 
+.report-header-btn {
+    margin-left: 0;
+    padding-top: 10px;
+    /*width: 20%;*/
+    height: 40px;
+    z-index: 2;
+}
+
+.datetime-pickers {
+    border-radius: 10px;
+    height: 40px;
+}
+
 /*Card formatting*/
 .card {
     width: 600px;
     height: 350px;
     margin-top: 20px;
+    margin-left: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
+    z-index: -1;
 }
 
 .card-container {
