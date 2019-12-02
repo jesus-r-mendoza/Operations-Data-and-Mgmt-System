@@ -1,51 +1,53 @@
 import React from 'react';
 // Components
 import DateTimePicker from "react-datetime-picker";
+import Select from "react-select";
 // Redux
 import { connect } from 'react-redux';
 import { selectRecent, selectStartDate, selectEndDate } from "../Actions";
-import {Col, Container, Row} from "react-bootstrap";
-// import NumberPicker from "react-number-picker";
+// Stylesheets
+import "../Layout/Reports.css";
+
+const recentNumbersOptions = [
+    {value: 5000, label: "All"},
+    {value: 1, label: 1},
+    {value: 5, label: 5},
+    {value: 10, label: 10},
+    {value: 50, label: 50},
+    {value: 100, label: 100},
+    {value: 500, label: 500}
+];
 
 class ReportHeader extends React.Component {
-
-    handleRecentNumber = e => {
-        console.log(e);
-        this.props.selectRecent(e);
-    };
-
     render() {
         return (
             <div className={"report-header"}>
-                <Container className={"report-header-btn"}>
-                    <Row>
-                        <Col>
-                            {/*Back arrow*/}
-                        </Col>
-                        <Col>
-                            {/*<NumberPicker*/}
-                            {/*    value={this.props.recent}*/}
-                            {/*    onChange={this.handleRecentNumber.bind(this)}*/}
-                            {/*/>*/}
-                        </Col>
-                        <Col>
-                            <DateTimePicker
-                                onChange={e => this.props.selectStartDate(e)}
-                                value={this.props.startDate}
-                                disableClock
-                                className={"datetime-pickers"}
-                            />
-                        </Col>
-                        <Col>
-                            <DateTimePicker
-                                onChange={e => this.props.selectEndDate(e)}
-                                value={this.props.endDate}
-                                disableClock
-                                className={"datetime-pickers"}
-                            />
-                        </Col>
-                    </Row>
-                </Container>
+                <div className={"report-header-btn"}>
+                    <div>
+                        <button>
+                            <img className={"back-btn"} src={require('../Images/back1.png')} />
+                        </button>
+                    </div>
+                    <Select
+                        className={"recent-selector"}
+                        options={recentNumbersOptions}
+                        placeholder={"All"}
+                        value={this.props.recent}
+                        onChange={e => this.props.selectRecent(e)}
+                    />
+                    <DateTimePicker
+                        onChange={e => this.props.selectStartDate(e)}
+                        value={this.props.startDate}
+                        disableClock
+                        className={"datetime-pickers"}
+                    />
+                    <DateTimePicker
+                        onChange={e => this.props.selectEndDate(e)}
+                        value={this.props.endDate}
+                        disableClock
+                        className={"datetime-pickers"}
+                    />
+                </div>
             </div>
         );
     }
@@ -54,8 +56,8 @@ class ReportHeader extends React.Component {
 const mapStateToProps = state => {
     return {
         recent: state.selectRecent,
-        startDate: state.selectDate,
-        endDate: state.selectDate
+        startDate: state.selectStartDate,
+        endDate: state.selectEndDate
     };
 };
 

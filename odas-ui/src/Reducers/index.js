@@ -34,20 +34,26 @@ const selectedRecentReducer = (recent = 10, action) => {
     return recent;
 };
 
-const selectDateReducer = (date = new Date(), action) => {
-    switch (action.type) {
-        case 'START_DATE_SELECTED':
-            return action.payload;
-        case 'END_DATE_SELECTED':
-            return action.payload;
-        default:
-            return date;
+const selectStartDateReducer = (date = new Date(), action) => {
+    if (action.type === "START_DATE_SELECTED") {
+        return action.payload
     }
+
+    return date;
+};
+
+const selectEndDateReducer = (date = new Date(), action) => {
+    if (action.type === "END_DATE_SELECTED") {
+        return action.payload
+    }
+
+    return date;
 };
 
 export default combineReducers({
     sats: satelliteReducer,
     selectedSat: selectedSatReducer,
     selectRecent: selectedRecentReducer,
-    selectDate: selectDateReducer
+    selectStartDate: selectStartDateReducer,
+    selectEndDate: selectEndDateReducer
 });
