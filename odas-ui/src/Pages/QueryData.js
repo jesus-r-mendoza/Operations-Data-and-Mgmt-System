@@ -25,7 +25,6 @@ export default class QueryData extends React.Component {
         };
     }
 
-    // TODO combine axios calls into one
     componentDidMount() {
         axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
             .then(axios.spread((...responses) => {

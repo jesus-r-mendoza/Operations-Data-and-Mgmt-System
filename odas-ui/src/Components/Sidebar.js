@@ -9,7 +9,7 @@ import Select from 'react-select';
 import LoadSpinner from "./LoadSpinner";
 // Redux
 import { connect } from 'react-redux';
-import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions/ApiCalls";
+import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions";
 
 class Sidebar extends React.Component {
     constructor(props) {
