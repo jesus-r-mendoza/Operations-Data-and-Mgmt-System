@@ -58,7 +58,6 @@ export default class Main extends React.Component {
                                         Login
                                     </Button>
                                 </div>
-
                                 <div className={"email-button"}>
                                     <Link to={""}>
                                         <Button

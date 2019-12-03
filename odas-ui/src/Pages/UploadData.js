@@ -88,24 +88,24 @@ class UploadData extends React.Component {
     handleFileSubmit = () => {
         let fileForm = new FormData();
         let upfile = this.state.selectedFile;
+        let description = "This is a description";
         fileForm.append("upfile", upfile);
-        console.log(fileForm.get("upfile"));
+        fileForm.append("description", description);
+
+        let fileObj = Object.create({}, {
+            upfile: {value: upfile},
+            description: {value: description}
+        });
+
+        console.log(fileObj);
 
         axios.post('http://localhost:8000/files/upload/', {
-            data: {
-                message: 'Hi',
-                upfile: fileForm
-            }
-        }, {
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
+            data: fileObj
         })
             .then(
-                res =>console.log(res),
-                error => console.log(error)
+                res =>console.log(res)
             )
+            .catch(err => console.log(err))
     };
     
     showErrorMessage(loaded) {

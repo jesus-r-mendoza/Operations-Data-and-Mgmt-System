@@ -1,9 +1,9 @@
 import React from 'react';
 //Components
 import ReportCard from "../Components/ReportCard";
+import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
 // Stylesheets
-import { Container, Row, Col } from "react-bootstrap";
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
@@ -25,7 +25,6 @@ export default class QueryData extends React.Component {
         };
     }
 
-    // TODO combine axios calls into one
     componentDidMount() {
         axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
             .then(axios.spread((...responses) => {
@@ -77,7 +76,6 @@ export default class QueryData extends React.Component {
 
     render() {
         if (this.state.isLoading) {
-
             return (
                 <LoadSpinner/>
             );
@@ -98,15 +96,9 @@ export default class QueryData extends React.Component {
                     >
                         Query a Dataset
                     </Sidebar>
-                    {/*className={"card-container"}*/}
-                    <div>
-                        <Container>
-                            <Row>
-                                <Col lg>
-                                    <ReportCard/>
-                                </Col>
-                            </Row>
-                        </Container>
+                    <div className={"report-body"}>
+                        <ReportHeader />
+                        <ReportCard/>
                     </div>
                 </div>
             );

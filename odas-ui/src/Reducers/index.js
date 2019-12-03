@@ -1,35 +1,23 @@
 import { combineReducers } from 'redux';
+import {
+    unitsReducer,
+    componentsReducer,
+    satelliteReducer
+} from "./ApiReducers";
 
-const satelliteReducer = (state = [], action) => {
-    switch (action.type) {
-        case 'FETCH_UNITS':
-            return [...state, action.payload];
-        case 'FETCH_COMPS':
-            return [...state, action.payload];
-        case 'FETCH_SATS':
-            return [...state, action.payload];
-        default:
-            return state;
-    }
-};
-
-// const fileReducer = action => {
-//     console.log(action.payload);
-//     return action.payload
-// };
-
-const selectedSatReducer = (selectedSat = null, action) => {
-    if (action.type === "SAT_SELECTED") {
-        return action.payload
-    }
-
-    return selectedSat
-};
-
-
+import {
+    selectedRecentReducer,
+    selectedSatReducer,
+    selectEndDateReducer,
+    selectStartDateReducer
+} from "./SelectionReducers";
 
 export default combineReducers({
-    // file: fileReducer,
-    sats: satelliteReducer,
+    satObjects: satelliteReducer,
+    units: unitsReducer,
+    components: componentsReducer,
     selectedSat: selectedSatReducer,
+    selectRecent: selectedRecentReducer,
+    selectStartDate: selectStartDateReducer,
+    selectEndDate: selectEndDateReducer
 });
