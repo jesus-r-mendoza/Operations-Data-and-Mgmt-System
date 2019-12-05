@@ -13,6 +13,6 @@ services:
             - "3000:3000"
         volumes:
             - ./odas-ui:/odas/odas-ui
-        command: bash -c "cd odas/odas-ui && npm install && npm start"
+        command: bash -c "cd odas/odas-ui && npm start"
         depends_on:
             - backend
