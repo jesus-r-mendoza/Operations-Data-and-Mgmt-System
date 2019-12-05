@@ -22,11 +22,19 @@
         <tr>
           
           <td>{{ file.description }}</td>
+          
+
           <td>
-            <a href="{{ file.upfile.url }}" class="btn btn-primary btn-sm" target="_blank">
+            <a href="/files/download{{ file.upfile.url }}/">
               Download File
             </a>
           </td>
+
+
+          
+
+
+
           <td>
             <form method="post" action="{% url 'delete_file' file.pk %}">
               {% csrf_token %}

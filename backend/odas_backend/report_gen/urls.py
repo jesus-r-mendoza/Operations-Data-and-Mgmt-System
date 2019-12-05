@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from . import views
 
 urlpatterns = [
@@ -8,5 +8,6 @@ urlpatterns = [
     path('satest/', views.dbemail, name='db_test'),
     path('writetest/', views.dbwritefile, name='db_test'),
     path('files/upload/', views.upload_view, name='upload_file'),
-    path('files/<int:pk>/', views.delete_file, name='delete_file')
+    path('files/<int:pk>/', views.delete_file, name='delete_file'),
+    re_path(r'^files/download/(?P<url>.*)/$', views.download_view, name='file_download'),
 ]

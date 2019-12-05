@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,Http404, FileResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
@@ -32,7 +32,7 @@ def index(request):
     return render(request, 'emailsender/index.html', {'form': form})
 
 def successView(request):
-    return HttpResponse('Thank you. You are now subscribed to emails')
+    return HttpResponse('Thank you, your email was sent.')
 
 def dbemail(request):
     all_sats = Satellite.objects.all()
@@ -45,7 +45,7 @@ def dbwritefile(request):
     sat_name1= all_sats[0].name
     desc_1 = all_sats[0].mission_description
     concant_msg = sat_name1 + desc_1
-    cpath = os.path.join(settings.MEDIA_ROOT, 'new.txt')       
+    cpath = os.path.join(settings.MEDIA_ROOT,'files','uploads', 'new.txt')       
 
     file1 = open(cpath, "w")
 
@@ -54,7 +54,7 @@ def dbwritefile(request):
     file1.write(toFile)
 
     file1.close()
-    return HttpResponse('Thank you. You are now subscribed to emails')
+    return HttpResponse('File was saved to your files.')
 
 # Create your views here.
 @csrf_exempt
@@ -93,3 +93,12 @@ def delete_file(request, pk):
         user_file = Upload.objects.get(pk=pk)
         user_file.delete()
     return redirect('file_list')
+
+def download_view(request, url):
+    try:
+        response = FileResponse(open(url, 'rb'))
+        response['content_type'] = "application/octet-stream"
+        response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
+        return response
+    except Exception:
+        raise Http404

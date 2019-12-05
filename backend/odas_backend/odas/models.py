@@ -37,3 +37,11 @@ class Measurement(models.Model):
         s = f'{self.id}: | Satellite: {self.satellite.name} | Component: {self.component.name} | '
         s += f'Value: {self.value} | Time: {self.time_measured}'
         return s
+
+class Risk(models.Model):
+    satellite = models.ForeignKey(Satellite, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
+    units = models.ForeignKey(Units, on_delete=models.CASCADE)
+    error = models.CharField(max_length=512)
+    priority = models.IntegerField()
+    value = models.ForeignKey(Measurement, on_delete=models.CASCADE)
