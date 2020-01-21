@@ -104,7 +104,7 @@ def recent_by_component(request, satellite_id, component_id, quantity):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def recent_by_many_components(request, satellite_id, component_ids, quantity):
+def with_many_components(request, satellite_id, component_ids, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
@@ -141,9 +141,7 @@ def _handle_many_comp_ids(comp_ids, sat, filtered_meas, quantity=None, from_date
             comp = Component.objects.get(pk=id)
             if comp.satellite != sat:
                 raise Component.DoesNotExist()
-            print('\n\n\n',quantity,'\n\n\n')
             if quantity:
-                print('quatity supplied')
                 meas = filtered_meas.filter(component=comp).order_by('-time_measured')[:quantity]
             elif from_date and to_date:
                 meas = filtered_meas.filter(component=comp).filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
