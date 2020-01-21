@@ -104,14 +104,14 @@ def recent_by_component(request, satellite_id, component_id, quantity):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def with_many_components(request, satellite_id, component_ids, quantity):
+def with_many_components(request, satellite_id, component_ids, quantity=None, from_date=None, to_date=None):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
             return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
         measurements = Measurement.objects.filter(satellite=sat)
 
-        ans = _handle_many_comp_ids(component_ids, sat, measurements, quantity=quantity)
+        ans = _handle_many_comp_ids(component_ids, sat, measurements, quantity=quantity, from_date=from_date, to_date=to_date)
         if not ans:
             return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
         else:
