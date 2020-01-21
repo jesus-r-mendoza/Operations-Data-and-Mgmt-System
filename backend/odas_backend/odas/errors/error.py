@@ -10,5 +10,3 @@ COMP_DNE_OR_PERM_DEN = Response( { 'data': False, 'error': 'Component Does Not E
 COMPS_DNE = Response( { 'data': False, 'error': 'Component(s) Does not exist' }, status=status.HTTP_400_BAD_REQUEST )
 QUANT_LESS_THAN_1 = Response( { 'data': False, 'error': 'Must request at least 1 recent measurement' }, status=status.HTTP_400_BAD_REQUEST )
 NO_DATA_WITHIN_PARAMS = Response( { 'data': False, 'error': 'Satellite has no measurements fitting those parameters' }, status=status.HTTP_204_NO_CONTENT )
-
-print('\n\n\nWas executed\n\n\n')
