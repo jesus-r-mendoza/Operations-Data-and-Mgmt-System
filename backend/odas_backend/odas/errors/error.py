@@ -11,10 +11,11 @@ COMPS_DNE = Response( { 'data': False, 'error': 'Component(s) Does not exist' },
 QUANT_LESS_THAN_1 = Response( { 'data': False, 'error': 'Must request at least 1 recent measurement' }, status=status.HTTP_400_BAD_REQUEST )
 NO_DATA_WITHIN_PARAMS = Response( { 'data': False, 'error': 'Satellite has no measurements fitting those parameters' }, status=status.HTTP_204_NO_CONTENT )
 
-# MISSING_CREDENTIALS
-# USRNAME_EXISTS
-# INVITE_INVALID
-
-# MISSING_ORG_NAME
-# PASSWORD_INVALID
-# ORG_NAME_EXISTS
+MISSING_CREDENTIALS = Response( { 'data': False, 'error': 'Details not provided: Must provide username, pass, email; code (optional)' }, status=status.HTTP_400_BAD_REQUEST )
+USERNAME_EXISTS = Response( { 'data': False, 'error': 'User with this username already exists' }, status=status.HTTP_403_FORBIDDEN )
+INVITE_CODE_INVALID = Response( { 'data': False, 'error': 'Invitation code is invalid' }, status=status.HTTP_403_FORBIDDEN )
+ORG_NAME_REQUIRED = Response( { 'data': False, 'error': 'Must provide organization name' }, status=status.HTTP_400_BAD_REQUEST )
+PASSWORD_INVALID = Response( { 'data': False, 'error': 'Password not provided or incorrect' }, status=status.HTTP_401_UNAUTHORIZED )
+ORG_NAME_EXISTS = Response( { 'data': False, 'error': 'Organization with this name already exists' }, status=status.HTTP_403_FORBIDDEN )
+USR_AND_PASS_REQUIRED= Response( { 'data': False, 'error': 'Must provide both username and password' }, status=status.HTTP_400_BAD_REQUEST )
+USR_OR_PASS_INVALID = Response( { 'data': False, 'error': 'Username and / or password are not correct' }, status=status.HTTP_401_UNAUTHORIZED )
