@@ -11,6 +11,7 @@ from django.utils.crypto import get_random_string
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from odas.errors import error
 
 @csrf_exempt
 @api_view(['POST'])
@@ -19,10 +20,9 @@ def register(request):
     psw = request.POST.get('pass')
     eml = request.POST.get('email')
     inv = request.POST.get('code')
-    
-    if not usr or not psw or not eml:
-        return JsonResponse( { 'data': False, 'error': 'Details not provided: Must provide username, pass, email; code (optional)' } )
 
+    if not usr or not psw or not eml:
+        return error.MISSING_CREDENTIALS
     try:
         user = User.objects.create(username=usr, password=psw, email=eml)
         user.set_password(user.password)
@@ -42,10 +42,10 @@ def register(request):
             data['organization'] = user.groups.all()[0].name
         return JsonResponse(data)
     except IntegrityError:
-        return JsonResponse({ 'data': False, 'error': 'User with this username already exists' })
+        return error.USERNAME_EXISTS
     except Invite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Invitation Link is invalid' } )
-    
+        return error.INVITE_CODE_INVALID
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -56,11 +56,11 @@ def register_org(request):
     psw = request.POST.get('pass')
 
     if not org_name:
-        return JsonResponse( { 'data': False, 'error': 'Must provide organization name' } )
+        return error.ORG_NAME_REQUIRED
 
     if not psw or psw != settings.CREATE_ORG_PASSWORD:
-        return JsonResponse( { 'data': False, 'error': 'Password not provided or incorrect' } )
-    
+        return error.PASSWORD_INVALID
+
     try:
         org = Group.objects.create(name=org_name)
         request.user.groups.add(org)
@@ -75,7 +75,7 @@ def register_org(request):
 
         return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
     except IntegrityError:
-        return JsonResponse( { 'data': False, 'error': 'Organization with this name already exists' } )
+        return error.ORG_NAME_EXISTS
 
 @csrf_exempt
 @api_view(['POST'])
@@ -84,12 +84,12 @@ def login(request):
     psw = request.POST.get('pass')
 
     if not usr or not psw:
-        return JsonResponse( { 'data': False, 'error': 'Must provide both username and password' } )
-    
+        return error.USR_AND_PASS_REQUIRED
+
     user = authenticate(username=usr, password=psw)
 
     if not user:
-        return JsonResponse({ 'data': False, 'error': 'Username and / or password are not correct' })
+        return error.USR_OR_PASS_INVALID
 
     tkn = Token.objects.get_or_create(user=user)
     data = {
@@ -102,9 +102,9 @@ def login(request):
     return JsonResponse(data)
 
 
-@api_view(['GET'])
+@api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def logout(request):    
+def logout(request):
     request.auth.delete()
     return JsonResponse({ 'data': True, 'error': 'None' })
