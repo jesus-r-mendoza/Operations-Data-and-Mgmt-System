@@ -21,7 +21,7 @@ POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers 
 POST | register/ | Allows a user to sign up to use ODAS, must provide **username**, **email**, and **pass** in POST request to sign up. Optionally, if **code** is provided, (this is the 12 char invite code), then a user can sign up and will automatically be added to the organization which provided that invite code | | No
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
 POST | login/ | Allows user to login, returns authentication token if login successful. Must provide **username** and **pass** in POST request | | No
-GET | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
+DELETE | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
 ---
 
 ## Authentication
@@ -93,7 +93,7 @@ Once your in the base directory, simply run:
 
 > `$ docker-compose up`
 
-This will run both the frontend and backend containers. 
+This will run both the frontend and backend containers.
 
 For testing purposes, the backend container is accessible through your container's ip or localhost at port 8000; and the frontend container is accessible through your container's ip or localhost at port 3000.
 

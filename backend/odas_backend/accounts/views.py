@@ -73,7 +73,7 @@ def register_org(request):
             except IntegrityError:
                 unique = False
 
-        return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } ) # 200
+        return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
     except IntegrityError:
         return error.ORG_NAME_EXISTS
 
@@ -102,9 +102,9 @@ def login(request):
     return JsonResponse(data)
 
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def logout(request):
     request.auth.delete()
-    return JsonResponse({ 'data': True, 'error': 'None' }) # 200
+    return JsonResponse({ 'data': True, 'error': 'None' })
