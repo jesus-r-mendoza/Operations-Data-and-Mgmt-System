@@ -124,10 +124,10 @@ class Sidebar extends React.Component {
         />
     );
 
-    selectAllUnits = () => this.selectAllUnitCheckboxes(true);
+    // selectAllUnits = () => this.selectAllUnitCheckboxes(true);
     deselectAllUnits = () => this.selectAllUnitCheckboxes(false);
 
-    selectAllComponents = () => this.selectAllComponentCheckboxes(true, "components");
+    // selectAllComponents = () => this.selectAllComponentCheckboxes(true, "components");
     deselectAllComponents = () => this.selectAllComponentCheckboxes(false, "components");
 
     createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
