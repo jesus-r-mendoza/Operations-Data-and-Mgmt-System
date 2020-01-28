@@ -3,10 +3,10 @@ services:
     backend:
         image: jesusrmendoza/odasbackend:latest
         ports:
-            - "8000:8000"
+            - "8080:8080"
         volumes:
             - ./backend:/odas/backend
-        command: bash -c "cd odas/backend/odas_backend/ && python manage.py runserver 0.0.0.0:8000"
+        command: bash -c "cd odas/backend/odas_backend/ && python manage.py runserver 0.0.0.0:8080"
     frontend:
         image: node:12
         ports:
