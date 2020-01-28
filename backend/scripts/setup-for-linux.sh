@@ -45,19 +45,19 @@ echo  + - - - - - - - - - +
 echo
 di=0
 
-echo Step 1 / 3:
+echo Step 1 / 3: Installing package from apt-get...
 sudo apt-get install docker.io
-if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 1/3 complete..; else echo; echo [ ! ] Step 1/3 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 1/3 complete; else echo; echo [ ! ] Step 1/3 failed. Continuing...; fi
 
 echo
-echo Step 2 / 3:
+echo Step 2 / 3: Starting docker with systemctl...
 sudo systemctl start docker
-if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 2/3 complete..; else echo; echo [ ! ] Step 2/3 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 2/3 complete; else echo; echo [ ! ] Step 2/3 failed. Continuing...; fi
 
 echo
-echo Step 3 / 3:
+echo Step 3 / 3: Enabling docker with systemctl...
 sudo systemctl enable docker
-if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 3/3 complete..; else echo; echo [ ! ] Step 3/3 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 3/3 complete; else echo; echo [ ! ] Step 3/3 failed. Continuing...; fi
 echo
 
 docker --version
@@ -73,14 +73,14 @@ echo  + - - - - - - - - - - - - - +
 echo
 dc=0
 
-echo Step 1 / 2:
+echo Step 1 / 2: Downloading docker-compose...
 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-if [ $? -eq 0 ]; then ((dc++)); echo; echo [ OK ] Step 1/2 complete..; else echo; echo [ ! ] Step 1/2 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((dc++)); echo; echo [ OK ] Step 1/2 complete; else echo; echo [ ! ] Step 1/2 failed. Continuing...; fi
 
 echo
-echo Step 2 / 2:
+echo Step 2 / 2: Making docker-compose executable...
 sudo chmod +x /usr/local/bin/docker-compose
-if [ $? -eq 0 ]; then ((dc++)); echo; echo [ OK ] Step 2/2 complete..; else echo; echo [ ! ] Step 2/2 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((dc++)); echo; echo [ OK ] Step 2/2 complete; else echo; echo [ ! ] Step 2/2 failed. Continuing...; fi
 echo
 
 docker-compose --version
@@ -97,29 +97,29 @@ echo  + - - - - - - - - - +
 echo
 njs=0
 
-echo Step 1 / 5:
+echo Step 1 / 5: Downloading tar file for NodeJS version 12...
 curl "https://nodejs.org/dist/v12.14.1/node-v12.14.1-linux-x64.tar.xz" -o ~/nodejs.tar.xz
-if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 1/5 complete..; else echo; echo [ ! ] Step 1/2 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 1/5 complete; else echo; echo [ ! ] Step 1/2 failed. Continuing...; fi
 
 echo
-echo Step 2 / 5:
+echo Step 2 / 5: Extracting NodeJS tar file...
 cd ~ && tar -xf ~/nodejs.tar.xz
-if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 2/5 complete..; else echo; echo [ ! ] Step 2/5 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 2/5 complete; else echo; echo [ ! ] Step 2/5 failed. Continuing...; fi
 
 echo
-echo Step 3 / 5:
+echo Step 3 / 5: Moving extracted content to /usr/local/lib/nodejs-v12...
 sudo mv ~/node-v12.14.1-linux-x64/ /usr/local/lib/nodejs-v12
-if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 3/5 complete..; else echo; echo [ ! ] Step 3/5 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 3/5 complete; else echo; echo [ ! ] Step 3/5 failed. Continuing...; fi
 
 echo
-echo Step 4 / 5:
+echo Step 4 / 5: Exporting /nodejs-v12/bin to PATH environment variable...
 echo "export PATH=\$PATH:/usr/local/lib/nodejs-v12/bin" >> ~/.bash_aliases
-if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 4/5 complete..; else echo; echo [ ! ] Step 4/5 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 4/5 complete; else echo; echo [ ! ] Step 4/5 failed. Continuing...; fi
 
 echo
-echo Step 5 / 5:
+echo Step 5 / 5: Removing downloaded tar file...
 rm ~/nodejs.tar.xz
-if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 5/5 complete..; else echo; echo [ ! ] Step 5/5 failed. Continuing...; fi
+if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 5/5 complete; else echo; echo [ ! ] Step 5/5 failed. Continuing...; fi
 
 source ~/.bashrc
 nr=0
