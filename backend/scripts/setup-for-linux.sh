@@ -98,29 +98,30 @@ echo
 njs=0
 
 echo Step 1 / 5:
-curl "https://nodejs.org/dist/v12.14.1/node-v12.14.1-linux-x64.tar.xz" -o ~/Downloads/nodejs.tar.xz
+curl "https://nodejs.org/dist/v12.14.1/node-v12.14.1-linux-x64.tar.xz" -o ~/nodejs.tar.xz
 if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 1/5 complete..; else echo; echo [ ! ] Step 1/2 failed. Continuing...; fi
 
 echo
 echo Step 2 / 5:
-cd ~/Downloads && tar -xf ~/Downloads/nodejs.tar.xz
+cd ~ && tar -xf ~/nodejs.tar.xz
 if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 2/5 complete..; else echo; echo [ ! ] Step 2/5 failed. Continuing...; fi
 
 echo
 echo Step 3 / 5:
-sudo mv ~/Downloads/node-v12.14.1-linux-x64/ /usr/local/lib/nodejs-v12
+sudo mv ~/node-v12.14.1-linux-x64/ /usr/local/lib/nodejs-v12
 if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 3/5 complete..; else echo; echo [ ! ] Step 3/5 failed. Continuing...; fi
 
 echo
 echo Step 4 / 5:
-echo "export PATH=\$PATH:/usr/local/lib/nodejs-v12/bin" > ~/.bash_aliases
+echo "export PATH=\$PATH:/usr/local/lib/nodejs-v12/bin" >> ~/.bash_aliases
 if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 4/5 complete..; else echo; echo [ ! ] Step 4/5 failed. Continuing...; fi
 
 echo
 echo Step 5 / 5:
-rm ~/Downloads/nodejs.tar.xz
+rm ~/nodejs.tar.xz
 if [ $? -eq 0 ]; then ((njs++)); echo; echo [ OK ] Step 5/5 complete..; else echo; echo [ ! ] Step 5/5 failed. Continuing...; fi
 
+source ~/.bashrc
 nr=0
 node --version
 if [ $? -eq 0 ]; then ((nr++)); fi
