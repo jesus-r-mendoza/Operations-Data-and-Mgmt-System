@@ -11,7 +11,9 @@ from django.utils.crypto import get_random_string
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from odas_backend.config import get_creds
 from odas.errors import error
+import os
 
 @csrf_exempt
 @api_view(['POST'])
@@ -108,3 +110,11 @@ def login(request):
 def logout(request):
     request.auth.delete()
     return JsonResponse({ 'data': True, 'error': 'None' })
+
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def deploy(request):
+
+    return JsonResponse({'data': True})
