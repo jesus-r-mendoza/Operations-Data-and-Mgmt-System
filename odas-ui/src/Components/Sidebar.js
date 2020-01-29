@@ -91,7 +91,7 @@ class Sidebar extends React.Component {
 
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
-
+    // Append to formdata variables and submit
         Object.keys(this.state.measurementCheckboxes)
             .filter(checkbox => this.state.measurementCheckboxes[checkbox])
             .forEach(checkbox => {

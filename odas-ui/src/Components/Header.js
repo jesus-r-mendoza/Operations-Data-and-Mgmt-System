@@ -18,6 +18,12 @@ export default class Header extends React.Component {
         });
     }
 
+    handleLogin(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        console.log(data);
+    };
+
     render() {
         return (
             <div>
@@ -55,9 +61,9 @@ export default class Header extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form onSubmit={this.handleLogin}>
                             <div className={"email-form"}>
-                                <Form.Control type={"text"} placeholder={"Email"} />
+                                <Form.Control type={"email"} placeholder={"Email"} />
                             </div>
                             <div>
                                 <Form.Control type={"password"} placeholder={"Password"} />
@@ -66,16 +72,8 @@ export default class Header extends React.Component {
                                 <Button
                                     variant={"info"}
                                     type={"submit"}
-                                    onClick={() => console.log("Submit")}
                                 >
                                     Login
-                                </Button>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    onClick={() => console.log("Submit")}
-                                >
-                                    Register
                                 </Button>
                             </Modal.Footer>
                         </Form>
