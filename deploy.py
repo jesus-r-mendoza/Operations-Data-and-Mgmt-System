@@ -4,11 +4,16 @@ except ImportError:
     print('\nERROR: You need to install the requests package first. \nDo: $ pip install requests\n')
     exit(1)
 
-from odas_backend.odas_backend.config import get_creds
+from backend.odas_backend.odas_backend.config import get_creds
 
-deploy_site = 'http://localhost:8000/deploy/'
+creds = get_creds()
+
+deploy_site = creds['dep_site']
+token = creds['dep_token']
+
 auth = {
-    'Authorization': f"Token {get_creds()['dep_token']}"
+    'Authorization': f"Token {token}"
 }
+
 res = requests.post(url=deploy_site, headers=auth)
-print(res.text)
+print(res)

@@ -11,7 +11,6 @@ from django.utils.crypto import get_random_string
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from odas_backend.config import get_creds
 from odas.errors import error
 import os
 
@@ -116,5 +115,7 @@ def logout(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def deploy(request):
-
-    return JsonResponse({'data': True})
+    # This will be executed on the remote linux server
+    os.chdir(f'{settings.BASE_DIR[:-12]}scripts')
+    os.system('./deploy.sh')
+    return JsonResponse( {'data': True} )
