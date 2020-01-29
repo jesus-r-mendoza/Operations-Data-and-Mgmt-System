@@ -1,1 +1,2 @@
-echo Run from django view
+cd ~/Operations-Data-and-Mgmt-System
+git pull
