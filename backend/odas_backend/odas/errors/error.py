@@ -17,5 +17,8 @@ INVITE_CODE_INVALID = Response( { 'data': False, 'error': 'Invitation code is in
 ORG_NAME_REQUIRED = Response( { 'data': False, 'error': 'Must provide organization name' }, status=status.HTTP_400_BAD_REQUEST )
 PASSWORD_INVALID = Response( { 'data': False, 'error': 'Password not provided or incorrect' }, status=status.HTTP_401_UNAUTHORIZED )
 ORG_NAME_EXISTS = Response( { 'data': False, 'error': 'Organization with this name already exists' }, status=status.HTTP_403_FORBIDDEN )
-USR_AND_PASS_REQUIRED= Response( { 'data': False, 'error': 'Must provide both username and password' }, status=status.HTTP_400_BAD_REQUEST )
+USR_AND_PASS_REQUIRED = Response( { 'data': False, 'error': 'Must provide both username and password' }, status=status.HTTP_400_BAD_REQUEST )
 USR_OR_PASS_INVALID = Response( { 'data': False, 'error': 'Username and / or password are not correct' }, status=status.HTTP_401_UNAUTHORIZED )
+
+DEP_INVALID = Response( { 'data': False, 'error': 'You are not authorized to use this endpoint.' }, status=status.HTTP_401_UNAUTHORIZED )
+METHOD_INVALID = Response( { 'data': False, 'error': 'Method type not allowed.' }, status=status.HTTP_400_BAD_REQUEST )

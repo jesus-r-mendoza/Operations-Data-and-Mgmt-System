@@ -12,6 +12,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from odas.errors import error
+import os
 
 @csrf_exempt
 @api_view(['POST'])
@@ -108,3 +109,13 @@ def login(request):
 def logout(request):
     request.auth.delete()
     return JsonResponse({ 'data': True, 'error': 'None' })
+
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def deploy(request):
+    # This will be executed on the remote linux server
+    os.chdir(f'{settings.BASE_DIR[:-12]}scripts')
+    os.system('./deploy.sh')
+    return JsonResponse( {'data': True} )
