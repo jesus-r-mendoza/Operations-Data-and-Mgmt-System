@@ -22,13 +22,6 @@ class Sidebar extends React.Component {
             formSubmit: [],
             loadDropdown: true,
             satPlaceHolder: "Satellite",
-            measurementCheckboxes: MEASUREMENTS.reduce(
-                (options, option) => ({
-                    ...options,
-                    [option]: false
-                }),
-                {}
-            ),
             componentCheckboxes: COMPONENTS.reduce(
                 (options, option) => ({
                     ...options,
@@ -45,17 +38,6 @@ class Sidebar extends React.Component {
         });
     }
 
-    selectAllUnitCheckboxes = isSelected => {
-        Object.keys(this.state.measurementCheckboxes).forEach(checkboxU => {
-            this.setState(prevStateU => ({
-                measurementCheckboxes: {
-                    ...prevStateU.measurementCheckboxes,
-                    [checkboxU]: isSelected
-                }
-            }));
-        });
-    };
-
     selectAllComponentCheckboxes = isSelected => {
         Object.keys(this.state.componentCheckboxes).forEach(checkboxC => {
             this.setState(prevStateC => ({
@@ -65,17 +47,6 @@ class Sidebar extends React.Component {
                 }
             }));
         });
-    };
-
-    handleUnitCheckboxChange = unitChangeEvent => {
-        const { name } = unitChangeEvent.target;
-
-        this.setState(prevState => ({
-            measurementCheckboxes: {
-                ...prevState.measurementCheckboxes,
-                [name]: !prevState.measurementCheckboxes[name]
-            }
-        }));
     };
 
     handleComponentCheckboxChange = componentChangeEvent => {
@@ -106,15 +77,6 @@ class Sidebar extends React.Component {
             });
     };
 
-    unitCheckboxes = option => (
-        <CheckComponent
-            label={option}
-            isSelected={this.state.measurementCheckboxes[option]}
-            onCheckboxChange={this.handleUnitCheckboxChange}
-            key={option}
-        />
-    );
-
     componentCheckboxes = option => (
         <CheckComponent
             label={option}
@@ -123,9 +85,6 @@ class Sidebar extends React.Component {
             key={option}
         />
     );
-
-    // selectAllUnits = () => this.selectAllUnitCheckboxes(true);
-    deselectAllUnits = () => this.selectAllUnitCheckboxes(false);
 
     // selectAllComponents = () => this.selectAllComponentCheckboxes(true, "components");
     deselectAllComponents = () => this.selectAllComponentCheckboxes(false, "components");
@@ -165,25 +124,6 @@ class Sidebar extends React.Component {
                                     />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
-                                    <div className={"checkbox-container"}>
-                                        <Divider horizontal>Measurements</Divider>
-                                        {this.createMeasurementCheckboxes(this.props.units)}
-                                        <div className={"selection-buttons"}>
-                                            {/*<Button*/}
-                                            {/*    variant={"outline-success"}*/}
-                                            {/*    onClick={() => this.selectAllUnits()}*/}
-                                            {/*    size={"sm"}*/}
-                                            {/*>*/}
-                                            {/*    Select All*/}
-                                            {/*</Button>*/}
-                                            <Button
-                                                variant={"outline-danger"}
-                                                onClick={() => this.deselectAllUnits()}
-                                                size={"sm"}
-                                            >
-                                                Deselect All
-                                            </Button>
-                                        </div>
                                         <Divider horizontal>Components</Divider>
                                         {this.createComponentCheckboxes(this.props.components)}
                                         <div className={"selection-buttons"}>
@@ -204,7 +144,6 @@ class Sidebar extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
                         <div className={"gen-button-container"}>
                             <Button
