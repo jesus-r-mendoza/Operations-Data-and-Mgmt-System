@@ -14,8 +14,8 @@ export const fetchUnits = () => async dispatch => {
     dispatch({type: "FETCH_UNITS", payload: response.data});
 };
 
+// Get all components existing in the database
 export const fetchComponents = () => async dispatch => {
-    // Needed exact URL including the slashes?
     const response = await SatApi.get("api/comp/", {
         method: "GET",
         headers: {

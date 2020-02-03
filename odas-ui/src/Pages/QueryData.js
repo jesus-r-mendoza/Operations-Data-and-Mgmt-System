@@ -18,7 +18,6 @@ export default class QueryData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            MEASUREMENTS: [],
             COMPONENTS: [],
             satObject: [],
             isLoading: true,
@@ -82,15 +81,14 @@ export default class QueryData extends React.Component {
         }
 
         if (!this.state.isLoading) {
-            let units = this.createArray("units");
             let components = this.createArray("components");
             let satNames = this.state.satObject.map(function(names) {return names.name});
             let satIds = this.state.satObject.map(function(ids){return ids.id});
             let satList = this.createSatArray(satNames, satIds);
+
             return (
                 <div className={"report-container"}>
                     <Sidebar
-                        units={units}
                         components={components}
                         satellites={satList}
                     >
@@ -98,7 +96,7 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        <ReportCard/>
+                        <ReportCard />
                     </div>
                 </div>
             );

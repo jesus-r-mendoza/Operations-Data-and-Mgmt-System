@@ -47,6 +47,12 @@ class ReportHeader extends React.Component {
                         disableClock
                         className={"datetime-pickers"}
                     />
+                    {/*<Select*/}
+                    {/*    className={"unit-filters"}*/}
+                    {/*    placeholder={"Filters"}*/}
+                    {/*    value={this.props.filter}*/}
+                    {/*    // onChange={e => this.props.selectFilters(e)}*/}
+                    {/*/>*/}
                 </div>
             </div>
         );

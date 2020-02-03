@@ -14,7 +14,7 @@ export const selectedRecentReducer = (recent = 10, action) => {
     return recent;
 };
 
-export const selectStartDateReducer = (date = new Date(), action) => {
+export const selectStartDateReducer = (date = null, action) => {
     if (action.type === "START_DATE_SELECTED") {
         return action.payload
     }
@@ -22,7 +22,7 @@ export const selectStartDateReducer = (date = new Date(), action) => {
     return date;
 };
 
-export const selectEndDateReducer = (date = new Date(), action) => {
+export const selectEndDateReducer = (date = null, action) => {
     if (action.type === "END_DATE_SELECTED") {
         return action.payload
     }

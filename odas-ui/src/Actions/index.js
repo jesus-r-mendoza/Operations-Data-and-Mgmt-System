@@ -1,9 +1,11 @@
+// API Call
 import {
     fetchSatellites,
     fetchComponents,
     fetchUnits
 } from "./ApiActions";
 
+// Selections
 import {
     selectStartDate,
     selectEndDate,
@@ -11,21 +13,20 @@ import {
     selectSatellite
 } from "./SelectionActions";
 
-// API Call 
+// User queries
+import {
+    satCompQuery
+} from "./QueryActions";
+
 export {
     fetchSatellites,
     fetchComponents,
-    fetchUnits
-};
-
-// Selections
-export {
+    fetchUnits,
     selectStartDate,
     selectSatellite,
     selectRecent,
-    selectEndDate
+    selectEndDate,
+    satCompQuery
 };
-
-
 
 

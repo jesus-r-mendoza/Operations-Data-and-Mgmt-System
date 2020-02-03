@@ -1,10 +1,18 @@
 import { combineReducers } from 'redux';
+
+// API calls
 import {
     unitsReducer,
     componentsReducer,
-    satelliteReducer
+    satelliteReducer,
 } from "./ApiReducers";
 
+// Queries
+import {
+    satComponentQueryReducer
+} from "./QueryReducers"
+
+// Selection reducers
 import {
     selectedRecentReducer,
     selectedSatReducer,
@@ -19,5 +27,6 @@ export default combineReducers({
     selectedSat: selectedSatReducer,
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
-    selectEndDate: selectEndDateReducer
+    selectEndDate: selectEndDateReducer,
+    satComponentQuery: satComponentQueryReducer
 });
