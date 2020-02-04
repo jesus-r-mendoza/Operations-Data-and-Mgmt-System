@@ -34,7 +34,6 @@ class Sidebar extends React.Component {
 
     selectAllCheckboxes = isSelected => {
         Object.keys(this.state.checkboxes).forEach(checkbox => {
-            // BONUS: Can you explain why we pass updater function to setState instead of an object?
             this.setState(prevState => ({
                 checkboxes: {
                     ...prevState.checkboxes,
@@ -95,8 +94,7 @@ class Sidebar extends React.Component {
     render() {
         let satellites = this.props.satellites;
         let components = this.props.components;
-        let obj = this.props.satCompQuery(1);
-        console.log(obj);
+        console.log(this.props.sats);
 
         if (this.state.isLoading === true) {
             return (

@@ -67,4 +67,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { selectRecent, selectStartDate, selectEndDate })(ReportHeader)
+export default connect(mapStateToProps, { selectRecent, selectStartDate, selectEndDate })(ReportHeader);

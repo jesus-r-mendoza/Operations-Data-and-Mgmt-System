@@ -3,13 +3,22 @@ import {Link} from "react-router-dom";
 // Stylesheets
 import {Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form} from "react-bootstrap";
 import "../Layout/Main.css";
+// Redux
+import { connect } from "react-redux";
+import { login, register } from "../Actions";
 
 export default class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            modalState: false
-        }
+            modalState: false,
+            username: '',
+            email: '',
+            password: ''
+        };
+
+        this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handlePassChange = this.handlePassChange.bind(this);
     }
 
     setModalState(state) {
@@ -20,8 +29,36 @@ export default class Header extends React.Component {
 
     handleLogin(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
-        console.log(data);
+        const data = new FormData();
+        data.append("1", event.target.email);
+        for (let value of data.values()) {
+            console.log("Header data", value);
+        }
+    };
+
+    handleEmailChange(e) {
+        e.preventDefault();
+        this.setState({
+            email: e.target.value
+        });
+        console.log(this.state.email);
+    }
+
+    handlePassChange(e) {
+        e.preventDefault();
+        this.setState({
+            password: e.target.value
+        });
+        console.log(this.state.password);
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        console.log("Username", this.state.username);
+        console.log("Email", this.state.email);
+        console.log("Password", this.state.password);
+
+        this.props.register(this.state.username, this.state.email, this.state.password);
     };
 
     render() {
@@ -61,20 +98,36 @@ export default class Header extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={this.handleLogin}>
+                        <Form onSubmit={() => this.handleSubmit}>
                             <div className={"email-form"}>
-                                <Form.Control type={"email"} placeholder={"Email"} />
+                                <Form.Control
+                                    type={"email"}
+                                    placeholder={"Email"}
+                                    value={this.state.email}
+                                    onChange={this.handleEmailChange}
+                                />
                             </div>
                             <div>
-                                <Form.Control type={"password"} placeholder={"Password"} />
+                                <Form.Control
+                                    type={"password"}
+                                    placeholder={"Password"}
+                                    value={this.state.password}
+                                    onChange={this.handlePassChange}
+                                />
                             </div>
-                            <Modal.Footer className={"modal-btn"}>
+                            <Modal.Footer >
                                 <Button
                                     variant={"info"}
                                     type={"submit"}
+                                    className={"modal-btn"}
                                 >
                                     Login
                                 </Button>
+                                <div>
+                                    <Link to={"/register"}>
+                                        New? Click here to register.
+                                    </Link>
+                                </div>
                             </Modal.Footer>
                         </Form>
                     </Modal.Body>
@@ -83,3 +136,11 @@ export default class Header extends React.Component {
         )
     }
 }
+
+// const mapStateToProps = state => {
+//     return {
+//         login: state
+//     }
+// };
+
+// export default connect(mapStateToProps({login, register }))(Header)

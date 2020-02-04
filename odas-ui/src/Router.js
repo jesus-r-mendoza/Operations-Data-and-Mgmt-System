@@ -6,6 +6,7 @@ import Main from "./Pages/Main";
 import QueryData from "./Pages/QueryData";
 import UploadData from "./Pages/UploadData";
 import Documentation from "./Pages/Documentation";
+import Register from "./Pages/Register";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
@@ -23,6 +24,7 @@ export default class App extends React.Component {
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
                     <Route path={"/user-dashboard"} component={Dashboard} />
+                    <Route path={"/register"} component={Register} />
                 </div>
             </Router>
         );

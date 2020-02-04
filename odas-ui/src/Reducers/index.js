@@ -20,6 +20,11 @@ import {
     selectStartDateReducer
 } from "./SelectionReducers";
 
+// Authentication
+import {
+    registerReducer
+} from "./AuthReducers";
+
 export default combineReducers({
     satObjects: satelliteReducer,
     units: unitsReducer,
@@ -28,5 +33,6 @@ export default combineReducers({
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
-    satComponentQuery: satComponentQueryReducer
+    satComponentQuery: satComponentQueryReducer,
+    authenticate: registerReducer
 });

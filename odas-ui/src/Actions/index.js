@@ -18,6 +18,12 @@ import {
     satCompQuery
 } from "./QueryActions";
 
+// Authentication
+import {
+    register,
+    login
+} from "./AuthActions";
+
 export {
     fetchSatellites,
     fetchComponents,
@@ -26,7 +32,9 @@ export {
     selectSatellite,
     selectRecent,
     selectEndDate,
-    satCompQuery
+    satCompQuery,
+    register,
+    login
 };
 
 

@@ -124,8 +124,8 @@ html, body {
 
 .modal-btn {
     display: flex;
-    justify-content: space-between;
-    padding-top: 7px;
+    justify-content: space-around;
+    flex-direction: column;
     width: 100%;
 }
 

@@ -1,0 +1,27 @@
+.register-container {
+    display: flex;
+    justify-content: space-around;
+    height: 100em;
+    width: 100%;
+    background: #141e28;
+}
+
+.register-box {
+    display: flex;
+    justify-content: center;
+    padding-top: 10em;
+    border-radius: 10px;
+    width: 50em;
+    height: 40em;
+    margin-top: 10%;
+    box-shadow: 0 4px 5px darkgray;
+    background: white;
+}
+
+.register-form {
+    width: 35em;
+}
+
+.register-input {
+    margin-bottom: 40px;
+}
