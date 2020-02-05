@@ -31,59 +31,61 @@ class Register extends React.Component {
 
     handleRegister = e => {
         e.preventDefault();
-        this.props.register(this.state.username, this.state.email, this.state.password);
+        this.props.register(
+            this.state.username,
+            this.state.email,
+            this.state.password,
+            this.state.inviteCode);
     };
 
     render() {
         return (
             <div className={"register-container"}>
                 <div className={"register-box"}>
-                    <div className={"input-cluster"}>
-                        <div className={"register-form"}>
-                            <Form onSubmit={this.handleRegister}>
-                                {/*<span>ODAS User Registration</span>*/}
-                                <Form.Control
-                                    name={"username"}
-                                    placeholder={"Username"}
-                                    value={this.state.username}
-                                    onChange={this.handleInputChange}
-                                    className={"register-input"}
-                                />
-                                <Form.Control
-                                    name={"email"}
-                                    type={"email"}
-                                    placeholder={"Email"}
-                                    value ={this.state.email}
-                                    onChange={this.handleInputChange}
-                                    className={"register-input"}
-                                />
-                                <Form.Control
-                                    name={"password"}
-                                    type={"password"}
-                                    placeholder={"Password"}
-                                    value={this.state.password}
-                                    onChange={this.handleInputChange}
-                                    className={"register-input"}
-                                />
-                                <Form.Control
-                                    name={"inviteCode"}
-                                    type={""}
-                                    placeholder={"Invite Code (Optional)"}
-                                    value={this.state.inviteCode}
-                                    onChange={this.handleInputChange}
-                                    className={"register-input"}
-                                />
-                                <div className={'register-btn'}>
-                                    <Button
-                                        type={"submit"}
-                                        variant={"info"}
-                                        onClick={this.handleRegister}
-                                    >
-                                        Submit
-                                    </Button>
-                                </div>
-                            </Form>
-                        </div>
+                    <div className={"register-form"}>
+                        <Form onSubmit={this.handleRegister}>
+                            {/*<span>ODAS User Registration</span>*/}
+                            <Form.Control
+                                name={"username"}
+                                placeholder={"Username"}
+                                value={this.state.username}
+                                onChange={this.handleInputChange}
+                                className={"register-input"}
+                            />
+                            <Form.Control
+                                name={"email"}
+                                type={"email"}
+                                placeholder={"Email"}
+                                value ={this.state.email}
+                                onChange={this.handleInputChange}
+                                className={"register-input"}
+                            />
+                            <Form.Control
+                                name={"password"}
+                                type={"password"}
+                                placeholder={"Password"}
+                                value={this.state.password}
+                                onChange={this.handleInputChange}
+                                className={"register-input"}
+                            />
+                            <Form.Control
+                                name={"inviteCode"}
+                                type={""}
+                                placeholder={"Invite Code (Optional)"}
+                                value={this.state.inviteCode}
+                                onChange={this.handleInputChange}
+                                className={"register-input"}
+                            />
+                            <div className={'register-btn'}>
+                                <Button
+                                    type={"submit"}
+                                    variant={"info"}
+                                    onClick={this.handleRegister}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        </Form>
                     </div>
                 </div>
             </div>

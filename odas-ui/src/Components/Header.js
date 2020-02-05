@@ -12,9 +12,9 @@ class Header extends React.Component {
         super(props);
         this.state = {
             modalState: false,
-            username: '',
+            username: 'macks',
             email: '',
-            password: ''
+            password: '123'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -36,7 +36,8 @@ class Header extends React.Component {
 
     handleLogin = e => {
         e.preventDefault();
-        this.props.login(this.state.email, this.state.password);
+        this.props.login(this.state.username, this.state.password);
+        console.log(this.props.user);
     };
 
     render() {
@@ -79,10 +80,10 @@ class Header extends React.Component {
                         <Form onSubmit={() => this.handleLogin}>
                             <div className={"email-form"}>
                                 <Form.Control
-                                    name={"email"}
+                                    name={"username"}
                                     type={"email"}
                                     placeholder={"Email"}
-                                    value={this.state.email}
+                                    value={this.state.username}
                                     onChange={this.handleInputChange}
                                 />
                             </div>
@@ -98,7 +99,7 @@ class Header extends React.Component {
                             <Modal.Footer className={"modal-footer"}>
                                 <Button
                                     variant={"info"}
-                                    type={"submit"}
+                                    onClick={this.handleLogin}
                                     className={"modal-btn"}
                                 >
                                     Login
@@ -122,7 +123,7 @@ class Header extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        userLogin: state.login
+        user: state.login
     }
 };
 
