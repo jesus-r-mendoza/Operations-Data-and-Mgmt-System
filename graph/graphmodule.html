@@ -8,7 +8,6 @@
 	<script src="xml2json.js"></script>	
 	
 	<script>
-
 	</script>
 	</head>
 	<body>
@@ -36,6 +35,11 @@
 			var rawvalues = [];
 			var keysValues = [];
 			var json = "";	
+			
+			const myHeaders = new Headers();
+			myHeaders.append('Content-Type', 'application/json');
+			myHeaders.append('Authorization', 'Token cc3c47b2ca27352dd789a67ff5ad847d189adc84');
+			
 			var request = new Request(
 //TEST 3
 			//'http://127.0.0.1:8000/api/satellites/1/recent/7/');
@@ -47,8 +51,14 @@
 		// 	'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/');
 	//	 	'http://127.0.0.1:8000/api/sat/1/comp/1+2+5/recent/10/');//true
 		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');//true
-		//	'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/'); //false
-			'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=now/');//false
+			'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/' //false
+		//	'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=now/');//false
+
+			 ,{
+        method: 'GET',
+        headers: myHeaders,
+      });
+
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json()) //testType = 1, 3
 				.then((out) => {
