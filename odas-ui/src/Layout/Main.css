@@ -100,6 +100,20 @@ html, body {
     margin-bottom: 20px;
 }
 
+/*Login forms and modal*/
+.modal-btn {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+}
+
 .email-input {
     display: flex;
     flex-direction: column;
@@ -122,12 +136,6 @@ html, body {
     padding-bottom: 10px;
 }
 
-.modal-btn {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-    width: 100%;
-}
 
 .email-header {
     padding-bottom: 12px;
@@ -141,6 +149,6 @@ html, body {
 }
 
 .email-form {
-    padding-bottom: 18px;
+    padding-bottom: 10px;
 }
 

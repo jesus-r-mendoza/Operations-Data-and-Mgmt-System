@@ -12,16 +12,21 @@
     padding-top: 10em;
     border-radius: 10px;
     width: 50em;
-    height: 40em;
-    margin-top: 10%;
+    height: 33em;
+    margin-top: 20em;
     box-shadow: 0 4px 5px darkgray;
     background: white;
 }
 
 .register-form {
-    width: 35em;
+    width: 40em;
 }
 
 .register-input {
-    margin-bottom: 40px;
+    margin-bottom: 25px;
+}
+
+.register-btn {
+    display: flex;
+    justify-content: flex-end;
 }

@@ -5,9 +5,9 @@ import {Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, For
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login, register } from "../Actions";
+import { login } from "../Actions/AuthActions";
 
-export default class Header extends React.Component {
+class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -17,8 +17,7 @@ export default class Header extends React.Component {
             password: ''
         };
 
-        this.handleEmailChange = this.handleEmailChange.bind(this);
-        this.handlePassChange = this.handlePassChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     setModalState(state) {
@@ -27,38 +26,17 @@ export default class Header extends React.Component {
         });
     }
 
-    handleLogin(event) {
-        event.preventDefault();
-        const data = new FormData();
-        data.append("1", event.target.email);
-        for (let value of data.values()) {
-            console.log("Header data", value);
-        }
+    handleInputChange = e => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+
+        console.log(e.target.name, "updated with: ", e.target.value)
     };
 
-    handleEmailChange(e) {
+    handleLogin = e => {
         e.preventDefault();
-        this.setState({
-            email: e.target.value
-        });
-        console.log(this.state.email);
-    }
-
-    handlePassChange(e) {
-        e.preventDefault();
-        this.setState({
-            password: e.target.value
-        });
-        console.log(this.state.password);
-    }
-
-    handleSubmit = e => {
-        e.preventDefault();
-        console.log("Username", this.state.username);
-        console.log("Email", this.state.email);
-        console.log("Password", this.state.password);
-
-        this.props.register(this.state.username, this.state.email, this.state.password);
+        this.props.login(this.state.email, this.state.password);
     };
 
     render() {
@@ -98,24 +76,26 @@ export default class Header extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={() => this.handleSubmit}>
+                        <Form onSubmit={() => this.handleLogin}>
                             <div className={"email-form"}>
                                 <Form.Control
+                                    name={"email"}
                                     type={"email"}
                                     placeholder={"Email"}
                                     value={this.state.email}
-                                    onChange={this.handleEmailChange}
+                                    onChange={this.handleInputChange}
                                 />
                             </div>
                             <div>
                                 <Form.Control
+                                    name={"password"}
                                     type={"password"}
                                     placeholder={"Password"}
                                     value={this.state.password}
-                                    onChange={this.handlePassChange}
+                                    onChange={this.handleInputChange}
                                 />
                             </div>
-                            <Modal.Footer >
+                            <Modal.Footer className={"modal-footer"}>
                                 <Button
                                     variant={"info"}
                                     type={"submit"}
@@ -125,8 +105,10 @@ export default class Header extends React.Component {
                                 </Button>
                                 <div>
                                     <Link
-                                        to={"/register"}>
-                                        New? Click here to register.
+                                        to={"/register"}
+                                        onClick={() => {this.setModalState(false)}}
+                                    >
+                                        New user? Click here to register.
                                     </Link>
                                 </div>
                             </Modal.Footer>
@@ -138,10 +120,10 @@ export default class Header extends React.Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         login: state
-//     }
-// };
+const mapStateToProps = state => {
+    return {
+        userLogin: state.login
+    }
+};
 
-// export default connect(mapStateToProps({login, register }))(Header)
+export default connect(mapStateToProps, { login })(Header)

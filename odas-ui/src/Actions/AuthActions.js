@@ -1,4 +1,5 @@
 import SatApi from "../Apis/SatApi";
+import axios from "axios";
 
 // Register a new user
 export const register = (username, email, pass) => async dispatch => {
@@ -6,8 +7,14 @@ export const register = (username, email, pass) => async dispatch => {
     registerData.append("username", username);
     registerData.append("email", email);
     registerData.append("password", pass);
+    console.log("Username", registerData.get("username"));
+    console.log("Email", registerData.get("email"));
+    console.log("Password", registerData.get("password"));
 
-    const response = await SatApi.post("register/", {
+    const response = await axios({
+        method: 'POST',
+        url: "http://localhost:8000/register/",
+        header: { 'Content-type': 'application/json' },
         data: registerData
     })
         .catch((function (error) {
@@ -24,6 +31,9 @@ export const login = (email, pass) => async dispatch => {
     loginData.append("password", pass);
 
     const response = await SatApi.post("login/", {
+        header: {
+            'Content-type': 'Authentication'
+        },
         data: loginData
     })
         .catch(function(error) {
