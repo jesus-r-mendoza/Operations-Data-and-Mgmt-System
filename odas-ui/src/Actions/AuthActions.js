@@ -6,10 +6,11 @@ export const register = (username, email, pass) => async dispatch => {
     const registerData = new FormData();
     registerData.append("username", username);
     registerData.append("email", email);
-    registerData.append("password", pass);
+    registerData.append("pass", pass);
+
     console.log("Username", registerData.get("username"));
     console.log("Email", registerData.get("email"));
-    console.log("Password", registerData.get("password"));
+    console.log("Password", registerData.get("pass"));
 
     const response = await axios({
         method: 'POST',
@@ -18,7 +19,7 @@ export const register = (username, email, pass) => async dispatch => {
         data: registerData
     })
         .catch((function (error) {
-            console.log(error)
+            console.log(error.error)
         }));
 
     dispatch({type: "REGISTER", payload: response})

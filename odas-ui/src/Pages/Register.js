@@ -10,9 +10,9 @@ class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            email: '',
-            password: '',
+            username: 'macks',
+            email: 'max.hawk213@gmail.com',
+            password: '123',
             inviteCode: ''
         };
 
