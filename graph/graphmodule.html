@@ -297,7 +297,7 @@
 								testIndex = 1;
 								console.log('Texample Unspecified Unit-Name(Specified): ');
 							}
-							var exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
+							exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
 							console.log('Example Graph Data: ', exampleGraphData);
 							exampleTime = [];
 							exampleValue = [];
@@ -310,11 +310,11 @@
 
 							var table = document.getElementById("traces");
 							var row = table.insertRow(table.rows.length-1); //insert row at bottom
-							var initialDataArray = totalGraphsArray[testIndex];
+							var initialDataArray = totalGraphsArray[0][testIndex];
 						console.log('Test Initial Data Array', initialDataArray);
 							//for(var a=0;a<initialDataArray[0].length;a++){
 								//tableKeys.push(Object.keys(initialDataArray[0][a]));
-								tableKeys = Object.keys(initialDataArray[0]);
+								tableKeys = Object.keys(initialDataArray);
 							//}
 							for(var b=0;b<tableKeys.length;b++){
 								var cellAdd = row.insertCell(b);
