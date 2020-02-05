@@ -35,21 +35,7 @@
 			var numKeys = 0;
 			var rawvalues = [];
 			var keysValues = [];
-			var json = "";
-			//var myList = document.querySelector('ul');
-
-//TEST 4
-/*			
-			$.ajax({
-				method: 'GET',
-//WARNING: ALWAYS ADD/REMOVE API KEY
-				url: 'https://cors-anywhere.herokuapp.com/https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?',
-				success: function(html) {
-					console.log('herokutest');
-					console.log(html);
-				}
-			})
-*/			
+			var json = "";	
 			var request = new Request(
 //TEST 3
 			//'http://127.0.0.1:8000/api/satellites/1/recent/7/');
@@ -63,15 +49,6 @@
 		//	'http://127.0.0.1:8000/api/sat/3/meas/from=2019-01-01T22:43:23/to=now/');//true
 		//	'http://127.0.0.1:8000/api/sat/6/comp/14/recent/10/'); //false
 			'http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=now/');//false
-//TEST 1
-//			'https://raw.githubusercontent.com/nlee806/temp/master/testdata.txt'); //testType = 1
-	// /locations/{observatories}/{timeRange}/{coordinateSystems}/ 
-	// {observatories} = a comma separated list of observatory identifiers for which location data is being requested. The values must be from those returned by Get Observatories.
-	//{timeRange} = time range for which data location is being requested. There must be two comma separated basic format (minimal number of separators) ISO 8601 date values.
-	//{coordinateSystems} = a comma separated list of the names of the coordinate systems in which to represent the returned location information. The values must be from this list: geo, gm, gse, gsm, sm, geitod, geij2000. If no values are given, gse will be assumed. For each coordinate system, the X, Y, Z, Latitude, Longitude, and local-time (if applicable) values will be returned.
-	//Satellite observatories: mms1,mms2
-	//Time range: 20190101T000000Z,20190101T001000Z
-	//Coordinate systems: gse,geo
 //TEST 2
 //WARNING: ALWAYS ADD/REMOVE API KEY testType = 2
 //			'https://sscweb.sci.gsfc.nasa.gov/WS/sscr/2/locations/mms1,mms2/20190101T000000Z,20190101T001000Z/gse,geo/?');  
