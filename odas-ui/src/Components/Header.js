@@ -12,9 +12,9 @@ class Header extends React.Component {
         super(props);
         this.state = {
             modalState: false,
-            username: 'macks',
+            username: '',
             email: '',
-            password: '123'
+            password: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);

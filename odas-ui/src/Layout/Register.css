@@ -9,7 +9,7 @@
 .register-box {
     display: flex;
     justify-content: center;
-    padding-top: 10em;
+    padding-top: 20px;
     border-radius: 10px;
     width: 50em;
     height: 33em;
@@ -29,4 +29,17 @@
 .register-btn {
     display: flex;
     justify-content: flex-end;
+}
+
+.input-cluster {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.registration-text {
+    font-size: xx-large;
+    font-weight: bold;
+    align-self: center;
+    margin-bottom: 30px
 }
