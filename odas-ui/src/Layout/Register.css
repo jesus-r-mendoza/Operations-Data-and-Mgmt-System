@@ -1,0 +1,45 @@
+.register-container {
+    display: flex;
+    justify-content: space-around;
+    height: 100em;
+    width: 100%;
+    background: #141e28;
+}
+
+.register-box {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    border-radius: 10px;
+    width: 50em;
+    height: 33em;
+    margin-top: 20em;
+    box-shadow: 0 4px 5px darkgray;
+    background: white;
+}
+
+.register-form {
+    width: 40em;
+}
+
+.register-input {
+    margin-bottom: 25px;
+}
+
+.register-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.input-cluster {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.registration-text {
+    font-size: xx-large;
+    font-weight: bold;
+    align-self: center;
+    margin-bottom: 30px
+}

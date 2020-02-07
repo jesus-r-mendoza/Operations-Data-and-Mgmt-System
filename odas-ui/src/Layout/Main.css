@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
 html, body {
     margin: 0;
     padding: 0;
@@ -48,7 +50,7 @@ html, body {
     background: #141e28;
     border-radius: 10px;
     width: 29em;
-    height: 23em;
+    height: 20em;
     padding-left: 30px;
     margin-top: 30px;
     box-shadow: 0 4px 5px darkgray inset;
@@ -100,6 +102,20 @@ html, body {
     margin-bottom: 20px;
 }
 
+/*Login forms and modal*/
+.modal-btn {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
+}
+
 .email-input {
     display: flex;
     flex-direction: column;
@@ -122,12 +138,6 @@ html, body {
     padding-bottom: 10px;
 }
 
-.modal-btn {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 7px;
-    width: 100%;
-}
 
 .email-header {
     padding-bottom: 12px;
@@ -141,6 +151,6 @@ html, body {
 }
 
 .email-form {
-    padding-bottom: 18px;
+    padding-bottom: 10px;
 }
 

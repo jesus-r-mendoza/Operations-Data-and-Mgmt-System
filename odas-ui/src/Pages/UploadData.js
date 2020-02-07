@@ -55,6 +55,22 @@ class UploadData extends React.Component {
         });
     }
 
+    createArray(type) {
+        if(type === "units") {
+            let values = this.state.MEASUREMENTS.map(function (units) {
+                return (units.units);
+            });
+            console.log("VALUES: ", values);
+            return values;
+        } else if(type === "components") {
+            let values = this.state.COMPONENTS.map(function (components) {
+                return (components.name);
+            });
+            console.log("VALUES: ", values);
+            return values;
+        }
+    }
+
      //TODO Needs implementation. May need rethinking.
      // Will need to find where the database connection and call will be
     goToReport() {
@@ -118,24 +134,6 @@ class UploadData extends React.Component {
 
     // TODO implement onFileSubmit
 
-    createArray(type) {
-        if(type === "units") {
-            let values = this.state.MEASUREMENTS.map(function (units) {
-                return (units.units);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        } else if(type === "components") {
-            let values = this.state.COMPONENTS.map(function (components) {
-                return (components.name);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        }
-    }
-
-
-
     renderFileInput() {
         if (this.state.currentPage === "upload") {
             return (
@@ -184,14 +182,12 @@ class UploadData extends React.Component {
         }
 
         else if (this.state.currentPage === "renderReport") {
-            let units = this.createArray("units");
             let components = this.createArray("components");
 
             return (
                 <div>
                     <Sidebar
                         page={this.state.currentPage}
-                        units={units}
                         components={components}
                     >
                         Upload a Dataset

@@ -47,29 +47,29 @@ export default class Main extends React.Component {
                                     </Button>
                                 </Link>
                             </div>
-                            <div className={"email-button-container"}>
-                                <div className={"email-button"}>
-                                    <Button
-                                        variant={"info"}
-                                        type={"submit"}
-                                        size={"lg"}
-                                        onClick={() => this.setModalState(true)}
-                                    >
-                                        Login
-                                    </Button>
-                                </div>
-                                <div className={"email-button"}>
-                                    <Link to={""}>
-                                        <Button
-                                            variant={"info"}
-                                            type={"submit"}
-                                            size={"lg"}
-                                        >
-                                            About
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </div>
+                            {/*<div className={"email-button-container"}>*/}
+                            {/*    <div className={"email-button"}>*/}
+                            {/*        <Button*/}
+                            {/*            variant={"info"}*/}
+                            {/*            type={"submit"}*/}
+                            {/*            size={"lg"}*/}
+                            {/*            onClick={() => this.setModalState(true)}*/}
+                            {/*        >*/}
+                            {/*            Login*/}
+                            {/*        </Button>*/}
+                            {/*    </div>*/}
+                            {/*    <div className={"email-button"}>*/}
+                            {/*        <Link to={""}>*/}
+                            {/*            <Button*/}
+                            {/*                variant={"info"}*/}
+                            {/*                type={"submit"}*/}
+                            {/*                size={"lg"}*/}
+                            {/*            >*/}
+                            {/*                About*/}
+                            {/*            </Button>*/}
+                            {/*        </Link>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                     <div id={"img"} className={"main-image"}>

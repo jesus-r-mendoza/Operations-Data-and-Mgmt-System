@@ -9,35 +9,64 @@ import Select from 'react-select';
 import LoadSpinner from "./LoadSpinner";
 // Redux
 import { connect } from 'react-redux';
-import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions";
+import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
 
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
-        let MEASUREMENTS = this.props.units;
         let COMPONENTS = this.props.components;
+
         this.state = {
             isLoading: true,
             currentPage: this.props.page,
-            formSubmit: [],
             loadDropdown: true,
             satPlaceHolder: "Satellite",
-            measurementCheckboxes: MEASUREMENTS.reduce(
+            formSubmit: [],
+            checkboxes: COMPONENTS.reduce(
                 (options, option) => ({
                     ...options,
-                    [option]: false
-                }),
-                {}
-            ),
-            componentCheckboxes: COMPONENTS.reduce(
-                (options, option) => ({
-                    ...options,
-                    [option]: false
+                    [option]: true
                 }),
                 {}
             ),
         };
     }
+
+    selectAllCheckboxes = isSelected => {
+        Object.keys(this.state.checkboxes).forEach(checkbox => {
+            this.setState(prevState => ({
+                checkboxes: {
+                    ...prevState.checkboxes,
+                    [checkbox]: isSelected
+                }
+            }));
+        });
+    };
+
+    selectAll = () => this.selectAllCheckboxes(true);
+    deselectAll = () => this.selectAllCheckboxes(false);
+
+    handleCheckboxChange = changeEvent => {
+        const { name } = changeEvent.target;
+
+        this.setState(prevState => ({
+            checkboxes: {
+                ...prevState.checkboxes,
+                [name]: !prevState.checkboxes[name]
+            }
+        }));
+    };
+
+    createCheckbox = option => (
+        <CheckComponent
+            label={option}
+            isSelected={this.state.checkboxes[option]}
+            onCheckboxChange={this.handleCheckboxChange}
+            key={option}
+        />
+    );
+
+    createCheckboxes = com => com.map(this.createCheckbox);
 
     componentDidMount() {
         this.setState({
@@ -45,93 +74,16 @@ class Sidebar extends React.Component {
         });
     }
 
-    selectAllUnitCheckboxes = isSelected => {
-        Object.keys(this.state.measurementCheckboxes).forEach(checkboxU => {
-            this.setState(prevStateU => ({
-                measurementCheckboxes: {
-                    ...prevStateU.measurementCheckboxes,
-                    [checkboxU]: isSelected
-                }
-            }));
-        });
-    };
-
-    selectAllComponentCheckboxes = isSelected => {
-        Object.keys(this.state.componentCheckboxes).forEach(checkboxC => {
-            this.setState(prevStateC => ({
-                componentCheckboxes: {
-                    ...prevStateC.componentCheckboxes,
-                    [checkboxC]: isSelected
-                }
-            }));
-        });
-    };
-
-    handleUnitCheckboxChange = unitChangeEvent => {
-        const { name } = unitChangeEvent.target;
-
-        this.setState(prevState => ({
-            measurementCheckboxes: {
-                ...prevState.measurementCheckboxes,
-                [name]: !prevState.measurementCheckboxes[name]
-            }
-        }));
-    };
-
-    handleComponentCheckboxChange = componentChangeEvent => {
-        const { name } = componentChangeEvent.target;
-
-        this.setState(prevState => ({
-            componentCheckboxes: {
-                ...prevState.componentCheckboxes,
-                [name]: !prevState.componentCheckboxes[name]
-            }
-        }));
-    };
-
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
 
-        Object.keys(this.state.measurementCheckboxes)
-            .filter(checkbox => this.state.measurementCheckboxes[checkbox])
+        Object.keys(this.state.checkboxes)
+            .filter(checkbox => this.state.checkboxes[checkbox])
             .forEach(checkbox => {
-
-                console.log(checkbox, "is selected.");
-            });
-        Object.keys(this.state.componentCheckboxes)
-            .filter(checkbox => this.state.componentCheckboxes[checkbox])
-            .forEach(checkbox => {
-
-                console.log(checkbox, "is selected.");
+                this.state.formSubmit.push(checkbox);
+                console.log(this.state.formSubmit)
             });
     };
-
-    unitCheckboxes = option => (
-        <CheckComponent
-            label={option}
-            isSelected={this.state.measurementCheckboxes[option]}
-            onCheckboxChange={this.handleUnitCheckboxChange}
-            key={option}
-        />
-    );
-
-    componentCheckboxes = option => (
-        <CheckComponent
-            label={option}
-            isSelected={this.state.componentCheckboxes[option]}
-            onCheckboxChange={this.handleComponentCheckboxChange}
-            key={option}
-        />
-    );
-
-    selectAllUnits = () => this.selectAllUnitCheckboxes(true);
-    deselectAllUnits = () => this.selectAllUnitCheckboxes(false);
-
-    selectAllComponents = () => this.selectAllComponentCheckboxes(true, "components");
-    deselectAllComponents = () => this.selectAllComponentCheckboxes(false, "components");
-
-    createMeasurementCheckboxes = units => units.map(this.unitCheckboxes);
-    createComponentCheckboxes = components => components.map(this.componentCheckboxes);
 
     dropDownChange = e => {
         this.setState({
@@ -141,6 +93,8 @@ class Sidebar extends React.Component {
 
     render() {
         let satellites = this.props.satellites;
+        let components = this.props.components;
+        console.log(this.props.sats);
 
         if (this.state.isLoading === true) {
             return (
@@ -165,38 +119,19 @@ class Sidebar extends React.Component {
                                     />
                                 </div>
                                 <div className={"checkbox-selection-btn"}>
-                                    <div className={"checkbox-container"}>
-                                        <Divider horizontal>Measurements</Divider>
-                                        {this.createMeasurementCheckboxes(this.props.units)}
+                                    <Divider horizontal>Components</Divider>
+                                        {this.createCheckboxes(components)}
                                         <div className={"selection-buttons"}>
-                                            {/*<Button*/}
-                                            {/*    variant={"outline-success"}*/}
-                                            {/*    onClick={() => this.selectAllUnits()}*/}
-                                            {/*    size={"sm"}*/}
-                                            {/*>*/}
-                                            {/*    Select All*/}
-                                            {/*</Button>*/}
                                             <Button
-                                                variant={"outline-danger"}
-                                                onClick={() => this.deselectAllUnits()}
+                                                variant={"outline-success"}
+                                                onClick={this.selectAll}
                                                 size={"sm"}
                                             >
-                                                Deselect All
+                                                Select All
                                             </Button>
-                                        </div>
-                                        <Divider horizontal>Components</Divider>
-                                        {this.createComponentCheckboxes(this.props.components)}
-                                        <div className={"selection-buttons"}>
-                                            {/*<Button*/}
-                                            {/*    variant={"outline-success"}*/}
-                                            {/*    onClick={() => this.selectAllComponents()}*/}
-                                            {/*    size={"sm"}*/}
-                                            {/*>*/}
-                                            {/*    Select All*/}
-                                            {/*</Button>*/}
                                             <Button
                                                 variant={"outline-danger"}
-                                                onClick={() => this.deselectAllComponents()}
+                                                onClick={this.deselectAll}
                                                 size={"sm"}
                                             >
                                                 Deselect All
@@ -205,7 +140,6 @@ class Sidebar extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <div className={"gen-button-container"}>
                             <Button
                                 type={"submit"}
@@ -228,6 +162,6 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents })(Sidebar)
+export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents, satCompQuery })(Sidebar)
 
 // TODO Bring api calls back into sidebar
