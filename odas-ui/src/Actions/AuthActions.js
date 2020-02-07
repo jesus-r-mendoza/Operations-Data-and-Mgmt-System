@@ -49,9 +49,13 @@ export const login = (username, pass) => async dispatch => {
         data: loginData
     })
         .catch((function (error) {
-            console.log(error.error)
+            console.log(error)
         }));
 
-    console.log(response.data);
-    dispatch({ type: "LOGIN", payload: response })
+    if (response.status >= 200 || response.status <= 299) {
+        console.log(response);
+        dispatch({type: "LOGIN_SUCCESS", payload: response.data})
+    } else {
+        dispatch({ type: "LOGIN_FAIL", payload: response})
+    }
 };

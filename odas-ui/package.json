@@ -29,6 +29,7 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "latest",
     "static-eval": "^2.0.3",
+    "universal-cookie": "^4.0.3",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
