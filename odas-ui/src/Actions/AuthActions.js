@@ -52,5 +52,6 @@ export const login = (username, pass) => async dispatch => {
             console.log(error.error)
         }));
 
-    dispatch({ type: "LOGIN", payload: response.data })
+    console.log(response.data);
+    dispatch({ type: "LOGIN", payload: response })
 };
