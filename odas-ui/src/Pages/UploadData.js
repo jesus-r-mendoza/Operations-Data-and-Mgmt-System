@@ -7,6 +7,7 @@ import {reduxForm} from "redux-form";
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
+import { apiURL } from "../Apis/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Button, FormControl, Container} from "react-bootstrap";
@@ -18,9 +19,9 @@ const acceptedExtensions = [".tlm", ".bin", ".txt"];
 // });
 
 const apis = {
-    unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/comp/",
-    satellites: "http://localhost:8000/api/sat/"
+    unit: `${apiURL}api/units/`,
+    component: `${apiURL}api/comp/`,
+    satellites: `${apiURL}api/sat/`
 };
 
 class UploadData extends React.Component {

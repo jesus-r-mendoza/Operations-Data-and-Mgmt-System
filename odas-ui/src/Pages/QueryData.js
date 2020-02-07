@@ -3,15 +3,17 @@ import React from 'react';
 import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
+import {apiURL} from "../Apis/SatApi";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 
+
 const apis = {
-    unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/comp/",
-    satellites: "http://localhost:8000/api/sat/"
+    unit: `${apiURL}api/units/`,
+    component: `${apiURL}api/comp/`,
+    satellites: `${apiURL}api/sat/`
 };
 
 export default class QueryData extends React.Component {

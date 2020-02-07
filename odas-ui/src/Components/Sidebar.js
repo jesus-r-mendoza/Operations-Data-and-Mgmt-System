@@ -25,7 +25,7 @@ class Sidebar extends React.Component {
             checkboxes: COMPONENTS.reduce(
                 (options, option) => ({
                     ...options,
-                    [option]: true
+                    [option]: false
                 }),
                 {}
             ),
@@ -41,6 +41,8 @@ class Sidebar extends React.Component {
                 }
             }));
         });
+
+        console.log(this.state.checkboxes);
     };
 
     selectAll = () => this.selectAllCheckboxes(true);
@@ -94,11 +96,10 @@ class Sidebar extends React.Component {
     render() {
         let satellites = this.props.satellites;
         let components = this.props.components;
-        console.log(this.props.sats);
 
         if (this.state.isLoading === true) {
             return (
-                <LoadSpinner/>
+                <LoadSpinner />
             );
         } else {
             return (
