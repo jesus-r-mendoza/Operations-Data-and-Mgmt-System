@@ -39,6 +39,7 @@ class Register extends React.Component {
     };
 
     render() {
+        console.log(this.props.registerUser);
         return (
             <div className={"register-container"}>
                 <div className={"register-box"}>

@@ -1,14 +1,14 @@
-export const login = (loginState = [], action) => {
+export const loginReducer = (loginState = [], action) => {
     if (action.type === "LOGIN") {
-        return action.payload
+        return [...loginState, action.payload]
     }
 
     return loginState;
 };
 
-export const register = (registerState = [], action) => {
+export const registerReducer = (registerState = [], action) => {
     if (action.type === "REGISTER") {
-        return action.payload
+        return [...registerState, action.payload]
     }
 
     return registerState;

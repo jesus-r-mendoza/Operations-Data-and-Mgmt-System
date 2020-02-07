@@ -1,4 +1,4 @@
-import SatApi from "../Apis/SatApi";
+import { apiURL } from "../Apis/SatApi";
 import axios from "axios";
 
 // Register a new user
@@ -13,6 +13,7 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
     console.log("Email", registerData.get("email"));
     console.log("Password", registerData.get("pass"));
 
+    // Making the invite code optional information
     if (inviteCode.length > 0) {
         registerData.append("code", inviteCode);
         console.log("Invite", registerData.get("code"));
@@ -20,7 +21,7 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
 
     const response = await axios({
         method: 'POST',
-        url: `${SatApi.url}register/`,
+        url: `${apiURL}register/`,
         header: {'Content-type': 'application/json'},
         data: registerData
     })
@@ -28,7 +29,7 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
             console.log(error.error)
         }));
 
-    dispatch({ type: "REGISTER", payload: response })
+    dispatch({ type: "REGISTER", payload: response.data })
 };
 
 // Log the user in and obtain an Auth token
@@ -43,7 +44,7 @@ export const login = (username, pass) => async dispatch => {
 
     const response = await axios({
         method: 'POST',
-        url: `${SatApi.url}login/`,
+        url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
@@ -51,5 +52,5 @@ export const login = (username, pass) => async dispatch => {
             console.log(error.error)
         }));
 
-    dispatch({ type: "LOGIN", payload: response })
+    dispatch({ type: "LOGIN", payload: response.data })
 };

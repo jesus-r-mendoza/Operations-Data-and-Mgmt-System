@@ -22,7 +22,8 @@ import {
 
 // Authentication
 import {
-    login,
+    loginReducer,
+    registerReducer
 
 } from "./AuthReducers";
 
@@ -35,5 +36,6 @@ export default combineReducers({
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
     satComponentQuery: satComponentQueryReducer,
-    userLogin: login
+    userLogin: loginReducer,
+    register: registerReducer
 });

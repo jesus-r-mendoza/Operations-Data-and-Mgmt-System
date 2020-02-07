@@ -123,7 +123,7 @@ class Header extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        user: state.login
+        userLogin: state.login
     }
 };
 
