@@ -24,7 +24,6 @@ import {
 import {
     loginReducer,
     registerReducer
-
 } from "./AuthReducers";
 
 export default combineReducers({

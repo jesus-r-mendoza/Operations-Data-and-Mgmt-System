@@ -72,8 +72,7 @@ class UploadData extends React.Component {
         }
     }
 
-     //TODO Needs implementation. May need rethinking.
-     // Will need to find where the database connection and call will be
+    // TODO Create new URL for this
     goToReport() {
         this.setState({
             currentPage: "renderReport"
@@ -132,8 +131,6 @@ class UploadData extends React.Component {
             );
         }
     }
-
-    // TODO implement onFileSubmit
 
     renderFileInput() {
         if (this.state.currentPage === "upload") {

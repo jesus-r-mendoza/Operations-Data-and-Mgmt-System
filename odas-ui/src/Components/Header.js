@@ -14,7 +14,8 @@ class Header extends React.Component {
             modalState: false,
             username: '',
             email: '',
-            password: ''
+            password: '',
+            showLoginButton: 'Sign in'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -37,10 +38,17 @@ class Header extends React.Component {
     handleLogin = e => {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
-        console.log(this.props.user);
+
+        // TODO change the condition to something more bulletproof
+        if (this.props.userLogin === 200) {
+            this.setState({
+                showLoginButton: 'Sign out'
+            });
+        }
     };
 
     render() {
+        console.log(this.props.userLogin);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -61,7 +69,7 @@ class Header extends React.Component {
                         <Button
                             onClick={() => this.setModalState(true)}
                         >
-                            Sign in
+                            {this.state.showLoginButton}
                         </Button>
                     </Container>
                 </Navbar>

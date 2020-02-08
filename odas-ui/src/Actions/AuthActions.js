@@ -13,7 +13,7 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
     console.log("Email", registerData.get("email"));
     console.log("Password", registerData.get("pass"));
 
-    // Making the invite code optional information
+    // Making the invite code an optional input
     if (inviteCode.length > 0) {
         registerData.append("code", inviteCode);
         console.log("Invite", registerData.get("code"));
@@ -51,9 +51,9 @@ export const login = (username, pass) => async dispatch => {
         .catch((function (error) {
             console.log(error)
         }));
-
+    console.log(response.status);
+    // If a successful response is received from server, data is passed to reducer
     if (response.status >= 200 || response.status <= 299) {
-        console.log(response);
         dispatch({type: "LOGIN_SUCCESS", payload: response.data})
     } else {
         dispatch({ type: "LOGIN_FAIL", payload: response})

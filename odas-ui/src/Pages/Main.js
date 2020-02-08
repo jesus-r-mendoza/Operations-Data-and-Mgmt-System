@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, Modal, Form} from "react-bootstrap";
 import "../Layout/Main.css"
 
-// TODO Check for correct email format
 export default class Main extends React.Component {
     constructor(props){
         super(props);
