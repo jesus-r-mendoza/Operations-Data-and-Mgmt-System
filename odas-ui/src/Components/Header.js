@@ -38,13 +38,6 @@ class Header extends React.Component {
     handleLogin = e => {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
-
-        // TODO change the condition to something more bulletproof
-        if (this.props.userLogin === 200) {
-            this.setState({
-                showLoginButton: 'Sign out'
-            });
-        }
     };
 
     render() {

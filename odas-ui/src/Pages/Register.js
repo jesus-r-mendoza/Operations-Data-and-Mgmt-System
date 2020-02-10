@@ -38,6 +38,15 @@ class Register extends React.Component {
             this.state.inviteCode);
     };
 
+    handleRegisterResult = () => {
+        this.setState({
+            username: '',
+            email: '',
+            password: '',
+            inviteCode: ''
+        })
+    };
+
     render() {
         console.log(this.props.registerUser);
         return (

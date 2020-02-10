@@ -51,11 +51,11 @@ export const login = (username, pass) => async dispatch => {
         .catch((function (error) {
             console.log(error)
         }));
-    console.log(response.status);
+    console.log(response);
     // If a successful response is received from server, data is passed to reducer
-    if (response.status >= 200 || response.status <= 299) {
+    if (response !== undefined && response !== null) {
         dispatch({type: "LOGIN_SUCCESS", payload: response.data})
     } else {
-        dispatch({ type: "LOGIN_FAIL", payload: response})
+        dispatch({ type: "LOGIN_FAIL", payload: response })
     }
 };
