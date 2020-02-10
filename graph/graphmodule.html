@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
-	
 	<head>
     <meta http-equiv="content-type" content = "text/html; charset= UTF-8"/>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	</head>
-	
 	<body>
 	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
 		<div id="chart0"></div>
 		<div id = "bottomchart2">
-	<table style="width:100%" id = "traces2">
+		<table style="width:100%" id = "traces2">
 			<tr id = "fieldnames2">
 			</tr>
 			<tr id = "data2">
@@ -68,12 +66,15 @@
 			testurl(url);
 			var request = new Request(url,{method: 'GET', headers: myHeaders, });
 			
-			
+			/**
+			Fetches data from the specified API URL. 
+			Returns an error if invalid authentication token. 
+			Returns an error if invalid API URL.
+			**/
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json())
 				.then((out) => {
-					var testType = 3;
-					if(testType==3){
+					if(true){
 						console.log('test full API', out);
 						if(out.data==true){
 							var mydiv = document.getElementById("toptitle");
