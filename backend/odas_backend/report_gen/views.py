@@ -6,10 +6,18 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from odas.models import Satellite, Component, Measurement, Units
 from .forms import SubscriberForm, UploadForm
+from django.contrib.auth.models import User, Group
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import Upload
+from .errors import error
 import os
 
 @csrf_exempt
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def index(request):
     if request.method == 'GET':
         form = SubscriberForm()
@@ -74,6 +82,9 @@ def file_view(request):
     })
 
 @csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def upload_view(request):
     if request.method == 'POST':        
         upfile = request.FILES.get('upfile')
@@ -88,17 +99,40 @@ def upload_view(request):
     else:
         return JsonResponse( { 'data': False, 'error': 'only POST requests allowed' } )
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def delete_file(request, pk):
     if request.method == 'POST':
         user_file = Upload.objects.get(pk=pk)
         user_file.delete()
     return redirect('file_list')
 
+# @api_view(['GET'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# def download_view(request, url):
+#     try:
+#         response = FileResponse(open(url, 'rb'))
+#         response['content_type'] = "application/octet-stream"
+#         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
+#         return response
+#     except Exception:
+#         raise Http404
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def download_view(request, url):
     try:
+        fUpload = Upload.objects.get(pk=fid)
+        if not request.user.filter(name=fUpload.User.name).exists():
+            return error.USER_DNE
         response = FileResponse(open(url, 'rb'))
         response['content_type'] = "application/octet-stream"
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
         return response
     except Exception:
         raise Http404
+     except FileNotFoundError
+        return error.FILE_DNE
