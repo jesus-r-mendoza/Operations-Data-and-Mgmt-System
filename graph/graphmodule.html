@@ -21,11 +21,7 @@
 		</div>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
-		/**
-		Graphs backend API data using endpoints.
-		Input: valid endpoint URL, valid Authentication Token.
-		Output: Plotly graph.
-		**/
+
 			console.log('start');
 			var done = false;
 			var keys = [];
@@ -36,23 +32,12 @@
 			const myHeaders = new Headers();
 			var url = 'http://127.0.0.1:8000/api/';
 			
-			/**
-			For Changing Token in Headers for CORS and Authentication.
-			Input: myHeaders Value.
-			Output: Changes global myHeaders variable.
-			**/
 			function testheaders(myHeaders){
 			myHeaders.append('Content-Type', 'application/json');
 			myHeaders.append('Authorization', 'Token cc3c47b2ca27352dd789a67ff5ad847d189adc84');
 			window.myHeaders = myHeaders;
 			}
 			
-			/**
-			For changing URL endpoints in backend API.
-			Contains all valid possible endpoints. 
-			Input: URL value
-			Output: Changes global URL variable.
-			**/
 			function testurl(url){
 			//url = url+'sat/';
 			//url = url+'comp/';
@@ -73,21 +58,13 @@
 			testurl(url);
 			var request = new Request(url,{method: 'GET', headers: myHeaders, });
 			
-			/**
-			Fetches data from the specified API URL. 
-			Returns an error if invalid authentication token. 
-			Returns an error if invalid API URL.
-			Otherwise, successful completion results in 'finish' statement.
-			**/
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json())
 				.then((out) => {
 					if(true){
 						console.log('Test 1: Full API:', out);
 						if(out.data==true){
-							/**
-								Places name, launch year, and mission description in proper places on the page.
-							**/
+
 							titleSpecs(out);
 							function titleSpecs(out){
 								var mydiv = document.getElementById("toptitle");
@@ -105,9 +82,7 @@
 									mydiv2.appendChild(newcontent3.firstChild);
 								}
 							}
-							/**
-								Checks if Comp_specified is true or false. 
-							**/
+
 							var compSpecified = false;
 							checkCompSpecified(out);
 							function checkCompSpecified(out){
@@ -121,10 +96,7 @@
 							realQuantity = out.Measurements.length;
 							var checkQuantities = false;
 							checkQuantitiesMatch(quantity, realQuantity);
-							/**
-								Checks if quantities are as expected. 
-								Tests if quantities match as expected.
-							**/
+
 							function checkQuantitiesMatch(quantity, realQuantity){
 								if(quantity==realQuantity){
 									checkQuantities = true;
@@ -179,9 +151,6 @@
 							}
 							console.log('Test Formatted Data Array: ', data);
 							
-							/**
-								Compares units to units. 
-							**/
 							function compare(a,b){
 								if(a.units<b.units){
 									return -1;
@@ -205,9 +174,6 @@
 								}
 						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
 							
-							/**
-								Lambda Expression for distinct units. 
-							**/
 							const distinct = (value, index, self) => {
 								return self.indexOf(value) === index;
 							}
@@ -219,10 +185,7 @@
 						console.log('Test Distinct Names: ', distinctNames);
 							var numUniqueNames = distinctNames.length;
 						console.log('Test Num Unique Names: ', numUniqueNames);
-						//Alternative
-						//const alternativeDistinctUnits = [...new Set(sortedMeasurements.map(x => x.units))];
-						//console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
-						//Alternative
+
 							var totalNumGraphs = numUniqueUnits*numUniqueNames;
 							if(compSpecified == false){
 								totalNumGraphs = numUniqueUnits;
@@ -239,9 +202,6 @@
 							}
 						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
 							
-							/**
-								Compares names of units for Sort.
-							**/
 							function compareNames(a,b){
 								if(a.component_name[0]<b.component_name[0]){
 									return -1;
@@ -275,10 +235,6 @@
 							console.log('Test Total Graphs Array: ', totalGraphsArray);
 							console.log('Test Total Graphs Array Length', totalGraphsArray.length);
 							
-							/**
-								Compares time values. 
-								Used in Sort.
-							**/
 							function compareTime(a,b){
 								if(a.time<b.time){
 									return -1;
@@ -303,7 +259,6 @@
 
 							var altcurrentData = [];
 							for(var a=0;a<totalNumGraphs;a++){
-								//no empty graphs
 								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
 									for(var b=0;b<totalGraphsArray[a].length;b++){
 										altcurrentData.push(totalGraphsArray[a][b].value);
@@ -358,9 +313,6 @@
 							var paused = false;
 							var alreadyStopped = false;
 							
-							/**
-								Gets X value.
-							**/
 							function getX(count){
 								if(exampleTime[count]!=null){
 									//console.log('X Plot: ',exampleTime[count]);
@@ -375,9 +327,7 @@
 									}
 								}
 							}
-							/**
-								Gets Y value.
-							**/
+							
 							function getY(count){
 								if(exampleValue[count]!=null){
 									getData(count);
@@ -393,9 +343,7 @@
 									}
 								}
 							}
-							/**
-								Retrieves data for Plotly to plot.
-							**/
+
 							function getData(cnt) {
 									var table = document.getElementById("traces");
 									var row = table.insertRow(table.rows.length-1); //insert row at bottom	
@@ -410,9 +358,7 @@
 							
 							var cnt = 0;
 							document.getElementById("pause").addEventListener("click", pause);
-							/**
-								Pauses the graph when the button is pressed.
-							**/
+
 							function pause() {
 								console.log('Stop enabled.');
 								paused = true;
@@ -435,10 +381,7 @@
 							},15);
 							console.log('finish');
 						}
-						/**
-						Shows error if no data found in the API endpoint.
-						Shows error if API is in the correct JSON format.
-						**/
+
 						else if(out.data==false){
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
@@ -456,10 +399,7 @@
 							document.getElementById("tablechart").appendChild(node2);
 							
 						}
-						/**
-						Shows error if no data found in the API endpoint. 
-						Shows error if API is not in the correct JSON format.
-						**/
+
 						else{
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
