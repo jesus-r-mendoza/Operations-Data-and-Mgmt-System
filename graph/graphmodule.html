@@ -75,7 +75,7 @@
 				.then(res => res.json())
 				.then((out) => {
 					if(true){
-						console.log('test full API', out);
+						console.log('Test 1: Full API:', out);
 						if(out.data==true){
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
@@ -472,6 +472,10 @@
 							
 							console.log('finish');
 						}
+						/**
+						Shows error if no data found in the API endpoint.
+						Shows error if API is in the correct JSON format.
+						**/
 						else if(out.data==false){
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
@@ -489,6 +493,10 @@
 							document.getElementById("tablechart").appendChild(node2);
 							
 						}
+						/**
+						Shows error if no data found in the API endpoint. 
+						Shows error if API is not in the correct JSON format.
+						**/
 						else{
 							var mydiv = document.getElementById("toptitle");
 							var newcontent = document.createElement('div');
