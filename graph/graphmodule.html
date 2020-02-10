@@ -2,13 +2,9 @@
 <html>
 	<head>
     <meta http-equiv="content-type" content = "text/html; charset= UTF-8"/>
-
 	<script src="plotly.min.js"></script>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<script src="xml2json.js"></script>	
-	
-	<script>
-	</script>
+	<script src="xml2json.js"></script>
 	</head>
 	<body>
 	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
@@ -33,12 +29,22 @@
 			var rawvalues = [];
 			var keysValues = [];
 			var json = "";	
-			
 			const myHeaders = new Headers();
+			var url = 'http://127.0.0.1:8000/api/';
+			
+			/**
+			For Changing Token in Headers for CORS and Authentication.
+			**/
+			function testheaders(myHeaders){
 			myHeaders.append('Content-Type', 'application/json');
 			myHeaders.append('Authorization', 'Token cc3c47b2ca27352dd789a67ff5ad847d189adc84');
+			window.myHeaders = myHeaders;
+			}
 			
-			var url = 'http://127.0.0.1:8000/api/'
+			/**
+			For changing URL endpoints in backend API.
+			**/
+			function testurl(url){
 			//url = url+'sat/';
 			//url = url+'comp/';
 			//url = url+'meas/';
@@ -50,14 +56,14 @@
 			//url = url+'sat/6/meas/from=2019-01-01T22:43:23/to=now';
 			//url = url+'sat/6/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/';
 			//url = url+'sat/6/meas/comp/1+2+3/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00'/;
+			window.url = url;
+			}
 			
-			var request = new Request(url,{
-			method: 'GET',
-			headers: myHeaders,
-			});
-
+			testheaders(myHeaders);
+			testurl(url);
+			var request = new Request(url,{method: 'GET', headers: myHeaders, });
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
-				.then(res => res.json()) //testType =  3
+				.then(res => res.json())
 				.then((out) => {
 					var testType = 3;
 					if(testType==3){
@@ -288,7 +294,7 @@
 							}
 							else{
 								testIndex = 1;
-								console.log('Texample Unspecified Unit-Name(Specified): ');
+								console.log('Example Unspecified Unit-Name(Specified): ');
 							}
 							exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
 							console.log('Example Graph Data: ', exampleGraphData);
