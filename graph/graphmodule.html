@@ -56,15 +56,16 @@
 			function testurl(url){
 			//url = url+'sat/';
 			//url = url+'comp/';
-			//url = url+'meas/';
-			//url = url+'units/';
-			//url = url+'sat/6/comp/';
-			//url = url+'sat/6/recent/10';
+			//url = url+'meas/'; 
+			//url = url+'units/'; //not right JSON format
+			//url = url+'sat/6/comp/'; //no comp_specified
+			//url = url+'sat/6/recent/10'; //authentication token incorrect
 			url = url+'sat/6/comp/14/recent/10/';
-			//url = url+'sat/6/comp/1+2+3/recent/10';
-			//url = url+'sat/6/meas/from=2019-01-01T22:43:23/to=now';
-			//url = url+'sat/6/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/';
-			//url = url+'sat/6/meas/comp/1+2+3/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00'/;
+			//url = url+'sat/6/comp/1+2+3/recent/10'; //authentication token incorrect
+			//url = url+'sat/6/meas/from=2019-01-01T22:43:23/to=now'; //authentication token incorrect
+		//	url = url+'sat/6/meas/comp/14/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/'; // no measurements
+		//	url = url+'sat/6/meas/comp/1+2+3/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/'; //json error
+			//url = url+'sat/6/meas/comp/14/from=2019-01-01T22:43:23/to=now/';
 			window.url = url;
 			}
 			
@@ -84,11 +85,10 @@
 					if(true){
 						console.log('Test 1: Full API:', out);
 						if(out.data==true){
-							
-							titleSpecs(out);
 							/**
 								Places name, launch year, and mission description in proper places on the page.
 							**/
+							titleSpecs(out);
 							function titleSpecs(out){
 								var mydiv = document.getElementById("toptitle");
 								var newcontent = document.createElement('div');
@@ -105,13 +105,11 @@
 									mydiv2.appendChild(newcontent3.firstChild);
 								}
 							}
-							
-							
-							var compSpecified = false;
-							checkCompSpecified(out);
 							/**
 								Checks if Comp_specified is true or false. 
 							**/
+							var compSpecified = false;
+							checkCompSpecified(out);
 							function checkCompSpecified(out){
 								compSpecified = out.comp_specified;
 								window.compSpecified = out.comp_specified;
@@ -135,6 +133,9 @@
 								console.log('Quantity: ', quantity);
 								console.log('Real Quantity: ', realQuantity);
 								console.log('Test 3: Quantities Match? : ', checkQuantities);
+								if(quantity==realQuantity==0){
+									console.log('Error: No Data');
+								}
 							}
 							
 							var outSort = out;
@@ -149,10 +150,10 @@
 
 							for(var a=0;a<realQuantity;a++){
 								if(compSpecified == true){
-								measurementsComponent_Category.push(out.Measurements[a].component_category[0]);
-								measurementsComponent_Description.push(out.Measurements[a].component_description[0]);
-								measurementsComponent_Model.push(out.Measurements[a].component_model[0]);
-								measurementsComponent_Name.push(out.Measurements[a].component_name[0]);
+								measurementsComponent_Category.push(out.Component.category);
+								measurementsComponent_Description.push(out.Component.description);
+								measurementsComponent_Model.push(out.Component.model);
+								measurementsComponent_Name.push(out.Component.name);
 								}
 								measurementsTime.push(out.Measurements[a].time);
 								measurementsUnits.push(out.Measurements[a].units);
@@ -164,7 +165,6 @@
 //							console.log('Component_Description: ', measurementsComponent_Description);
 							//ignore
 //							console.log('Component_Model: ', measurementsComponent_Model);
-							
 							console.log('Component_Name: ', measurementsComponent_Name);
 							console.log('Time: ', measurementsTime);
 							console.log('Units: ', measurementsUnits);
@@ -185,6 +185,9 @@
 							}
 							console.log('Test Formatted Data Array: ', data);
 							
+							/**
+								Compares units to units. 
+							**/
 							function compare(a,b){
 								if(a.units<b.units){
 									return -1;
@@ -195,7 +198,7 @@
 								return 0;
 							}
 							outSort.Measurements.sort(compare);
-//						console.log('Test Sorted Out: ', outSort.Measurements);
+						console.log('Test Sorted Out: ', outSort.Measurements);
 							var sortedMeasurements = [];
 							var allUnits = [];
 							var allNames = [];
@@ -208,6 +211,9 @@
 								}
 						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
 							
+							/**
+								
+							**/
 							const distinct = (value, index, self) => {
 								return self.indexOf(value) === index;
 							}
@@ -220,8 +226,8 @@
 							var numUniqueNames = distinctNames.length;
 						console.log('Test Num Unique Names: ', numUniqueNames);
 						//Alternative
-//						const alternativeDistinctUnits = [...new Set(sortedMeasurements.map(x => x.units))];
-//						console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
+						//const alternativeDistinctUnits = [...new Set(sortedMeasurements.map(x => x.units))];
+						//console.log('Alternative Test Distinct Units 2: ', alternativeDistinctUnits);
 						//Alternative
 							var totalNumGraphs = numUniqueUnits*numUniqueNames;
 							if(compSpecified == false){
@@ -239,6 +245,9 @@
 							}
 						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
 							
+							/**
+							
+							**/
 							function compareNames(a,b){
 								if(a.component_name[0]<b.component_name[0]){
 									return -1;
