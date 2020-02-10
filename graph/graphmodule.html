@@ -36,6 +36,8 @@
 			
 			/**
 			For Changing Token in Headers for CORS and Authentication.
+			Input: myHeaders Value.
+			Output: Changes global myHeaders variable.
 			**/
 			function testheaders(myHeaders){
 			myHeaders.append('Content-Type', 'application/json');
@@ -46,6 +48,8 @@
 			/**
 			For changing URL endpoints in backend API.
 			Contains all valid possible endpoints. 
+			Input: URL value
+			Output: Changes global URL variable.
 			**/
 			function testurl(url){
 			//url = url+'sat/';
@@ -70,6 +74,7 @@
 			Fetches data from the specified API URL. 
 			Returns an error if invalid authentication token. 
 			Returns an error if invalid API URL.
+			Otherwise, successful completion results in 'finish' statement.
 			**/
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json())
@@ -83,9 +88,18 @@
 							while (newcontent.firstChild) {
 								mydiv.appendChild(newcontent.firstChild);
 							}
+							
 							var compSpecified = false;
-							compSpecified = out.comp_specified;
-							console.log('Component Specified?: ', compSpecified);
+							checkCompSpecified(out);
+							/**
+								Checks if Comp_specified is true or false. 
+							**/
+							function checkCompSpecified(out){
+								compSpecified = out.comp_specified;
+								window.compSpecified = out.comp_specified;
+								console.log('Test 2: Component Specified?: ', compSpecified);
+							}
+							
 							var outSort = out;
 							var measurementsComponent_Category = [];
 							var measurementsComponent_Description = [];
@@ -95,7 +109,13 @@
 							var measurementsUnits = [];
 							var measurementsValue = [];
 							var data = [];
+							/**
+								
+							**/
+							function checkQuantities(){
 							
+							
+							}
 							var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 							var realQuantity = 0;
 							realQuantity = out.Measurements.length;
