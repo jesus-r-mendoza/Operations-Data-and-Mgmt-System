@@ -310,6 +310,9 @@
 							
 							console.log('Test Total Graphs Array Length', totalGraphsArray.length);
 							
+							/**
+							
+							**/
 							function compareTime(a,b){
 								if(a.time<b.time){
 									return -1;
@@ -370,10 +373,15 @@
 							var row = table.insertRow(table.rows.length-1); //insert row at bottom
 							var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
 						console.log('Test Initial Data Array', initialDataArray);
-							//for(var a=0;a<initialDataArray[0].length;a++){
-								//tableKeys.push(Object.keys(initialDataArray[0][a]));
+							if(compSpecified==false){
+								//for(var a=0;a<initialDataArray[0].length;a++){
+									var keysHold = (Object.keys(initialDataArray[0]));
+								//}
+								tableKeys = keysHold;
+							}
+							else{
 								tableKeys = Object.keys(initialDataArray);
-							//}
+							}
 							for(var b=0;b<tableKeys.length;b++){
 								var cellAdd = row.insertCell(b);
 								//console.log('tableKeysb', tableKeys[b]);
@@ -440,7 +448,7 @@
 								paused = true;
 							}	
 						
-			var interval = 	setInterval(function(){
+			var interval = setInterval(function(){
 								/*if(cnt<exampleGraphData){ //10 rows
 									console.log('New row', cnt);
 									var table = document.getElementById("traces");
