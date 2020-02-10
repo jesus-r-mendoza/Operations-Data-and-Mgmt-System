@@ -6,6 +6,8 @@
 	</head>
 	<body>
 	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
+	<div id="toptitle2"><span> </span></div>
+	<div id="toptitle3"><span> </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
 		<div id="chart0"></div>
@@ -82,12 +84,28 @@
 					if(true){
 						console.log('Test 1: Full API:', out);
 						if(out.data==true){
-							var mydiv = document.getElementById("toptitle");
-							var newcontent = document.createElement('div');
-							newcontent.innerHTML = out.Satellite.name+": Launched "+out.Satellite.year_launched;
-							while (newcontent.firstChild) {
-								mydiv.appendChild(newcontent.firstChild);
+							
+							titleSpecs(out);
+							/**
+								Places name, launch year, and mission description in proper places on the page.
+							**/
+							function titleSpecs(out){
+								var mydiv = document.getElementById("toptitle");
+								var newcontent = document.createElement('div');
+								newcontent.innerHTML = out.Satellite.name;
+								var mydiv2 = document.getElementById("toptitle2");
+								var newcontent2 = document.createElement('div');
+								newcontent2.innerHTML = ": Launched "+out.Satellite.year_launched;
+								//var mydiv3 = document.getElementById("toptitle3");
+								var newcontent3 = document.createElement('div');
+								newcontent3.innerHTML = ""+out.Satellite.mission_description;
+								while (newcontent.firstChild) {
+									mydiv.appendChild(newcontent.firstChild);
+									mydiv.appendChild(newcontent2.firstChild);
+									mydiv2.appendChild(newcontent3.firstChild);
+								}
 							}
+							
 							
 							var compSpecified = false;
 							checkCompSpecified(out);
@@ -100,15 +118,6 @@
 								console.log('Test 2: Component Specified?: ', compSpecified);
 							}
 							
-							var outSort = out;
-							var measurementsComponent_Category = [];
-							var measurementsComponent_Description = [];
-							var measurementsComponent_Model = [];
-							var measurementsComponent_Name = [];
-							var measurementsTime = [];
-							var measurementsUnits = [];
-							var measurementsValue = [];
-							var data = [];
 							var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 							var realQuantity = 0;
 							realQuantity = out.Measurements.length;
@@ -128,9 +137,16 @@
 								console.log('Test 3: Quantities Match? : ', checkQuantities);
 							}
 							
-							
+							var outSort = out;
+							var measurementsComponent_Category = [];
+							var measurementsComponent_Description = [];
+							var measurementsComponent_Model = [];
+							var measurementsComponent_Name = [];
+							var measurementsTime = [];
+							var measurementsUnits = [];
+							var measurementsValue = [];
+							var data = [];
 
-							
 							for(var a=0;a<realQuantity;a++){
 								if(compSpecified == true){
 								measurementsComponent_Category.push(out.Measurements[a].component_category[0]);
