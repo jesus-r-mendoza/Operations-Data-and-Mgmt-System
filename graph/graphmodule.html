@@ -22,6 +22,11 @@
 		<script src="xml2json.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
+		/**
+		Graphs backend API data using endpoints.
+		Input: valid endpoint URL, valid Authentication Token.
+		Output: Plotly graph.
+		**/
 			console.log('start');
 			var done = false;
 			var keys = [];
@@ -43,6 +48,7 @@
 			
 			/**
 			For changing URL endpoints in backend API.
+			Contains all valid possible endpoints. 
 			**/
 			function testurl(url){
 			//url = url+'sat/';
