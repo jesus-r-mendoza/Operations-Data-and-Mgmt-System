@@ -109,23 +109,27 @@
 							var measurementsUnits = [];
 							var measurementsValue = [];
 							var data = [];
-							/**
-								
-							**/
-							function checkQuantities(){
-							
-							
-							}
 							var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 							var realQuantity = 0;
 							realQuantity = out.Measurements.length;
 							var checkQuantities = false;
-							if(quantity==realQuantity){
-								checkQuantities = true;
+							checkQuantitiesMatch(quantity, realQuantity);
+							/**
+								Checks if quantities are as expected. 
+								Tests if quantities match as expected.
+							**/
+							function checkQuantitiesMatch(quantity, realQuantity){
+								if(quantity==realQuantity){
+									checkQuantities = true;
+									window.checkQuantities = true;
+								}
+								console.log('Quantity: ', quantity);
+								console.log('Real Quantity: ', realQuantity);
+								console.log('Test 3: Quantities Match? : ', checkQuantities);
 							}
-							console.log('Quantity: ', quantity);
-							console.log('Real Quantity: ', realQuantity);
-							console.log('Test: Quantities Match? : ', checkQuantities);
+							
+							
+
 							
 							for(var a=0;a<realQuantity;a++){
 								if(compSpecified == true){
