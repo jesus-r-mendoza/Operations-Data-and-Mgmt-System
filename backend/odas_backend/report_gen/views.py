@@ -134,5 +134,3 @@ def download_view(request, url):
         return response
     except Exception:
         raise Http404
-     except FileNotFoundError
-        return error.FILE_DNE
