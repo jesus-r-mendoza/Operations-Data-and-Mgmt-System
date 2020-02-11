@@ -35,6 +35,7 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
 // Log the user in and obtain an Auth token
 export const login = (username, pass) => async dispatch => {
     const loginData = new FormData();
+    let errorMessage = '';
 
     loginData.append("username", username);
     loginData.append("pass", pass);
@@ -49,13 +50,17 @@ export const login = (username, pass) => async dispatch => {
         data: loginData
     })
         .catch((function (error) {
-            console.log(error)
+            errorMessage = error
         }));
-    console.log(response);
+    
     // If a successful response is received from server, data is passed to reducer
     if (response !== undefined && response !== null) {
-        dispatch({type: "LOGIN_SUCCESS", payload: response.data})
+        console.log(response);
+
+        dispatch({ type: "LOGIN_SUCCESS", payload: response.data })
     } else {
-        dispatch({ type: "LOGIN_FAIL", payload: response })
+        console.log(errorMessage);
+
+        dispatch({ type: "LOGIN_FAIL", payload: errorMessage })
     }
 };

@@ -105,9 +105,9 @@ class Register extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = registerState => {
     return {
-        registerUser: state.register
+        registerUser: registerState.register
     };
 };
 

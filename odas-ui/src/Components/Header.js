@@ -1,11 +1,14 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import Cookie from 'universal-cookie';
 // Stylesheets
 import {Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form} from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login } from "../Actions/AuthActions";
+
+let cookie = new Cookie();
 
 class Header extends React.Component {
     constructor(props){
@@ -15,7 +18,7 @@ class Header extends React.Component {
             username: '',
             email: '',
             password: '',
-            showLoginButton: 'Sign in'
+            loginBtnText: 'Sign in'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -38,7 +41,21 @@ class Header extends React.Component {
     handleLogin = e => {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
+
+        this.changeLoginButton();
     };
+
+    cookieCallback = type => cookie.addChangeListener(
+        () => function changeLoginButton() {
+                return type;
+
+        });
+
+    changeLoginButton(){
+        this.setState({
+            modalState: this.cookieCallback(false)
+        });
+    }
 
     render() {
         console.log(this.props.userLogin);
@@ -62,7 +79,7 @@ class Header extends React.Component {
                         <Button
                             onClick={() => this.setModalState(true)}
                         >
-                            {this.state.showLoginButton}
+                            {this.state.loginBtnText}
                         </Button>
                     </Container>
                 </Navbar>
@@ -102,6 +119,7 @@ class Header extends React.Component {
                                     variant={"info"}
                                     onClick={this.handleLogin}
                                     className={"modal-btn"}
+                                    type={"submit"}
                                 >
                                     Login
                                 </Button>
@@ -122,10 +140,10 @@ class Header extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = userState => {
     return {
-        userLogin: state.login
-    }
+        userLogin: userState.login
+    };
 };
 
-export default connect(mapStateToProps, { login })(Header)
+export default connect(mapStateToProps, { login })(Header);

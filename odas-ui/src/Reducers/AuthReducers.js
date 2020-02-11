@@ -1,21 +1,22 @@
 import Cookie from 'universal-cookie';
 
 export const loginReducer = (loginState = [], action) => {
-    switch (action.type) {
+    if (action.type === 'LOGIN_SUCCESS') {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
-        case 'LOGIN_SUCCESS':
-            const cookie = new Cookie();
+        const cookie = new Cookie();
 
-            cookie.set("auth", action.payload.token, {
-                maxAge: 900
-            });
+        cookie.set("auth", action.payload.token, {
+            maxAge: 900
+        });
 
-            return [...loginState, action.payload.status];
-        case 'LOGIN_FAIL':
-            return [...loginState, "ERROR: Could not log in"];
-        default:
-            return loginState;
+        return [...loginState, action.payload];
+    } else if (action.type === 'LOGIN_FAIL') {
+
+        return [...loginState, action.payload];
     }
+
+
+    return loginState;
 };
 
 export const registerReducer = (registerState = [], action) => {

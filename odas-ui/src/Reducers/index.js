@@ -35,6 +35,6 @@ export default combineReducers({
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
     satComponentQuery: satComponentQueryReducer,
-    userLogin: loginReducer,
+    login: loginReducer,
     register: registerReducer
 });
