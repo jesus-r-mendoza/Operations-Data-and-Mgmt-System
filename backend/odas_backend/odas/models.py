@@ -45,3 +45,4 @@ class Risk(models.Model):
     error = models.CharField(max_length=512)
     priority = models.IntegerField()
     value = models.ForeignKey(Measurement, on_delete=models.CASCADE)
+    
