@@ -5,6 +5,12 @@ export const loginReducer = (loginState = [], action) => {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
         const cookie = new Cookie();
 
+        cookie.addChangeListener(
+            function() {
+                console.log("COOKIE CHANGE");
+            }
+        );
+
         cookie.set("auth", action.payload.token, {
             maxAge: 900
         });
@@ -12,7 +18,7 @@ export const loginReducer = (loginState = [], action) => {
         return [...loginState, action.payload.data];
     } else if (action.type === 'LOGIN_FAIL') {
 
-        return [...loginState, action.payload.response.data];
+        return [...loginState, action.payload.response.data.data];
     }
 
 

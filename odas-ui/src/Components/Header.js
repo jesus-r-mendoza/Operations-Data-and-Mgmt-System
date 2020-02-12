@@ -43,16 +43,28 @@ class Header extends React.Component {
         this.props.login(this.state.username, this.state.password);
     };
 
-    cookieCallback = type => cookie.addChangeListener(
-        () => function changeLoginButton() {
-                return type;
-        });
+    handleLogout = e => {
+        e.preventDefault();
+        this.props.logout();
+    };
 
     changeLoginButton () {
-        if (!this.props.login.data) {
-            console.log("Error occurred");
+        if (!cookie.get('auth')) {
+            return (
+                <Button
+                    onClick={() => this.setModalState(true)}
+                >
+                    Sign in
+                </Button>
+            );
         } else {
-            console.log("Successful login");
+            return (
+                <Button
+                    onClick={this.handleLogout}
+                >
+                    Sign out
+                </Button>
+            );
         }
     }
 
@@ -75,11 +87,7 @@ class Header extends React.Component {
                             </Link>
                         </NavItem>
                         <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
-                        <Button
-                            onClick={() => this.setModalState(true)}
-                        >
-                            {this.state.loginBtnText}
-                        </Button>
+                        {this.changeLoginButton(this.props.userLogin.pop())}
                     </Container>
                 </Navbar>
                 <Modal
@@ -98,8 +106,8 @@ class Header extends React.Component {
                             <div className={"email-form"}>
                                 <Form.Control
                                     name={"username"}
-                                    type={"email"}
-                                    placeholder={"Email"}
+                                    type={"username"}
+                                    placeholder={"Username"}
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
                                 />
