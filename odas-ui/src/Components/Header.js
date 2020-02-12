@@ -1,12 +1,12 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Cookie from 'universal-cookie';
 // Stylesheets
-import {Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form} from "react-bootstrap";
+import { Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form } from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login } from "../Actions/AuthActions";
+import { login, logout } from "../Actions/AuthActions";
 
 let cookie = new Cookie();
 
@@ -41,20 +41,19 @@ class Header extends React.Component {
     handleLogin = e => {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
-
-        this.changeLoginButton();
     };
 
     cookieCallback = type => cookie.addChangeListener(
         () => function changeLoginButton() {
                 return type;
-
         });
 
-    changeLoginButton(){
-        this.setState({
-            modalState: this.cookieCallback(false)
-        });
+    changeLoginButton () {
+        if (!this.props.login.data) {
+            console.log("Error occurred");
+        } else {
+            console.log("Successful login");
+        }
     }
 
     render() {
@@ -95,7 +94,7 @@ class Header extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={() => this.handleLogin}>
+                        <Form onSubmit={() => this.handleLogin(this.changeLoginButton())}>
                             <div className={"email-form"}>
                                 <Form.Control
                                     name={"username"}
@@ -142,8 +141,9 @@ class Header extends React.Component {
 
 const mapStateToProps = userState => {
     return {
-        userLogin: userState.login
+        userLogin: userState.login,
+        userLogout: userState.logout
     };
 };
 
-export default connect(mapStateToProps, { login })(Header);
+export default connect(mapStateToProps, { login, logout })(Header);

@@ -9,10 +9,10 @@ export const loginReducer = (loginState = [], action) => {
             maxAge: 900
         });
 
-        return [...loginState, action.payload];
+        return [...loginState, action.payload.data];
     } else if (action.type === 'LOGIN_FAIL') {
 
-        return [...loginState, action.payload];
+        return [...loginState, action.payload.response.data];
     }
 
 
@@ -25,4 +25,12 @@ export const registerReducer = (registerState = [], action) => {
     }
 
     return registerState;
+};
+
+export const logoutReducer = (logoutState = [], action) => {
+    if (action.type === "LOGOUT") {
+        return [...logoutState, action.payload];
+    }
+
+    return logoutState;
 };

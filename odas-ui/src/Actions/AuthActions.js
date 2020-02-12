@@ -1,5 +1,6 @@
 import { apiURL } from "../Apis/SatApi";
 import axios from "axios";
+import Cookies from "universal-cookie/lib";
 
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
@@ -63,4 +64,22 @@ export const login = (username, pass) => async dispatch => {
 
         dispatch({ type: "LOGIN_FAIL", payload: errorMessage })
     }
+};
+
+// Log the user out using the Auth token
+export const logout = () => async dispatch => {
+    const cookie = new Cookies();
+    const authToken = cookie.get('auth');
+
+    const response = await axios({
+        method: 'DELETE',
+        url: `${apiURL}logout/`,
+        header: { 'Content-type': 'Authorization'},
+        data: authToken
+    })
+        .catch((function (error) {
+            console.log(error);
+        }));
+
+    dispatch({ type: 'LOGOUT', payload: response })
 };

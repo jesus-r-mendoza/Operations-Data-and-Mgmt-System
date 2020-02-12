@@ -2,11 +2,11 @@ import React from 'react';
 import CheckComponent from "./CheckComponent";
 // Stylesheets
 import '../Layout/Sidebar.css'
-import {Button} from "react-bootstrap";
-import {Divider} from "semantic-ui-react";
+import { Button } from "react-bootstrap";
+import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
-import LoadSpinner from "./LoadSpinner";
+// import LoadSpinner from "./LoadSpinner";
 // Redux
 import { connect } from 'react-redux';
 import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";

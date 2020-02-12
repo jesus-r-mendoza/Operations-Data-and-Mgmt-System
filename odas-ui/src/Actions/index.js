@@ -21,7 +21,8 @@ import {
 // Authentication
 import {
     register,
-    login
+    login,
+    logout
 } from "./AuthActions";
 
 export {
@@ -34,7 +35,8 @@ export {
     selectEndDate,
     satCompQuery,
     register,
-    login
+    login,
+    logout
 };
 
 
