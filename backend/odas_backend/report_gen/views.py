@@ -91,7 +91,7 @@ def upload_view(request):
         desc = request.POST.get('description')
         
         if upfile and desc:
-            Upload.objects.create(upfile=upfile, description=desc)
+            Upload.objects.create(upfile=upfile, description=desc, user = request.user)
         else:
             return JsonResponse( { 'data': False, 'error': 'Must provide both: upfile and description' } )
 
