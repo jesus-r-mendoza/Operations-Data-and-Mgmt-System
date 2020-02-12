@@ -108,29 +108,34 @@ def delete_file(request, pk):
         user_file.delete()
     return redirect('file_list')
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def download_view(request, fid):
+    try:
+        fUpload = Upload.objects.get(pk=fid)
+        url = settings.MEDIA_ROOT + '/' + fUpload.upfile.name 
+        print(url)
+        response = FileResponse(open(url, 'rb'))
+        response['content_type'] = "application/octet-stream"
+        response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
+        return response
+    except Upload.DoesNotExist:
+        return JsonResponse({'data': False, 'error': 'File with this ID does not exist'})
+    except Exception:
+        raise Http404
+
 # @api_view(['GET'])
 # @authentication_classes([TokenAuthentication])
 # @permission_classes([IsAuthenticated])
 # def download_view(request, url):
 #     try:
+#         fUpload = Upload.objects.get(pk=fid)
+#         if not request.user.filter(name=fUpload.User.name).exists():
+#             return error.USER_DNE
 #         response = FileResponse(open(url, 'rb'))
 #         response['content_type'] = "application/octet-stream"
 #         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
 #         return response
 #     except Exception:
 #         raise Http404
-
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def download_view(request, url):
-    try:
-        fUpload = Upload.objects.get(pk=fid)
-        if not request.user.filter(name=fUpload.User.name).exists():
-            return error.USER_DNE
-        response = FileResponse(open(url, 'rb'))
-        response['content_type'] = "application/octet-stream"
-        response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
-        return response
-    except Exception:
-        raise Http404

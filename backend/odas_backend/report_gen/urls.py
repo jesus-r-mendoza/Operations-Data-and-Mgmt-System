@@ -9,5 +9,5 @@ urlpatterns = [
     path('writetest/', views.dbwritefile, name='db_test'),
     path('files/upload/', views.upload_view, name='upload_file'),
     path('files/<int:pk>/', views.delete_file, name='delete_file'),
-    re_path(r'^files/download/(?P<url>.*)/$', views.download_view, name='file_download'),
+    path('files/download/<int:fid>/', views.download_view, name='file_download'),
 ]
