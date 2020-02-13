@@ -25,6 +25,11 @@ import {
     logout
 } from "./AuthActions";
 
+// Files
+import {
+    postFile
+} from "./FileActions";
+
 export {
     fetchSatellites,
     fetchComponents,

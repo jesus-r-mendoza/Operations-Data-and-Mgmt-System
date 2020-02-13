@@ -85,7 +85,7 @@ class UploadData extends React.Component {
         let extension = extractExtension.exec(fileName)[0];
 
         console.log(extension);
-        if (acceptedExtensions.includes(extension)) {
+        if (!acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0],
                 loaded: 1,

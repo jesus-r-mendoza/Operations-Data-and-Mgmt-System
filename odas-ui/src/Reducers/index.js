@@ -20,6 +20,11 @@ import {
     selectStartDateReducer
 } from "./SelectionReducers";
 
+// Files
+import {
+    postFileReducer
+} from "./FileReducers"
+
 // Authentication
 import {
     loginReducer,

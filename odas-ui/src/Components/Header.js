@@ -7,7 +7,6 @@ import {
     Navbar,
     NavbarBrand,
     NavDropdown,
-    NavItem,
     Button,
     Modal,
     Form,
@@ -26,6 +25,7 @@ class Header extends React.Component {
         this.state = {
             modalState: false,
             toastState: false,
+            loginBtnState: true,
             username: '',
             email: '',
             password: '',
@@ -35,16 +35,10 @@ class Header extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    setModalState(state) {
+    setElementStates(element, state) {
         this.setState({
-            modalState: state
-        });
-    }
-
-    setToastState(state) {
-        this.setState({
-            toastState: state
-        });
+            [element]: state
+        })
     }
 
     handleInputChange = e => {
@@ -57,9 +51,10 @@ class Header extends React.Component {
 
     handleLogin = e => {
         e.preventDefault();
+        this.setElementStates('loginBtnState', true);
         this.props.login(this.state.username, this.state.password);
-        this.setModalState(false);
-        this.setToastState(true);
+        this.setElementStates('modalState', false);
+        this.setElementStates('toastState', true);
     };
 
     handleLogout = e => {
@@ -71,7 +66,7 @@ class Header extends React.Component {
         if (!cookie.get('auth')) {
             return (
                 <Button
-                    onClick={() => this.setModalState(true)}
+                    onClick={() => this.setElementStates('modalState', true)}
                 >
                     Sign in
                 </Button>
@@ -114,7 +109,7 @@ class Header extends React.Component {
                 <Modal
                     size={"med"}
                     show={this.state.modalState}
-                    onHide={() => this.setModalState(false)}
+                    onHide={() => this.setElementStates('modalState', false)}
                     aria-labelledby={"example-modal-sizes-title-sm"}
                 >
                     <Modal.Header closeButton>
@@ -154,7 +149,7 @@ class Header extends React.Component {
                                 <div>
                                     <Link
                                         to={"/register"}
-                                        onClick={() => {this.setModalState(false)}}
+                                        onClick={() => {this.setElementStates('modalState', false)}}
                                     >
                                         New user? Click here to register.
                                     </Link>
@@ -164,7 +159,7 @@ class Header extends React.Component {
                     </Modal.Body>
                 </Modal>
                 <Toast
-                    onClose={() => this.setToastState(false)}
+                    onClose={() => this.setElementStates('toastState', false)}
                     show={this.state.toastState}
                     delay={3000} autohide
                     className={"login-toast"}
