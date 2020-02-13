@@ -32,7 +32,8 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
         }));
 
     if (response !== undefined && response !== null) {
-        dispatch({ type: "REGISTER_SUCCESS", payload: response.data.data })
+        console.log(response);
+        dispatch({ type: "REGISTER_SUCCESS", status: true, payload: response.data.username })
     } else {
         dispatch({ type: "REGISTER_FAIL", status: false, payload: errorMessage.response.data.error })
     }

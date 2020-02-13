@@ -6,6 +6,7 @@ import "../Layout/Register.css"
 import { connect } from 'react-redux';
 import { register } from '../Actions/AuthActions';
 
+
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -39,7 +40,12 @@ class Register extends React.Component {
     };
 
     showResultMessage = () => {
+        // Initialize to push redirect
+        const {history} = this.props;
+        // Returns false if failed registration or true if successful
         let registerStatus = this.props.registerUser.status;
+        // Will be the name on successful registration
+        let registerMessage = this.props.registerUser.message;
 
         if (registerStatus === false) {
             return (
@@ -51,10 +57,16 @@ class Register extends React.Component {
                 </Alert>
             );
         } else if (registerStatus === true) {
+            setInterval(function () {
+                history.push('/');
+            }, 8000);
+
             return (
-                <div>
-                    Success
-                </div>
+                <Alert
+                    variant={'success'}
+                >
+                    Registration successful, {registerMessage}. You will soon be redirected.
+                </Alert>
             );
         }
     };
