@@ -28,8 +28,7 @@ class Header extends React.Component {
             loginBtnState: true,
             username: '',
             email: '',
-            password: '',
-            loginBtnText: 'Sign in'
+            password: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);

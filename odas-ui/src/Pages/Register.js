@@ -1,6 +1,6 @@
 import React from 'react';
 // Stylesheets
-import {Button, Form} from "react-bootstrap";
+import  { Alert, Button, Form } from "react-bootstrap";
 import "../Layout/Register.css"
 // Redux
 import { connect } from 'react-redux';
@@ -17,7 +17,7 @@ class Register extends React.Component {
         };
 
         // Prevents TypeError: setState is undefined
-        this.handleInputChange = this.handleInputChange.bind(this);
+        // this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     // e.target.name takes HTML tag property from Form.Control
@@ -38,13 +38,25 @@ class Register extends React.Component {
             this.state.inviteCode);
     };
 
-    handleRegisterResult = () => {
-        this.setState({
-            username: '',
-            email: '',
-            password: '',
-            inviteCode: ''
-        })
+    showResultMessage = () => {
+        let registerStatus = this.props.registerUser.status;
+
+        if (registerStatus === false) {
+            return (
+                <Alert
+                    dismissible={true}
+                    variant={'warning'}
+                >
+                    {this.props.registerUser.message}
+                </Alert>
+            );
+        } else if (registerStatus === true) {
+            return (
+                <div>
+                    Success
+                </div>
+            );
+        }
     };
 
     render() {
@@ -87,14 +99,17 @@ class Register extends React.Component {
                                     onChange={this.handleInputChange}
                                     className={"register-input"}
                                 />
-                                <div className={'register-btn'}>
-                                    <Button
-                                        type={"submit"}
-                                        variant={"info"}
-                                        onClick={this.handleRegister}
-                                    >
-                                        Submit
-                                    </Button>
+                                <div>
+                                    {this.showResultMessage()}
+                                    <div className={'register-btn'}>
+                                        <Button
+                                            type={"submit"}
+                                            variant={"info"}
+                                            onClick={this.handleRegister}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
                                 </div>
                             </Form>
                         </div>

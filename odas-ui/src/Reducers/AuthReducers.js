@@ -24,8 +24,8 @@ export const loginReducer = (loginState = [], action) => {
 };
 
 export const registerReducer = (registerState = [], action) => {
-    if (action.type === "REGISTER") {
-        return [...registerState, action.payload]
+    if (action.type === "REGISTER_SUCCESS" || action.type === "REGISTER_FAIL") {
+        return {status: action.status, message: action.payload}
     }
 
     return registerState;

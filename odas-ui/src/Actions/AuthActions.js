@@ -5,6 +5,7 @@ import Cookies from "universal-cookie/lib";
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
+    let errorMessage = ''
 
     registerData.append("username", username);
     registerData.append("email", email);
@@ -27,10 +28,14 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
         data: registerData
     })
         .catch((function (error) {
-            console.log(error.error)
+            errorMessage = error;
         }));
 
-    dispatch({ type: "REGISTER", payload: response.data })
+    if (response !== undefined && response !== null) {
+        dispatch({ type: "REGISTER_SUCCESS", payload: response.data.data })
+    } else {
+        dispatch({ type: "REGISTER_FAIL", status: false, payload: errorMessage.response.data.error })
+    }
 };
 
 // Log the user in and obtain an Auth token
