@@ -11,9 +11,7 @@ export const loginReducer = (loginState = [], action) => {
             }
         );
 
-        cookie.set("auth", action.payload.token, {
-            maxAge: 900
-        });
+        cookie.set("auth", action.payload.token);
 
         return [...loginState, action.payload.data];
     } else if (action.type === 'LOGIN_FAIL') {

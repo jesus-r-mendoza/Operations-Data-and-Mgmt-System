@@ -6,7 +6,7 @@ html, body {
     overflow: hidden;
 }
 
-/*Navigation*/
+/*Navigation header*/
 .nav-bar {
     display: flex;
     background: #141e28;
@@ -20,7 +20,10 @@ html, body {
 
 .nav-items {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+    margin-left: 50%;
 }
 
 .title-text {

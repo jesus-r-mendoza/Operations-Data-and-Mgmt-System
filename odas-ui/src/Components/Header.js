@@ -2,7 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Cookie from 'universal-cookie';
 // Stylesheets
-import { Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form } from "react-bootstrap";
+import { Container,
+    Navbar,
+    NavbarBrand,
+    NavDropdown,
+    NavItem,
+    Button,
+    Modal,
+    Form,
+    Toast} from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
@@ -15,6 +23,7 @@ class Header extends React.Component {
         super(props);
         this.state = {
             modalState: false,
+            toastState: false,
             username: '',
             email: '',
             password: '',
@@ -30,6 +39,12 @@ class Header extends React.Component {
         });
     }
 
+    setToastState(state) {
+        this.setState({
+            toastState: state
+        });
+    }
+
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -41,6 +56,8 @@ class Header extends React.Component {
     handleLogin = e => {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
+        this.setModalState(false);
+        this.setToastState(true);
     };
 
     handleLogout = e => {
@@ -82,9 +99,12 @@ class Header extends React.Component {
                             <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
                         </NavDropdown>
                         <NavItem>
-                            <Link to={"/user-dashboard"}>
-                                Dashboard
-                            </Link>
+                            <Button onClick={() => this.setToastState(true)}>
+                                test
+                            </Button>
+                            {/*<Link to={"/user-dashboard"}>*/}
+                            {/*    Dashboard*/}
+                            {/*</Link>*/}
                         </NavItem>
                         <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
                         {this.changeLoginButton(this.props.userLogin.pop())}
@@ -142,6 +162,17 @@ class Header extends React.Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
+                <Toast
+                    onClose={() => this.setToastState(false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className="mr-auto">Welcome!</strong>
+                    </Toast.Header>
+                    <Toast.Body>You have successfully logged in</Toast.Body>
+                </Toast>
             </div>
         )
     }

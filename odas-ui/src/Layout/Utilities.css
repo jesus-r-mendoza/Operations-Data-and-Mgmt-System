@@ -13,3 +13,11 @@
     padding-left: 10px;
     font-size: large;
 }
+
+/*Toast*/
+.login-toast {
+    bottom: 3%;
+    right: 5%;
+    position: absolute;
+    z-index: 1;
+}

@@ -70,13 +70,11 @@ export const login = (username, pass) => async dispatch => {
 export const logout = () => async dispatch => {
     const cookie = new Cookies();
     const authToken = cookie.get('auth');
-    console.log("Delete auth", authToken);
 
     const response = await axios({
         method: 'DELETE',
         url: `${apiURL}logout/`,
-        header: { 'Content-type': 'Authorization'},
-        data: { 'Token': authToken }
+        header: { 'Authorization': `Token ${authToken}` },
     })
         .catch((function (error) {
             console.log(error);
