@@ -21,9 +21,13 @@ html, body {
 .nav-items {
     display: flex;
     justify-content: flex-end;
+    flex-direction: row;
     position: absolute;
-    right: 0;
-    margin-left: 50%;
+    right: 3%;
+}
+
+.nav-drop {
+    margin-right: 10px;
 }
 
 .title-text {

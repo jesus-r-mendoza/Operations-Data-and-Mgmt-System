@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Cookie from 'universal-cookie';
 // Stylesheets
-import { Container,
+import {
+    Container,
     Navbar,
     NavbarBrand,
     NavDropdown,
@@ -10,7 +11,8 @@ import { Container,
     Button,
     Modal,
     Form,
-    Toast} from "react-bootstrap";
+    Toast, DropdownButton
+} from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
@@ -93,21 +95,20 @@ class Header extends React.Component {
                     <NavbarBrand href={"/"}>
                         <span className={"title-text"}>Operations Data Analysis and Management System</span>
                     </NavbarBrand>
-                    <Container className={"justify-content-end"}>
-                        <NavDropdown id={'drop'} title={"Generate a Report"}>
-                            <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
-                            <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
-                        </NavDropdown>
-                        <NavItem>
-                            <Button onClick={() => this.setToastState(true)}>
-                                test
-                            </Button>
-                            {/*<Link to={"/user-dashboard"}>*/}
-                            {/*    Dashboard*/}
-                            {/*</Link>*/}
-                        </NavItem>
-                        <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
-                        {this.changeLoginButton(this.props.userLogin.pop())}
+                    <Container>
+                        <div className={"nav-items"}>
+                            <DropdownButton id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
+                                <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
+                                <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
+                            </DropdownButton>
+                            <Link to={"/user-dashboard"}>
+                                <Button>
+                                    Dashboard
+                                </Button>
+                            </Link>
+                            <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
+                            {this.changeLoginButton(this.props.userLogin.pop())}
+                        </div>
                     </Container>
                 </Navbar>
                 <Modal
@@ -171,7 +172,7 @@ class Header extends React.Component {
                     <Toast.Header>
                         <strong className="mr-auto">Welcome!</strong>
                     </Toast.Header>
-                    <Toast.Body>You have successfully logged in</Toast.Body>
+                    <Toast.Body>You have logged in successfully</Toast.Body>
                 </Toast>
             </div>
         )
