@@ -100,6 +100,10 @@ def login(request):
         'data': True,
         'error': 'None'
     }
+    if len(user.groups.all()) > 0:
+        data['organization'] = user.groups.all()[0].name
+    else:
+        data['organization'] = 'None'
     return JsonResponse(data)
 
 
