@@ -31,7 +31,6 @@ import {
     registerReducer,
     logoutReducer
 } from "./AuthReducers";
-import {postFile} from "../Actions/FileActions";
 
 export default combineReducers({
     satObjects: satelliteReducer,

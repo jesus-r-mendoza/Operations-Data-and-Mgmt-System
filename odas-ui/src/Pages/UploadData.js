@@ -1,8 +1,7 @@
 import React from 'react';
 // Redux
 import { postFile } from "../Actions";
-import {connect} from "react-redux";
-import {reduxForm} from "redux-form";
+import { connect } from "react-redux";
 //Components
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
@@ -14,9 +13,6 @@ import {Button, FormControl, Container} from "react-bootstrap";
 import axios from "axios";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt"];
-// const fileForm = reduxForm({
-//     form: 'file'
-// });
 
 const apis = {
     unit: `${apiURL}api/units/`,
@@ -101,27 +97,11 @@ class UploadData extends React.Component {
         console.log(fileName);
     };
 
-    handleFileSubmit = () => {
-        let fileForm = new FormData();
-        let upfile = this.state.selectedFile;
-        let description = "This is a description";
-        fileForm.append("upfile", upfile);
-        fileForm.append("description", description);
+    handleFileSubmit = e => {
+        e.preventDefault();
+        const selectedFile = this.state.selectedFile;
 
-        let fileObj = Object.create({}, {
-            upfile: {value: upfile},
-            description: {value: description}
-        });
-
-        console.log(fileObj);
-
-        axios.post('http://localhost:8000/files/upload/', {
-            data: fileObj
-        })
-            .then(
-                res =>console.log(res)
-            )
-            .catch(err => console.log(err))
+        this.props.postFile(selectedFile, "Test file")
     };
     
     showErrorMessage(loaded) {
@@ -171,7 +151,7 @@ class UploadData extends React.Component {
                         variant={"primary"}
                         className={"submit-btn"}
                         disabled={!this.state.fileSubmit}
-                        onClick={() => this.handleFileSubmit()}
+                        onClick={this.handleFileSubmit}
                     >
                         Submit
                     </Button>
@@ -199,6 +179,8 @@ class UploadData extends React.Component {
     }
 
     render() {
+        console.log(this.props.uploadFile);
+
         if (this.state.isLoading) {
             return(
                 <LoadSpinner />
@@ -206,7 +188,6 @@ class UploadData extends React.Component {
         }
 
         if(!this.state.isLoading) {
-
             return (
                 <div className={"report-container"}>
                     {this.renderFileInput()}
@@ -217,9 +198,9 @@ class UploadData extends React.Component {
 }
 
 
-const mapStateToProps = state => {
+const mapStateToProps = uploadState => {
     return {
-        uploadFile: state.postFile
+        uploadFile: uploadState.postFile
     };
 };
 

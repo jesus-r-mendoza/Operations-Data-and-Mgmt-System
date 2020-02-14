@@ -1,10 +1,11 @@
 export const postFileReducer = (fileState = [], action) => {
     switch (action.type) {
         case 'REQUEST_STARTED':
+            console.log("File loading", action.isLoading);
             return action.isLoading;
 
         case 'FILE_ACCEPTED':
-            return true;
+            return [action.payload, action.isLoading];
 
         case 'FILE_FAILED':
             return false;

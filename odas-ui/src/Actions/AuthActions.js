@@ -60,8 +60,8 @@ export const login = (username, pass) => async dispatch => {
             errorMessage = error
         }));
     
-    // If a successful response is received from server, data is passed to reducer
-    if (response !== undefined && response !== null) {
+    // If errorMessage remains empty, success is dispatched to the reducer
+    if (errorMessage === '') {
         console.log(response);
 
         dispatch({ type: "LOGIN_SUCCESS", payload: response.data })
@@ -86,5 +86,5 @@ export const logout = () => async dispatch => {
             console.log(error);
         }));
 
-    dispatch({ type: 'LOGOUT', payload: response })
+    dispatch({type: 'LOGOUT', payload: response})
 };
