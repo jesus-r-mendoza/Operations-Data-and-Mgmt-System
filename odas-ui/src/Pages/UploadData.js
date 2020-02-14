@@ -1,7 +1,7 @@
 import React from 'react';
 // Redux
-// import {postFile} from "../Actions";
-// import {connect} from "react-redux";
+import { postFile } from "../Actions";
+import {connect} from "react-redux";
 import {reduxForm} from "redux-form";
 //Components
 import LoadSpinner from "../Components/LoadSpinner";
@@ -85,7 +85,7 @@ class UploadData extends React.Component {
         let extension = extractExtension.exec(fileName)[0];
 
         console.log(extension);
-        if (!acceptedExtensions.includes(extension)) {
+        if (acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0],
                 loaded: 1,
@@ -217,6 +217,10 @@ class UploadData extends React.Component {
 }
 
 
-export default reduxForm({
-    form: 'file'
-})(UploadData)
+const mapStateToProps = state => {
+    return {
+        uploadFile: state.postFile
+    };
+};
+
+export default connect(mapStateToProps, { postFile })(UploadData);

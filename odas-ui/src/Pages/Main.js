@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from "react-router-dom";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, Modal, Form} from "react-bootstrap";
@@ -26,49 +25,32 @@ export default class Main extends React.Component {
                     <div className={"main-content"}>
                         <span className={"main-text"}>Welcome to <br/> ODAS Report Generator</span>
                         <div className={"user-box"}>
-                            <div className={"main-btns"}>
-                                <span className={"sub-text"}>
-                                    Register to get the fullest experience.
-                                    <ul>
-                                        <li>Generate custom telemetry reports</li>
-                                        <li>Analyze telemetry patterns</li>
-                                        <li>Save custom reports and summaries</li>
-                                        <li>Receive weekly reports</li>
-                                    </ul>
-                                </span>
-                                <Link to={"/user-dashboard"}>
-                                    <Button
-                                        size={"lg"}
-                                        variant={"info"}
-                                        className={"query-button"}
-                                    >
-                                        Generate a Report
-                                    </Button>
-                                </Link>
+                            <div className={"main-form"}>
+                                <span className={"sub-text"}>Get started by signing in</span>
+                                <Form.Control
+                                    type={"username"}
+                                    name={"username"}
+                                    placeholder={"Username"}
+                                    className={"email-form"}
+                                />
+                                <Form.Control
+                                    type={"password"}
+                                    name={"password"}
+                                    placeholder={"Password"}
+                                />
+                                <div className={"email-button-container"}>
+                                    <div className={"email-button"}>
+                                        <Button
+                                            variant={"info"}
+                                            type={"submit"}
+                                            size={"lg"}
+                                            onClick={() => this.setModalState(true)}
+                                        >
+                                            Login
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
-                            {/*<div className={"email-button-container"}>*/}
-                            {/*    <div className={"email-button"}>*/}
-                            {/*        <Button*/}
-                            {/*            variant={"info"}*/}
-                            {/*            type={"submit"}*/}
-                            {/*            size={"lg"}*/}
-                            {/*            onClick={() => this.setModalState(true)}*/}
-                            {/*        >*/}
-                            {/*            Login*/}
-                            {/*        </Button>*/}
-                            {/*    </div>*/}
-                            {/*    <div className={"email-button"}>*/}
-                            {/*        <Link to={""}>*/}
-                            {/*            <Button*/}
-                            {/*                variant={"info"}*/}
-                            {/*                type={"submit"}*/}
-                            {/*                size={"lg"}*/}
-                            {/*            >*/}
-                            {/*                About*/}
-                            {/*            </Button>*/}
-                            {/*        </Link>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                         </div>
                     </div>
                     <div id={"img"} className={"main-image"}>

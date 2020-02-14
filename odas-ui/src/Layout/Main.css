@@ -63,14 +63,11 @@ html, body {
     box-shadow: 0 4px 5px darkgray inset;
 }
 
-.main-text {
-    color: white;
-}
-
-.main-btns {
+.main-form {
     display: flex;
     flex-direction: column;
     padding-top: 20px;
+    padding-right: 40px;
     width: 27em;
 }
 
@@ -103,7 +100,7 @@ html, body {
 }
 
 .sub-text {
-    font-size: large;
+    font-size: x-large;
     color: #ffffff;
     padding-left: 10px;
     margin-bottom: 20px;
@@ -135,10 +132,9 @@ html, body {
 
 .email-button-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-top: 15px;
-    width: 12em;
+    justify-content: flex-end;
+    padding: 20px;
+    width: 100%;
 }
 
 .email-button {
@@ -158,6 +154,6 @@ html, body {
 }
 
 .email-form {
-    padding-bottom: 10px;
+    margin-bottom: 30px;
 }
 

@@ -7,7 +7,7 @@ export const postFileReducer = (fileState = [], action) => {
             return true;
 
         case 'FILE_FAILED':
-            return true;
+            return false;
 
         default:
             return false;

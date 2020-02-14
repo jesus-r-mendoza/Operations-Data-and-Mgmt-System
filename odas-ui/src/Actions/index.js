@@ -41,7 +41,8 @@ export {
     satCompQuery,
     register,
     login,
-    logout
+    logout,
+    postFile
 };
 
 
