@@ -7,7 +7,6 @@
 	<body>
 	<div class="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
 	<div id="toptitle2"><span> </span></div>
-	<div id="toptitle3"><span> </span></div>
 	<div class="wrapper">
 		<div id="chart"></div>
 		<div id="chart0"></div>
@@ -21,16 +20,27 @@
 		</div>
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script>	
-
 			console.log('start');
-			var done = false;
-			var keys = [];
-			var numKeys = 0;
-			var rawvalues = [];
-			var keysValues = [];
-			var json = "";	
 			const myHeaders = new Headers();
 			var url = 'http://127.0.0.1:8000/api/';
+			var out;
+			var compSpecified = false;
+			var quantity; 
+			var realQuantity;
+			var checkQuantities;
+			var outSort;
+			var data;
+			var sortedMeasurements = [];
+			var allUnits = [];
+			var allNames = [];
+			var distinct;
+			var distinctUnits;
+			var numUniqueUnits;
+			var distinctNames;
+			var numUniqueNames;
+			var totalNumGraphs;
+			var totalGraphsArray;
+			var altcurrentData;
 			
 			function testheaders(myHeaders){
 			myHeaders.append('Content-Type', 'application/json');
@@ -39,18 +49,7 @@
 			}
 			
 			function testurl(url){
-			//url = url+'sat/';
-			//url = url+'comp/';
-			//url = url+'meas/'; 
-			//url = url+'units/'; //not right JSON format
-			//url = url+'sat/6/comp/'; //no comp_specified
-			//url = url+'sat/6/recent/10'; //authentication token incorrect
 			url = url+'sat/6/comp/14/recent/10/';
-			//url = url+'sat/6/comp/1+2+3/recent/10'; //authentication token incorrect
-			//url = url+'sat/6/meas/from=2019-01-01T22:43:23/to=now'; //authentication token incorrect
-		//	url = url+'sat/6/meas/comp/14/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/'; // no measurements
-		//	url = url+'sat/6/meas/comp/1+2+3/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/'; //json error
-			//url = url+'sat/6/meas/comp/14/from=2019-01-01T22:43:23/to=now/';
 			window.url = url;
 			}
 			
@@ -60,253 +59,202 @@
 			
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json())
-				.then((out) => {
-					if(true){
-						console.log('Test 1: Full API:', out);
-						if(out.data==true){
-
-							titleSpecs(out);
-							function titleSpecs(out){
-								var mydiv = document.getElementById("toptitle");
-								var newcontent = document.createElement('div');
-								newcontent.innerHTML = out.Satellite.name;
-								var mydiv2 = document.getElementById("toptitle2");
-								var newcontent2 = document.createElement('div');
-								newcontent2.innerHTML = ": Launched "+out.Satellite.year_launched;
-								//var mydiv3 = document.getElementById("toptitle3");
-								var newcontent3 = document.createElement('div');
-								newcontent3.innerHTML = ""+out.Satellite.mission_description;
-								while (newcontent.firstChild) {
-									mydiv.appendChild(newcontent.firstChild);
-									mydiv.appendChild(newcontent2.firstChild);
-									mydiv2.appendChild(newcontent3.firstChild);
-								}
-							}
-
-							var compSpecified = false;
-							checkCompSpecified(out);
-							function checkCompSpecified(out){
-								compSpecified = out.comp_specified;
-								window.compSpecified = out.comp_specified;
-								console.log('Test 2: Component Specified?: ', compSpecified);
-							}
+				.then((out2) => {
+					window.out = out2;
+					checkData();
+					createDataUnit();
+					sortMeasurements();
+					makeParameters();
+					makeGraphArray();
+					reorder();
+					setGraphType();
+					plotGraph();
+				})
+				.catch(err => console.error(err));
+				
+			function checkData(){
+				var error;
+				console.log('Test 1: Full API:', out);
+				if(out.data==true){
+					titleSpecs(out);
+					window.compSpecified = false;
+					checkCompSpecified(out);
+					quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
+					realQuantity = 0;
+					realQuantity = out.Measurements.length;
+					checkQuantities = false;
+					checkQuantitiesMatch(quantity, realQuantity);
+					outSort = out; //will leave original out untouched.
+					data = [];
+				}
+				else if(out.data==false){
+					error = out.error;
+					errorOutput(error);
+				}
+				else{
+					error = "Error: The API is not in the correct JSON format. Please check again."
+					errorOutput(error);
+				}
+				
+				function errorOutput(error){
+					var mydiv = document.getElementById("toptitle");
+					var newcontent = document.createElement('div');
+					newcontent.innerHTML = "Error";
+					while (newcontent.firstChild) {
+						mydiv.appendChild(newcontent.firstChild);
+					}
+					var node = document.createElement("p");
+					var node2 = document.createElement("p");
+					var textnode = document.createTextNode(error);
+					var textnode2 = document.createTextNode(error);
+					node.appendChild(textnode);
+					node2.appendChild(textnode2);
+					document.getElementById("toptitle").appendChild(node);
+					document.getElementById("tablechart").appendChild(node2);
+				}
+			}
+			
+			function createDataUnit(){
+				for(var c=0;c<realQuantity;c++){
+					var dataUnit = [];
+					if(compSpecified == true){
+						dataUnit.push(out.Component.category);
+						dataUnit.push(out.Component.description);
+						dataUnit.push(out.Component.model);
+						dataUnit.push(out.Component.name);
+					}
+						dataUnit.push(out.Measurements[c].time);
+						dataUnit.push(out.Measurements[c].units);
+						dataUnit.push(out.Measurements[c].value);
+						data.push(dataUnit);
+				}
+					console.log('Test 4: Formatted Data Array: ', data);
+			}
+			
+			function sortMeasurements(){
+				outSort.Measurements.sort(compare.bind(null, 'units'));
+				console.log('Test 5: Sorted Out: ', outSort.Measurements);
+					for(var a=0;a<realQuantity;a++){
+						sortedMeasurements.push(outSort.Measurements[a]);
+						allUnits.push(outSort.Measurements[a].units);
+						if(compSpecified==true){
+							allNames.push(outSort.Measurements[a].component_name[0]);
+						}
+					}
+				console.log('Test SortedMeasurements JSON: ', sortedMeasurements);				
+			}
+			
+			function makeParameters(){
+				console.log('Test 6: Data Attributes: ');
+				distinct = (value, index, self) => {
+					return self.indexOf(value) === index;
+				}
+				distinctUnits = allUnits.filter(distinct);
+				console.log('Test Distinct Units: ', distinctUnits);
+				numUniqueUnits = distinctUnits.length;
+				console.log('Test Num Unique Units: ', numUniqueUnits);
+				distinctNames = allNames.filter(distinct);
+				console.log('Test Distinct Names: ', distinctNames);
+				numUniqueNames = distinctNames.length;
+				console.log('Test Num Unique Names: ', numUniqueNames);
+				
+				totalNumGraphs = numUniqueUnits*numUniqueNames;
+				if(compSpecified == false){
+					totalNumGraphs = numUniqueUnits;
+				}
+				console.log('Total Num Graphs: ', totalNumGraphs);
+			}
+			function makeGraphArray(){
+				totalGraphsArray = [];
+				for(var a=0;a<totalNumGraphs;a++){
+					//make dummy positions
+					var dummyGraph = [];
+					totalGraphsArray.push(dummyGraph);
+				}
+				console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
 							
-							var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
-							var realQuantity = 0;
-							realQuantity = out.Measurements.length;
-							var checkQuantities = false;
-							checkQuantitiesMatch(quantity, realQuantity);
-
-							function checkQuantitiesMatch(quantity, realQuantity){
-								if(quantity==realQuantity){
-									checkQuantities = true;
-									window.checkQuantities = true;
-								}
-								console.log('Quantity: ', quantity);
-								console.log('Real Quantity: ', realQuantity);
-								console.log('Test 3: Quantities Match? : ', checkQuantities);
-								if(quantity==realQuantity==0){
-									console.log('Error: No Data');
-								}
-							}
+				if(compSpecified == false){
+					numUniqueNames = 1;
+				}
 							
-							var outSort = out;
-							var measurementsComponent_Category = [];
-							var measurementsComponent_Description = [];
-							var measurementsComponent_Model = [];
-							var measurementsComponent_Name = [];
-							var measurementsTime = [];
-							var measurementsUnits = [];
-							var measurementsValue = [];
-							var data = [];
-
-							for(var a=0;a<realQuantity;a++){
-								if(compSpecified == true){
-								measurementsComponent_Category.push(out.Component.category);
-								measurementsComponent_Description.push(out.Component.description);
-								measurementsComponent_Model.push(out.Component.model);
-								measurementsComponent_Name.push(out.Component.name);
+				for(var a=0;a<realQuantity;a++){
+					for(var b=0;b<numUniqueUnits;b++){
+						for(var c=0;c<numUniqueNames;c++){
+							if(sortedMeasurements[a].units==distinctUnits[b]){
+								if(sortedMeasurements[a].component_name==distinctNames[c]){
+									totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
 								}
-								measurementsTime.push(out.Measurements[a].time);
-								measurementsUnits.push(out.Measurements[a].units);
-								measurementsValue.push(out.Measurements[a].value);
 							}
-							console.log('Component_Name: ', measurementsComponent_Name);
-							console.log('Time: ', measurementsTime);
-							console.log('Units: ', measurementsUnits);
-							console.log('Value: ', measurementsValue);
+						}
+					}
+				}
+				console.log('Test 7: Total Graphs Array: ', totalGraphsArray);
+				console.log('Test Total Graphs Array Length', totalGraphsArray.length);
+			}
+			function reorder(){
+				//Flip components to list them in correct sequential order.
+				for(var a=0;a<totalGraphsArray.length;a++){
+					if(totalGraphsArray[a].length>1){
+						totalGraphsArray[a].reverse();
+						if(compSpecified==false){
+							totalGraphsArray[a].sort(compare.bind(null, 'time'));
+						}
+					}
+				}
+				console.log('Test 8: Reordered Total Graphs Array: ', totalGraphsArray);
+			}
+			function setGraphType(){
+				altcurrentData = [];
+				for(var a=0;a<totalNumGraphs;a++){
+					if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
+						for(var b=0;b<totalGraphsArray[a].length;b++){
+							altcurrentData.push(totalGraphsArray[a][b].value);
+						}
+					}
+				}
+				console.log('AltCurrentData:', altcurrentData);
 							
-							for(var c=0;c<realQuantity;c++){
-								var dataUnit = [];
-								if(compSpecified == true){
-								dataUnit.push(measurementsComponent_Category[c]);
-								dataUnit.push(measurementsComponent_Description[c]);
-								dataUnit.push(measurementsComponent_Model[c]);
-								dataUnit.push(measurementsComponent_Name[c]);
-								}
-								dataUnit.push(measurementsTime[c]);
-								dataUnit.push(measurementsUnits[c]);
-								dataUnit.push(measurementsValue[c]);
-								data.push(dataUnit);
-							}
-							console.log('Test Formatted Data Array: ', data);
-							
-							function compare(a,b){
-								if(a.units<b.units){
-									return -1;
-								}
-								if(a.units>b.units){
-									return 1;
-								}
-								return 0;
-							}
-							outSort.Measurements.sort(compare);
-						console.log('Test Sorted Out: ', outSort.Measurements);
-							var sortedMeasurements = [];
-							var allUnits = [];
-							var allNames = [];
-								for(var a=0;a<realQuantity;a++){
-									sortedMeasurements.push(outSort.Measurements[a]);
-									allUnits.push(outSort.Measurements[a].units);
-									if(compSpecified==true){
-									allNames.push(outSort.Measurements[a].component_name[0]);
-									}
-								}
-						console.log('Test SortedMeasurements JSON: ', sortedMeasurements);
-							
-							const distinct = (value, index, self) => {
-								return self.indexOf(value) === index;
-							}
-							const distinctUnits = allUnits.filter(distinct);
-						console.log('Test Distinct Units: ', distinctUnits);
-							var numUniqueUnits = distinctUnits.length;
-						console.log('Test Num Unique Units: ', numUniqueUnits);
-							const distinctNames = allNames.filter(distinct);
-						console.log('Test Distinct Names: ', distinctNames);
-							var numUniqueNames = distinctNames.length;
-						console.log('Test Num Unique Names: ', numUniqueNames);
-
-							var totalNumGraphs = numUniqueUnits*numUniqueNames;
-							if(compSpecified == false){
-								totalNumGraphs = numUniqueUnits;
-							}
-						console.log('Total Num Graphs: ', totalNumGraphs);
-							
-							var totalGraphsArray = [];
-							var totalGraphsArrayForm = []
-							for(var a=0;a<totalNumGraphs;a++){
-								//make dummy positions
-								var dummyGraph = [];
-								totalGraphsArray.push(dummyGraph);
-								totalGraphsArrayForm.push(dummyGraph);
-							}
-						console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
-							
-							function compareNames(a,b){
-								if(a.component_name[0]<b.component_name[0]){
-									return -1;
-								}
-								if(a.component_name[0]>b.component_name[0]){
-									return 1;
-								}
-								return 0;
-							}
-							
-							if(compSpecified == false){
-								numUniqueNames = 1;
-							}
-							
-							for(var a=0;a<realQuantity;a++){
-								var subsectionSameUnit = [];
-								for(var b=0;b<numUniqueUnits;b++){
-									for(var c=0;c<numUniqueNames;c++){
-										if(sortedMeasurements[a].units==distinctUnits[b]){
-											if(sortedMeasurements[a].component_name==distinctNames[c]){
-												totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
-											}
-											else{
-											}
-										}
-										else{	
-										}
-									}
-								}
-							}
-							console.log('Test Total Graphs Array: ', totalGraphsArray);
-							console.log('Test Total Graphs Array Length', totalGraphsArray.length);
-							
-							function compareTime(a,b){
-								if(a.time<b.time){
-									return -1;
-								}
-								if(a.time>b.time){
-									return 1;
-								}
-								return 0;
-							}			
-							
-							//Flip components to list them in correct sequential order.
-							for(var a=0;a<totalGraphsArray.length;a++){
-								if(totalGraphsArray[a].length>1){
-									totalGraphsArray[a].reverse();
-									if(compSpecified==false){
-										totalGraphsArray[a].sort(compareTime);
-									}
-								}
-							}
-							console.log('Test Reordered Total Graphs Array: ', totalGraphsArray);
-							console.log('Test Reordered Total Graphs Array Form: ', totalGraphsArrayForm);
-
-							var altcurrentData = [];
-							for(var a=0;a<totalNumGraphs;a++){
-								if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
-									for(var b=0;b<totalGraphsArray[a].length;b++){
-										altcurrentData.push(totalGraphsArray[a][b].value);
-									}
-								}
-							}
-							console.log('AltCurrentData:', altcurrentData);
-							
-							var testIndex;
-							if(compSpecified==true){
-								testIndex = 3; //example.
-								console.log('Example Specific Unit-Name(Specified): GHz-MainCPU1');
-								exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
-							}
-							else{
-								testIndex = 0;
-								console.log('Example Unspecified Unit-Name(Specified): ');
-								exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
-							}
-							
-							console.log('Example Graph Data: ', exampleGraphData);
-							exampleTime = [];
-							exampleValue = [];
-							for(var a=0;a<exampleGraphData.length;a++){
-								exampleTime.push(exampleGraphData[a].time); //x
+				var testIndex;
+				if(compSpecified==true){
+					testIndex = 3; //example.
+					console.log('Example Specific Unit-Name(Specified): GHz-MainCPU1');
+					exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
+				}
+				else{
+					testIndex = 0;
+					console.log('Example Unspecified Unit-Name(Specified): ');
+					exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
+				}
+			}
+			function plotGraph(){
+				console.log('Example Graph Data: ', exampleGraphData);
+				exampleTime = [];
+				exampleValue = [];
+				for(var a=0;a<exampleGraphData.length;a++){
+					exampleTime.push(exampleGraphData[a].time); //x
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
 				console.log('ExampleTime', exampleTime);
 				console.log('ExampleValue', exampleValue);
 
-							var table = document.getElementById("traces");
-							var row = table.insertRow(table.rows.length-1); //insert row at bottom
-							var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
-						console.log('Test Initial Data Array', initialDataArray);
-							if(compSpecified==false){
-								//for(var a=0;a<initialDataArray[0].length;a++){
-									var keysHold = (Object.keys(initialDataArray[0]));
-								//}
-								tableKeys = keysHold;
-							}
-							else{
-								tableKeys = Object.keys(initialDataArray);
-							}
-							for(var b=0;b<tableKeys.length;b++){
-								var cellAdd = row.insertCell(b);
-								var toChart = tableKeys[b];
-								cellAdd.innerHTML = (toChart);
-							}
+				var table = document.getElementById("traces");
+				var row = table.insertRow(table.rows.length-1); //insert row at bottom
+				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
+				console.log('Test Initial Data Array', initialDataArray);
+				if(compSpecified==false){
+					//for(var a=0;a<initialDataArray[0].length;a++){
+					var keysHold = (Object.keys(initialDataArray[0]));
+					//}
+					tableKeys = keysHold;
+				}
+				else{
+					tableKeys = Object.keys(initialDataArray);
+				}
+				for(var b=0;b<tableKeys.length;b++){
+					var cellAdd = row.insertCell(b);
+					var toChart = tableKeys[b];
+					cellAdd.innerHTML = (toChart);
+				}
 				
 							var tableKeys = [];
 							var tableLog = [];
@@ -381,45 +329,49 @@
 							},15);
 							console.log('finish');
 						}
-
-						else if(out.data==false){
-							var mydiv = document.getElementById("toptitle");
-							var newcontent = document.createElement('div');
-							newcontent.innerHTML = "Error";
-							while (newcontent.firstChild) {
-								mydiv.appendChild(newcontent.firstChild);
-							}
-							var node = document.createElement("p");
-							var node2 = document.createElement("p");
-							var textnode = document.createTextNode(out.error);
-							var textnode2 = document.createTextNode(out.error);
-							node.appendChild(textnode);
-							node2.appendChild(textnode2);
-							document.getElementById("toptitle").appendChild(node);
-							document.getElementById("tablechart").appendChild(node2);
-							
-						}
-
-						else{
-							var mydiv = document.getElementById("toptitle");
-							var newcontent = document.createElement('div');
-							newcontent.innerHTML = "Error";
-							while (newcontent.firstChild) {
-								mydiv.appendChild(newcontent.firstChild);
-							}
-							var node = document.createElement("p");
-							var node2 = document.createElement("p");
-							var textnode = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
-							var textnode2 = document.createTextNode("Error: The API is not in the correct JSON format. Please check again.");
-							node.appendChild(textnode);
-							node2.appendChild(textnode2);
-							document.getElementById("toptitle").appendChild(node);
-							document.getElementById("tablechart").appendChild(node2);
-						}
-					}
-		})
-				.catch(err => console.error(err));	
-		//}
+				
+		function titleSpecs(out){
+			var mydiv = document.getElementById("toptitle");
+			var newcontent = document.createElement('div');
+			newcontent.innerHTML = out.Satellite.name;
+			var mydiv2 = document.getElementById("toptitle2");
+			var newcontent2 = document.createElement('div');
+			newcontent2.innerHTML = ": Launched "+out.Satellite.year_launched;
+			var newcontent3 = document.createElement('div');
+			newcontent3.innerHTML = ""+out.Satellite.mission_description;
+			while (newcontent.firstChild) {
+				mydiv.appendChild(newcontent.firstChild);
+				mydiv.appendChild(newcontent2.firstChild);
+				mydiv2.appendChild(newcontent3.firstChild);
+			}
+		}
+		function checkCompSpecified(out){
+			compSpecified = out.comp_specified;
+			window.compSpecified = out.comp_specified;
+			console.log('Test 2: Component Specified?: ', compSpecified);
+		}
+		function checkQuantitiesMatch(quantity, realQuantity){
+			if(quantity==realQuantity){
+				checkQuantities = true;
+				window.checkQuantities = true;
+			}
+			console.log('Quantity: ', quantity);
+			console.log('Real Quantity: ', realQuantity);
+			console.log('Test 3: Quantities Match? : ', checkQuantities);
+			if(quantity==realQuantity==0){
+				console.log('Error: No Data');
+			}
+		}
+		function compare(key,a,b){
+			if(a.key<b.key){
+				return -1;
+			}
+			if(a.key>b.key){
+				return 1;
+			}
+			return 0;
+		}		
+		
 		</script>
 	</div>
 	<div id = "bottomchart">
