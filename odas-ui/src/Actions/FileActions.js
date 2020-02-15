@@ -1,14 +1,16 @@
 import { apiURL } from "../Apis/SatApi";
 import axios from 'axios';
 
-export const postFile = (file, desc)=> async dispatch => {
+// TODO needs user auth now I think
+export const postFile = (file, desc = "None")=> async dispatch => {
     let errorMessage = '';
     let fileFd = new FormData();
 
     fileFd.append("upfile", file);
-    fileFd.append("Description", desc);
+    fileFd.append("description", desc);
 
-    console.log(file);
+    console.log(fileFd.get("upfile"));
+    console.log(fileFd.get("description"));
 
     // const response = dispatch({type: "REQUEST STARTED", isLoading: true});
 

@@ -159,5 +159,3 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents, satCompQuery })(Sidebar)
-
-// TODO Bring api calls back into sidebar
