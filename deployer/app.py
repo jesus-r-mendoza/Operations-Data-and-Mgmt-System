@@ -1,12 +1,31 @@
 from flask import Flask, request
 import os
 
-
 app = Flask(__name__)
 
 @app.route('/deploy', methods=['POST'])
 def deploy():
 
+    text, code = _check_auth()
+    if code != 200:
+        return text, code
+
+    os.chdir('~/Operations-Data-and-Mgmt-System')
+    cmds = [
+        ( 'git pull', 'Failed update repo from github' )
+    ]
+    for cmd in cmds:
+        rc = _execute(*cmd, text)
+        if rc:
+            return rc
+
+    return 'Successfully deployed. Changes should occur shortly', 200
+
+@app.route('/launch', methods=['POST'])
+def launch():
+    pass
+
+def _check_auth():
     with open('auth.cfg', 'r') as auth:
         key = auth.read()
 
@@ -25,12 +44,9 @@ def deploy():
         # posix or java
         ignore_stdout = '> /dev/null'
 
-    rc = os.system(f'cd ~/Operations-Data-and-Mgmt-System {ignore_stdout}')
-    if rc != 0:
-        return 'Failed to change directory', 500
+    return ignore_stdout, 200
 
-    rc = os.system(f'git pull {ignore_stdout}')
+def _execute(cmd, error_msg, ignore):
+    rc = os.system(f'{cmd} ')
     if rc != 0:
-        return 'Failed update repo from github', 500
-
-    return 'Successfully deployed. Changes should occur shortly', 200
+        return error_msg, 500
