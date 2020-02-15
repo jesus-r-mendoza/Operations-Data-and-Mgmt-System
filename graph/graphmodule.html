@@ -95,23 +95,6 @@
 					error = "Error: The API is not in the correct JSON format. Please check again."
 					errorOutput(error);
 				}
-				
-				function errorOutput(error){
-					var mydiv = document.getElementById("toptitle");
-					var newcontent = document.createElement('div');
-					newcontent.innerHTML = "Error";
-					while (newcontent.firstChild) {
-						mydiv.appendChild(newcontent.firstChild);
-					}
-					var node = document.createElement("p");
-					var node2 = document.createElement("p");
-					var textnode = document.createTextNode(error);
-					var textnode2 = document.createTextNode(error);
-					node.appendChild(textnode);
-					node2.appendChild(textnode2);
-					document.getElementById("toptitle").appendChild(node);
-					document.getElementById("tablechart").appendChild(node2);
-				}
 			}
 			
 			function createDataUnit(){
@@ -370,7 +353,23 @@
 				return 1;
 			}
 			return 0;
-		}		
+		}
+		function errorOutput(error){
+			var mydiv = document.getElementById("toptitle");
+			var newcontent = document.createElement('div');
+			newcontent.innerHTML = "Error";
+			while (newcontent.firstChild) {
+				mydiv.appendChild(newcontent.firstChild);
+			}
+			var node = document.createElement("p");
+			var node2 = document.createElement("p");
+			var textnode = document.createTextNode(error);
+			var textnode2 = document.createTextNode(error);
+			node.appendChild(textnode);
+			node2.appendChild(textnode2);
+			document.getElementById("toptitle").appendChild(node);
+			document.getElementById("tablechart").appendChild(node2);
+		}
 		
 		</script>
 	</div>
