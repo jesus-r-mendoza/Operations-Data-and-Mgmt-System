@@ -5,12 +5,15 @@ app = Flask(__name__)
 
 @app.route('/deploy', methods=['POST'])
 def deploy():
+    try:
+        os.chdir('~/Operations-Data-and-Mgmt-System')
+    except FileNotFoundError:
+        return 'Could not locate ODAS repository on server', 500
 
     text, code = _check_auth()
     if code != 200:
         return text, code
 
-    os.chdir('~/Operations-Data-and-Mgmt-System')
     cmds = [
         ( 'git pull', 'Failed update repo from github' )
     ]
@@ -26,9 +29,11 @@ def launch():
     pass
 
 def _check_auth():
-    with open('auth.cfg', 'r') as auth:
-        key = auth.read()
-
+    try:
+        with open('deployer/auth.cfg', 'r') as auth:
+            key = auth.read()
+    except FileNotFoundError:
+        return 'Authorization config file not found on server', 500
     token = request.headers.get('Authorization')
 
     if not token:
@@ -47,6 +52,9 @@ def _check_auth():
     return ignore_stdout, 200
 
 def _execute(cmd, error_msg, ignore):
-    rc = os.system(f'{cmd} ')
+    rc = os.system(f'{cmd} {ignore}')
     if rc != 0:
         return error_msg, 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)

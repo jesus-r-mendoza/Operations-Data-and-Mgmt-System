@@ -17,7 +17,8 @@ auth = {
 
 res = requests.post(url=deploy_site, headers=auth)
 
-if res.status_code == 200:
+code = res.status_code
+if code == 200:
     print('\nDeployment Successfull. The updates should take affect shortly.\n')
 else:
-    print('\nDeployment Failed. Discuss with the ODAS develops to resolve possible issues and server downtime.\n')
+    print(f'\nDeployment Failed. \n[ {code} ERROR ] {res.text}\n')
