@@ -1,10 +1,11 @@
 import React from 'react';
 // Stylesheets
-import {Button, Form} from "react-bootstrap";
+import  { Alert, Button, Form } from "react-bootstrap";
 import "../Layout/Register.css"
 // Redux
 import { connect } from 'react-redux';
 import { register } from '../Actions/AuthActions';
+
 
 class Register extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class Register extends React.Component {
         };
 
         // Prevents TypeError: setState is undefined
-        this.handleInputChange = this.handleInputChange.bind(this);
+        // this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     // e.target.name takes HTML tag property from Form.Control
@@ -36,6 +37,38 @@ class Register extends React.Component {
             this.state.email,
             this.state.password,
             this.state.inviteCode);
+    };
+
+    showResultMessage = () => {
+        // Initialize to push redirect
+        const {history} = this.props;
+        // Returns false if failed registration or true if successful
+        let registerStatus = this.props.registerUser.status;
+        // Will be the name on successful registration
+        let registerMessage = this.props.registerUser.message;
+
+        if (registerStatus === false) {
+            return (
+                <Alert
+                    dismissible={true}
+                    variant={'warning'}
+                >
+                    {this.props.registerUser.message}
+                </Alert>
+            );
+        } else if (registerStatus === true) {
+            setInterval(function () {
+                history.push('/');
+            }, 8000);
+
+            return (
+                <Alert
+                    variant={'success'}
+                >
+                    Registration successful, {registerMessage}. You will soon be redirected.
+                </Alert>
+            );
+        }
     };
 
     render() {
@@ -78,14 +111,17 @@ class Register extends React.Component {
                                     onChange={this.handleInputChange}
                                     className={"register-input"}
                                 />
-                                <div className={'register-btn'}>
-                                    <Button
-                                        type={"submit"}
-                                        variant={"info"}
-                                        onClick={this.handleRegister}
-                                    >
-                                        Submit
-                                    </Button>
+                                <div>
+                                    {this.showResultMessage()}
+                                    <div className={'register-btn'}>
+                                        <Button
+                                            type={"submit"}
+                                            variant={"info"}
+                                            onClick={this.handleRegister}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
                                 </div>
                             </Form>
                         </div>
@@ -96,9 +132,9 @@ class Register extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = registerState => {
     return {
-        registerUser: state.register
+        registerUser: registerState.register
     };
 };
 

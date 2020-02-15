@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiURL = "http://localhost:8000/";
+const apiURL = "http://localhost:8080/";
 
 // Can be used for generic API calls such as get requests
 export default axios.create({
@@ -8,5 +8,5 @@ export default axios.create({
 });
 
 // Can be used when configuration needs to be specific
-// e.g. for POST requests
+// e.g. for some POST requests
 export { apiURL }

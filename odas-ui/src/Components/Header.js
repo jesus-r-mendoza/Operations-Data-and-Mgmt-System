@@ -1,17 +1,31 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import Cookie from 'universal-cookie';
 // Stylesheets
-import {Container, Navbar, NavbarBrand, NavDropdown, NavItem, Button, Modal, Form} from "react-bootstrap";
+import {
+    Container,
+    Navbar,
+    NavbarBrand,
+    NavDropdown,
+    Button,
+    Modal,
+    Form,
+    Toast, DropdownButton
+} from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login } from "../Actions/AuthActions";
+import { login, logout } from "../Actions/AuthActions";
+
+let cookie = new Cookie();
 
 class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             modalState: false,
+            toastState: false,
+            loginBtnState: true,
             username: '',
             email: '',
             password: ''
@@ -20,10 +34,10 @@ class Header extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    setModalState(state) {
+    setElementStates(element, state) {
         this.setState({
-            modalState: state
-        });
+            [element]: state
+        })
     }
 
     handleInputChange = e => {
@@ -36,39 +50,65 @@ class Header extends React.Component {
 
     handleLogin = e => {
         e.preventDefault();
+        this.setElementStates('loginBtnState', true);
         this.props.login(this.state.username, this.state.password);
-        console.log(this.props.user);
+        this.setElementStates('modalState', false);
+        this.setElementStates('toastState', true);
     };
 
+    handleLogout = e => {
+        e.preventDefault();
+        this.props.logout();
+    };
+
+    changeLoginButton () {
+        if (!cookie.get('auth')) {
+            return (
+                <Button
+                    onClick={() => this.setElementStates('modalState', true)}
+                >
+                    Sign in
+                </Button>
+            );
+        } else {
+            return (
+                <Button
+                    onClick={this.handleLogout}
+                >
+                    Sign out
+                </Button>
+            );
+        }
+    }
+
     render() {
+        console.log(this.props.userLogin);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
                     <NavbarBrand href={"/"}>
                         <span className={"title-text"}>Operations Data Analysis and Management System</span>
                     </NavbarBrand>
-                    <Container className={"justify-content-end"}>
-                        <NavDropdown id={'drop'} title={"Generate a Report"}>
-                            <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
-                            <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
-                        </NavDropdown>
-                        <NavItem>
+                    <Container>
+                        <div className={"nav-items"}>
+                            <DropdownButton id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
+                                <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
+                                <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
+                            </DropdownButton>
                             <Link to={"/user-dashboard"}>
-                                Dashboard
+                                <Button>
+                                    Dashboard
+                                </Button>
                             </Link>
-                        </NavItem>
-                        <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
-                        <Button
-                            onClick={() => this.setModalState(true)}
-                        >
-                            Sign in
-                        </Button>
+                            <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
+                            {this.changeLoginButton(this.props.userLogin.pop())}
+                        </div>
                     </Container>
                 </Navbar>
                 <Modal
                     size={"med"}
                     show={this.state.modalState}
-                    onHide={() => this.setModalState(false)}
+                    onHide={() => this.setElementStates('modalState', false)}
                     aria-labelledby={"example-modal-sizes-title-sm"}
                 >
                     <Modal.Header closeButton>
@@ -77,12 +117,12 @@ class Header extends React.Component {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={() => this.handleLogin}>
+                        <Form onSubmit={() => this.handleLogin(this.changeLoginButton())}>
                             <div className={"email-form"}>
                                 <Form.Control
                                     name={"username"}
-                                    type={"email"}
-                                    placeholder={"Email"}
+                                    type={"username"}
+                                    placeholder={"Username"}
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
                                 />
@@ -101,13 +141,14 @@ class Header extends React.Component {
                                     variant={"info"}
                                     onClick={this.handleLogin}
                                     className={"modal-btn"}
+                                    type={"submit"}
                                 >
                                     Login
                                 </Button>
                                 <div>
                                     <Link
                                         to={"/register"}
-                                        onClick={() => {this.setModalState(false)}}
+                                        onClick={() => {this.setElementStates('modalState', false)}}
                                     >
                                         New user? Click here to register.
                                     </Link>
@@ -116,15 +157,27 @@ class Header extends React.Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
+                <Toast
+                    onClose={() => this.setElementStates('toastState', false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className="mr-auto">Welcome!</strong>
+                    </Toast.Header>
+                    <Toast.Body>You have logged in successfully</Toast.Body>
+                </Toast>
             </div>
         )
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = userState => {
     return {
-        userLogin: state.login
-    }
+        userLogin: userState.login,
+        userLogout: userState.logout
+    };
 };
 
-export default connect(mapStateToProps, { login })(Header)
+export default connect(mapStateToProps, { login, logout })(Header);

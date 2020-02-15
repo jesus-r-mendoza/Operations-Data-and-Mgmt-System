@@ -5,10 +5,19 @@
     justify-content: center;
     align-items: center;
     margin-top: 15em;
+    z-index: 99;
 }
 
 .loading-text {
     padding-top: 20px;
     padding-left: 10px;
     font-size: large;
+}
+
+/*Toast*/
+.login-toast {
+    bottom: 3%;
+    right: 5%;
+    position: absolute;
+    z-index: 1;
 }

@@ -21,8 +21,14 @@ import {
 // Authentication
 import {
     register,
-    login
+    login,
+    logout
 } from "./AuthActions";
+
+// Files
+import {
+    postFile
+} from "./FileActions";
 
 export {
     fetchSatellites,
@@ -34,7 +40,9 @@ export {
     selectEndDate,
     satCompQuery,
     register,
-    login
+    login,
+    logout,
+    postFile
 };
 
 
