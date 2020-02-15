@@ -59,6 +59,7 @@ export default class ReportCard extends React.Component {
 					revision={this.state.revision}
 					graphDiv = "graph"
 					/>
+					<BottomGraph/>
                 </div>
             </div>
         );
@@ -87,6 +88,22 @@ export default class ReportCard extends React.Component {
 				</div>
 				</div>
 			);
+		}
+	}
+	class BottomGraph extends React.Component{
+		render(){
+				return(
+					<div id = "bottomchart">
+					<p id="tablechart">Table Chart</p>
+					<button id="pause">Stop Graph</button>
+					<table style={{width:'100%'}} id = "traces">
+						<tr id = "fieldnames">
+						</tr>
+						<tr id = "data">
+						</tr>
+						</table>
+					</div>
+				);
 		}
 	}
 	
