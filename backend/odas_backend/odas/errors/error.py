@@ -14,11 +14,13 @@ NO_DATA_WITHIN_PARAMS = Response( { 'data': False, 'error': 'Satellite has no me
 MISSING_CREDENTIALS = Response( { 'data': False, 'error': 'Details not provided: Must provide username, pass, email; code (optional)' }, status=status.HTTP_400_BAD_REQUEST )
 USERNAME_EXISTS = Response( { 'data': False, 'error': 'User with this username already exists' }, status=status.HTTP_403_FORBIDDEN )
 INVITE_CODE_INVALID = Response( { 'data': False, 'error': 'Invitation code is invalid' }, status=status.HTTP_403_FORBIDDEN )
+MISSING_INVITE_CODE = Response( { 'data': False, 'error': 'Invitation code not provided' }, status=status.HTTP_403_FORBIDDEN )
 ORG_NAME_REQUIRED = Response( { 'data': False, 'error': 'Must provide organization name' }, status=status.HTTP_400_BAD_REQUEST )
 PASSWORD_INVALID = Response( { 'data': False, 'error': 'Password not provided or incorrect' }, status=status.HTTP_401_UNAUTHORIZED )
 ORG_NAME_EXISTS = Response( { 'data': False, 'error': 'Organization with this name already exists' }, status=status.HTTP_403_FORBIDDEN )
 USR_AND_PASS_REQUIRED = Response( { 'data': False, 'error': 'Must provide both username and password' }, status=status.HTTP_400_BAD_REQUEST )
 USR_OR_PASS_INVALID = Response( { 'data': False, 'error': 'Username and / or password are not correct' }, status=status.HTTP_401_UNAUTHORIZED )
+ALREADY_IN_ORG = Response( { 'data': False, 'error': 'User is already in an organization. Currently only permitted to join a single organization' }, status=status.HTTP_403_FORBIDDEN )
 
 DEP_INVALID = Response( { 'data': False, 'error': 'You are not authorized to use this endpoint.' }, status=status.HTTP_401_UNAUTHORIZED )
 METHOD_INVALID = Response( { 'data': False, 'error': 'Method type not allowed.' }, status=status.HTTP_400_BAD_REQUEST )
