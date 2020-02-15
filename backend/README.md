@@ -3,7 +3,7 @@
 ### The following guide provides details about available **API** endpoints
 
 ---
-Method | Endpoint | Description | JSON Response | Rquires Authentication
+Method | Endpoint | Description | JSON Response | Requires Authentication
 --- | --- | --- | --- | ---
 GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized) | No
 GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized) | No
@@ -23,6 +23,7 @@ POST | register/ | Allows a user to sign up to use ODAS, must provide **username
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
 POST | login/ | Allows user to login, returns authentication token if login successful. Must provide **username** and **pass** in POST request | | No
 DELETE | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
+POST | join/ | Allows users who have already registered with ODAS, but have *NOT* yet joined an organization to join an organization using its specific invite code (presumably provided by another member of that organization). Must provide **code** (the invite code for the organization the user will join) in POST request | | Yes
 POST | Downloads/(filename) | This endpoint allows the user to download a file from the files page without having to click a download button as long as the have the link and proper authorization | | Not yet
 ---
 
