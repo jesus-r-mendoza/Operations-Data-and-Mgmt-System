@@ -4,8 +4,8 @@ import Plot from 'react-plotly.js';
 import "../Layout/Reports.css"
 // TODO Bootstrap modals for the logs
 export default class ReportCard extends React.Component {
-	
 	state = {
+		
 		line1: {
 			x: [-3, -2, -1], 
 			y: [1,2,3], 
@@ -21,6 +21,9 @@ export default class ReportCard extends React.Component {
 		},
 		revision: 0,
 	}
+	
+	
+	
 	  componentDidMount() {
     setInterval(this.increaseGraphic, 1000);
   } 
@@ -45,8 +48,8 @@ export default class ReportCard extends React.Component {
     render() {
         return (
             <div className={"card"}>
-                <div className={"graph-report"}>
-                    <div>
+                <div className={"graph-report"}>{this.props.children}
+				<TitleBar/>
 					<Plot 
 					data={[
 							this.state.line1, 
@@ -56,9 +59,34 @@ export default class ReportCard extends React.Component {
 					revision={this.state.revision}
 					graphDiv = "graph"
 					/>
-					</div>
                 </div>
             </div>
         );
     }
 }
+
+	class TitleBar extends React.Component{
+		render(){
+			return (
+				<div className="titlebar">
+				<div className="navbar" id="toptitle"><span>Real-Time Telemetry Data: </span></div>
+				<div>
+					<div id="toptitle2"><span> </span></div>
+				</div>
+				<div className="wrapper">
+					<div id="chart"></div>
+					<div id="chart0"></div>
+					<div id = "bottomchart2">
+					<table style={{width:'100%'}} id = "traces2">
+						<tr id = "fieldnames2">
+						</tr>
+						<tr id = "data2">
+						</tr> 
+					</table>
+					</div>
+				</div>
+				</div>
+			);
+		}
+	}
+	
