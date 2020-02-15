@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route('/deploy', methods=['POST'])
 def deploy():
     try:
-        os.chdir('~/Operations-Data-and-Mgmt-System')
+        os.chdir('/home/superman/Operations-Data-and-Mgmt-System')
     except FileNotFoundError:
         return 'Could not locate ODAS repository on server', 500
 
