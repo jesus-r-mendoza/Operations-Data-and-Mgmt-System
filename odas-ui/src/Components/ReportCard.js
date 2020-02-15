@@ -47,21 +47,23 @@ export default class ReportCard extends React.Component {
   }
     render() {
         return (
+        <div className={"card-container"}>
             <div className={"card"}>
                 <div className={"graph-report"}>{this.props.children}
-				<TitleBar/>
-					<Plot 
-					data={[
-							this.state.line1, 
-							this.state.line2,
-					]}
-					layout = {this.state.layout}
-					revision={this.state.revision}
-					graphDiv = "graph"
-					/>
-					<BottomGraph/>
+				          <TitleBar/>
+					          <Plot 
+					          data={[
+							        this.state.line1, 
+							        this.state.line2,
+					          ]}
+					          layout = {this.state.layout}
+					          revision={this.state.revision}
+					          graphDiv = "graph"
+					          />
+					         <BottomGraph/>
                 </div>
-            </div>
+             </div>
+          </div>
         );
     }
 }

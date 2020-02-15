@@ -3,22 +3,23 @@ import React from 'react';
 import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
+import {apiURL} from "../Apis/SatApi";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 
+
 const apis = {
-    unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/comp/",
-    satellites: "http://localhost:8000/api/sat/"
+    unit: `${apiURL}api/units/`,
+    component: `${apiURL}api/comp/`,
+    satellites: `${apiURL}api/sat/`
 };
 
 export default class QueryData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            MEASUREMENTS: [],
             COMPONENTS: [],
             satObject: [],
             isLoading: true,
@@ -82,15 +83,14 @@ export default class QueryData extends React.Component {
         }
 
         if (!this.state.isLoading) {
-            let units = this.createArray("units");
             let components = this.createArray("components");
             let satNames = this.state.satObject.map(function(names) {return names.name});
             let satIds = this.state.satObject.map(function(ids){return ids.id});
             let satList = this.createSatArray(satNames, satIds);
+
             return (
                 <div className={"report-container"}>
                     <Sidebar
-                        units={units}
                         components={components}
                         satellites={satList}
                     >
@@ -98,7 +98,7 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        <ReportCard/>
+                        <ReportCard />
                     </div>
                 </div>
             );

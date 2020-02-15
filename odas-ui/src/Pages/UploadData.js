@@ -1,26 +1,23 @@
 import React from 'react';
 // Redux
-// import {postFile} from "../Actions";
-// import {connect} from "react-redux";
-import {reduxForm} from "redux-form";
+import { postFile } from "../Actions";
+import { connect } from "react-redux";
 //Components
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
+import { apiURL } from "../Apis/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Button, FormControl, Container} from "react-bootstrap";
 import axios from "axios";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt"];
-// const fileForm = reduxForm({
-//     form: 'file'
-// });
 
 const apis = {
-    unit: "http://localhost:8000/api/units/",
-    component: "http://localhost:8000/api/comp/",
-    satellites: "http://localhost:8000/api/sat/"
+    unit: `${apiURL}api/units/`,
+    component: `${apiURL}api/comp/`,
+    satellites: `${apiURL}api/sat/`
 };
 
 class UploadData extends React.Component {
@@ -55,8 +52,23 @@ class UploadData extends React.Component {
         });
     }
 
-     //TODO Needs implementation. May need rethinking.
-     // Will need to find where the database connection and call will be
+    createArray(type) {
+        if(type === "units") {
+            let values = this.state.MEASUREMENTS.map(function (units) {
+                return (units.units);
+            });
+            console.log("VALUES: ", values);
+            return values;
+        } else if(type === "components") {
+            let values = this.state.COMPONENTS.map(function (components) {
+                return (components.name);
+            });
+            console.log("VALUES: ", values);
+            return values;
+        }
+    }
+
+    // TODO Create new URL for this
     goToReport() {
         this.setState({
             currentPage: "renderReport"
@@ -85,27 +97,11 @@ class UploadData extends React.Component {
         console.log(fileName);
     };
 
-    handleFileSubmit = () => {
-        let fileForm = new FormData();
-        let upfile = this.state.selectedFile;
-        let description = "This is a description";
-        fileForm.append("upfile", upfile);
-        fileForm.append("description", description);
+    handleFileSubmit = e => {
+        e.preventDefault();
+        const selectedFile = this.state.selectedFile;
 
-        let fileObj = Object.create({}, {
-            upfile: {value: upfile},
-            description: {value: description}
-        });
-
-        console.log(fileObj);
-
-        axios.post('http://localhost:8000/files/upload/', {
-            data: fileObj
-        })
-            .then(
-                res =>console.log(res)
-            )
-            .catch(err => console.log(err))
+        this.props.postFile(selectedFile, "Test file")
     };
     
     showErrorMessage(loaded) {
@@ -115,26 +111,6 @@ class UploadData extends React.Component {
             );
         }
     }
-
-    // TODO implement onFileSubmit
-
-    createArray(type) {
-        if(type === "units") {
-            let values = this.state.MEASUREMENTS.map(function (units) {
-                return (units.units);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        } else if(type === "components") {
-            let values = this.state.COMPONENTS.map(function (components) {
-                return (components.name);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        }
-    }
-
-
 
     renderFileInput() {
         if (this.state.currentPage === "upload") {
@@ -175,7 +151,7 @@ class UploadData extends React.Component {
                         variant={"primary"}
                         className={"submit-btn"}
                         disabled={!this.state.fileSubmit}
-                        onClick={() => this.handleFileSubmit()}
+                        onClick={this.handleFileSubmit}
                     >
                         Submit
                     </Button>
@@ -184,14 +160,12 @@ class UploadData extends React.Component {
         }
 
         else if (this.state.currentPage === "renderReport") {
-            let units = this.createArray("units");
             let components = this.createArray("components");
 
             return (
                 <div>
                     <Sidebar
                         page={this.state.currentPage}
-                        units={units}
                         components={components}
                     >
                         Upload a Dataset
@@ -205,6 +179,8 @@ class UploadData extends React.Component {
     }
 
     render() {
+        console.log(this.props.uploadFile);
+
         if (this.state.isLoading) {
             return(
                 <LoadSpinner />
@@ -212,7 +188,6 @@ class UploadData extends React.Component {
         }
 
         if(!this.state.isLoading) {
-
             return (
                 <div className={"report-container"}>
                     {this.renderFileInput()}
@@ -223,6 +198,10 @@ class UploadData extends React.Component {
 }
 
 
-export default reduxForm({
-    form: 'file'
-})(UploadData)
+const mapStateToProps = uploadState => {
+    return {
+        uploadFile: uploadState.postFile
+    };
+};
+
+export default connect(mapStateToProps, { postFile })(UploadData);

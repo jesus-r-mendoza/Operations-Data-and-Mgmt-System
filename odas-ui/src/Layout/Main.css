@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
 html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
 
-/*Navigation*/
+/*Navigation header*/
 .nav-bar {
     display: flex;
     background: #141e28;
@@ -18,7 +20,14 @@ html, body {
 
 .nav-items {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    flex-direction: row;
+    position: absolute;
+    right: 3%;
+}
+
+.nav-drop {
+    margin-right: 10px;
 }
 
 .title-text {
@@ -48,20 +57,17 @@ html, body {
     background: #141e28;
     border-radius: 10px;
     width: 29em;
-    height: 23em;
+    height: 20em;
     padding-left: 30px;
     margin-top: 30px;
     box-shadow: 0 4px 5px darkgray inset;
 }
 
-.main-text {
-    color: white;
-}
-
-.main-btns {
+.main-form {
     display: flex;
     flex-direction: column;
     padding-top: 20px;
+    padding-right: 40px;
     width: 27em;
 }
 
@@ -94,10 +100,24 @@ html, body {
 }
 
 .sub-text {
-    font-size: large;
+    font-size: x-large;
     color: #ffffff;
     padding-left: 10px;
     margin-bottom: 20px;
+}
+
+/*Login forms and modal*/
+.modal-btn {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: column;
 }
 
 .email-input {
@@ -112,22 +132,15 @@ html, body {
 
 .email-button-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-top: 15px;
-    width: 12em;
+    justify-content: flex-end;
+    padding: 20px;
+    width: 100%;
 }
 
 .email-button {
     padding-bottom: 10px;
 }
 
-.modal-btn {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 7px;
-    width: 100%;
-}
 
 .email-header {
     padding-bottom: 12px;
@@ -141,6 +154,6 @@ html, body {
 }
 
 .email-form {
-    padding-bottom: 18px;
+    margin-bottom: 30px;
 }
 

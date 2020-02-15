@@ -165,6 +165,4 @@ EMAIL_USE_SSL= False
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = ('http://*', 'https://*', 'http://localhost:3000')
-
 CREATE_ORG_PASSWORD = credentials['create_org_pswd']

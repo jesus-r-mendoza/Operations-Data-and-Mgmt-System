@@ -5,6 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.models import User, Group
+from rest_framework import status
+from rest_framework.response import Response
+from .errors import error
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -13,14 +16,14 @@ def components_of_satellite(request, satellite_id):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
-            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
+            return error.SAT_PERM_DEN
         components = Component.objects.filter(satellite=sat)
         data = _build_comp_response(components)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+        return error.SAT_DNE
     except Group.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
+        return error.SAT_NOT_OF_ORG
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -28,10 +31,10 @@ def components_of_satellite(request, satellite_id):
 def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=None):
     try:
         if from_date[0] != 'from' or to_date[0] != 'to':
-            return JsonResponse( { 'data': False, 'error': 'Must specify both [from] and [to] date-times' } )
+            return error.DATE_RANGE_INVALID
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
-            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
+            return error.SAT_PERM_DEN
         measurements = Measurement.objects.filter(satellite=sat).filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
         if component_id == None:
             comp = None
@@ -49,11 +52,11 @@ def comp_measu_from_to(request, satellite_id, from_date, to_date, component_id=N
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+        return error.SAT_DNE
     except Component.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist or does not belong to this Satellite'} )
+        return error.COMP_DNE_OR_PERM_DEN
     except Group.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
+        return error.SAT_NOT_OF_ORG
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -62,18 +65,18 @@ def recent_measurements(request, satellite_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
-            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
+            return error.SAT_PERM_DEN
         if quantity < 1:
-            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+            return error.QUANT_LESS_THAN_1
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).order_by('-time_measured')[:quantity]
         qs = [sat, (None, len(measurements), measurements)]
         data = _build_response(qs)
         return JsonResponse(data)
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+        return error.SAT_DNE
     except Group.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
+        return error.SAT_NOT_OF_ORG
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -82,12 +85,12 @@ def recent_by_component(request, satellite_id, component_id, quantity):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
-            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
+            return error.SAT_PERM_DEN
         comp = Component.objects.get(pk=component_id)
         if comp.satellite != sat:
             raise Component.DoesNotExist()
         if quantity < 1:
-            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
+            return error.QUANT_LESS_THAN_1
         # Take the specified amount of the  most recent measurements for the given satellite
         measurements = Measurement.objects.filter(satellite=sat).filter(component=comp).order_by('-time_measured')[:quantity]
         qs = [sat, (comp, len(measurements), measurements)]
@@ -95,50 +98,61 @@ def recent_by_component(request, satellite_id, component_id, quantity):
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+        return error.SAT_DNE
     except Component.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Component Does Not Exist or does not belong to this Satellite'} )
+        return error.COMP_DNE_OR_PERM_DEN
     except Group.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
+        return error.SAT_NOT_OF_ORG
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def recent_by_many_components(request, satellite_id, component_ids, quantity):
+def with_many_components(request, satellite_id, component_ids, quantity=None, from_date=None, to_date=None):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
-            return JsonResponse( { 'data': False, 'error': 'Permission Denied. Satellite doesnt belong to your organization' } )
+            return error.SAT_PERM_DEN
         measurements = Measurement.objects.filter(satellite=sat)
-        querys = [sat] # list will be in this format: [sat, (comp, size, qs), (comp, size, qs), ...]
-        if quantity < 1:
-            return JsonResponse( { 'data': False, 'error': 'Must request at least 1 recent measurement'} )
-        comp_not_exist = []
-        for id in component_ids:
-            try:
-                comp = Component.objects.get(pk=id)
-                if comp.satellite != sat:
-                    raise Component.DoesNotExist()
-                meas = measurements.filter(component=comp).order_by('-time_measured')[:quantity]
-                querys.append( (comp, len(meas), meas) )
-            except Component.DoesNotExist:
-                # add to list of comps not exists
-                comp_not_exist.append(id)
-        
+
+        ans = _handle_many_comp_ids(component_ids, sat, measurements, quantity=quantity, from_date=from_date, to_date=to_date)
+        if not ans:
+            return error.QUANT_LESS_THAN_1
+        else:
+            querys, comp_not_exist = ans
         if len(comp_not_exist) == len(component_ids):
-            return JsonResponse( { 'data': False, 'error': 'Component(s) Does not exist' } )
+            return error.COMPS_DNE
 
         data = _build_response( querys )
-        
+
         if len(comp_not_exist) > 0:
             data['Quantities']['DNE'] = comp_not_exist
 
         return JsonResponse(data)
 
     except Satellite.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite Does Not Exist'} )
+        return error.SAT_DNE
     except Group.DoesNotExist:
-        return JsonResponse( { 'data': False, 'error': 'Satellite doesnt belong to an organization' } )
+        return error.SAT_NOT_OF_ORG
+
+def _handle_many_comp_ids(comp_ids, sat, filtered_meas, quantity=None, from_date=None, to_date=None):
+    querys = [sat] # list will be in this format: [sat, (comp, size, qs), (comp, size, qs), ...]
+    comp_not_exist = []
+    if quantity != None and quantity < 1:
+        return None
+    for id in comp_ids:
+        try:
+            comp = Component.objects.get(pk=id)
+            if comp.satellite != sat:
+                raise Component.DoesNotExist()
+            if quantity:
+                meas = filtered_meas.filter(component=comp).order_by('-time_measured')[:quantity]
+            elif from_date and to_date:
+                meas = filtered_meas.filter(component=comp).filter(time_measured__gte=from_date[1]).filter(time_measured__lte=to_date[1])
+            querys.append( (comp, len(meas), meas) )
+        except Component.DoesNotExist:
+            # add to list of comps not exists
+            comp_not_exist.append(id)
+    return ( querys, comp_not_exist )
 
 def _build_response(query_set_list, add_component=True):
     # query_set_list[0] contains Satellite obj
@@ -148,7 +162,7 @@ def _build_response(query_set_list, add_component=True):
         'Satellite': {
             'name': query_set_list[0].name,
             'mission_description': query_set_list[0].mission_description,
-            'year_launched': query_set_list[0].year_launched 
+            'year_launched': query_set_list[0].year_launched
         }
     }
     if not add_component:
@@ -159,7 +173,7 @@ def _build_response(query_set_list, add_component=True):
             'category': comp.category,
             'description': comp.description
         }
-    
+
     data['Measurements'] = []
 
     quantities = {}
@@ -183,7 +197,7 @@ def _build_response(query_set_list, add_component=True):
                 entry['component_model'] = comp.model,
                 entry['component_category'] = comp.category,
                 entry['component_description'] = comp.description,
-                    
+
             entry['units'] = measurement.units.units
             entry['time']  = measurement.time_measured
             entry['value'] = measurement.value
@@ -203,7 +217,7 @@ def _build_comp_response(comp_query_set):
         'Satellite': {
             'name': comp_query_set[0].satellite.name,
             'mission_description': comp_query_set[0].satellite.mission_description,
-            'year_launched': comp_query_set[0].satellite.year_launched 
+            'year_launched': comp_query_set[0].satellite.year_launched
         },
         'Components': []
     }

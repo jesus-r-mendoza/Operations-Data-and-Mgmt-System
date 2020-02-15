@@ -1,7 +1,11 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def get_creds():
     try:
         creds = {}
-        with open('../config.cfg', 'r') as cfg:
+        with open(f'{BASE_DIR[:-12]}config.cfg', 'r') as cfg:
             for line in cfg:
                 parts = line[:-1].split('::')
                 creds[parts[0]] = parts[1]
@@ -35,14 +39,14 @@ def get_creds():
         6. Save your config file, and restart
 
         For example:
-        
+
         If your config file looked like this:
         "
         key1::secret1
         key2::sectre2
         lastkey::lastsecret
          <- note that this line looks blank but contains a new line char
-        " 
+        "
 
         Then it should look like this after:
         "
@@ -50,7 +54,7 @@ def get_creds():
         key2::secret2
         lastkey::lastsecretx
         "
-        Note that the new line char was removed, and a junk char 
+        Note that the new line char was removed, and a junk char
         (in this case x) was appended to the end of the last line
         """)
         exit(1)
