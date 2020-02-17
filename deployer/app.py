@@ -39,7 +39,7 @@ def _check_auth():
     if not token:
         return 'You are not authorized to use this endpoint', 401
 
-    if token != key:
+    if token.strip() != key.strip():
         return 'Invalid Token', 403
 
     if os.name == 'nt':
