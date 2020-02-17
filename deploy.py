@@ -15,10 +15,14 @@ auth = {
     'Authorization': f"Token {token}"
 }
 
-res = requests.post(url=deploy_site, headers=auth)
+try:
+    res = requests.post(url=deploy_site, headers=auth)
+except:
+    print('\nDeployment Failed. The deployment server is not running or accessible.\n')
+    exit(1)
 
 code = res.status_code
 if code == 200:
     print('\nDeployment Successfull. The updates should take affect shortly.\n')
 else:
-    print(f'\nDeployment Failed. \n[ {code} ERROR ] {res.text}\n')
+    print(f'\nDeployment Failed. \n[ {code} ERROR ] {res.text}.\n')
