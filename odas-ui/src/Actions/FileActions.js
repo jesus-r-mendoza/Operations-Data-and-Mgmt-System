@@ -1,10 +1,13 @@
 import { apiURL } from "../Apis/SatApi";
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 // TODO needs user auth now I think
 export const postFile = (file, desc = "None")=> async dispatch => {
+    let cookie = new Cookies();
     let errorMessage = '';
     let fileFd = new FormData();
+    const authToken = cookie.get('auth');
 
     fileFd.append("upfile", file);
     fileFd.append("description", desc);
@@ -17,7 +20,10 @@ export const postFile = (file, desc = "None")=> async dispatch => {
     const response = await axios({
         method: 'POST',
         url: `${apiURL}files/upload/`,
-        header: {'Content-type': 'multipart/from-data'},
+        header: {
+            'Content-type': 'multipart/from-data',
+            'Authorization': `Token ${authToken}`
+        },
         data: fileFd
     })
         .catch(function (error) {

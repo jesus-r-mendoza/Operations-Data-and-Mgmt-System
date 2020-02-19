@@ -2,10 +2,11 @@ import { apiURL } from "../Apis/SatApi";
 import axios from "axios";
 import Cookies from "universal-cookie/lib";
 
+const cookie = new Cookies();
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
-    let errorMessage = ''
+    let errorMessage = '';
 
     registerData.append("username", username);
     registerData.append("email", email);
@@ -74,17 +75,22 @@ export const login = (username, pass) => async dispatch => {
 
 // Log the user out using the Auth token
 export const logout = () => async dispatch => {
-    const cookie = new Cookies();
     const authToken = cookie.get('auth');
+    console.log(authToken);
 
-    const response = await axios({
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${authToken}`);
+
+    const requestOptions = {
         method: 'DELETE',
-        url: `${apiURL}logout/`,
-        header: { 'Authorization': `Token ${authToken}` },
-    })
-        .catch((function (error) {
-            console.log(error);
-        }));
+        headers: myHeaders,
+        redirect: 'follow'
+    };
 
-    dispatch({type: 'LOGOUT', payload: response})
+    fetch("http://localhost:8080/logout/", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+    // dispatch({type: 'LOGOUT', payload: response})
 };
