@@ -10,7 +10,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.forms.models import model_to_dict
 from .models import Upload
+
 from .errors import error
 import os
 
@@ -103,10 +105,13 @@ def upload_view(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_file(request, pk):
-    if request.method == 'POST':
-        user_file = Upload.objects.get(pk=pk)
-        user_file.delete()
-    return redirect('file_list')
+    try:
+        if request.method == 'POST':
+            user_file = Upload.objects.get(pk=pk)
+            user_file.delete()
+        return redirect('file_list')
+    except Upload.DoesNotExist:
+        return error.FILE_DNE
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -121,9 +126,32 @@ def download_view(request, fid):
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
         return response
     except Upload.DoesNotExist:
-        return JsonResponse({'data': False, 'error': 'File with this ID does not exist'})
+        return error.FILE_DNE
     except Exception:
         raise Http404
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+
+def file_point(request):
+    all_entries = Upload.objects.filter(user = request.user)
+    data = {}
+    files = []
+    for f in all_entries:
+        entry = {
+            'id': f.id,
+            'name': f.upfile.name,
+            'description': f.description
+        }
+
+        files.append(entry)
+    data['files']= files
+    data['data']= True
+    data['error']= 'None'
+    # all_ids = [upload_obj.id for upload_obj in all_entries]
+    # all_fnames = [upload_obj.upfile.name for upload_obj in all_entries]
+    return JsonResponse(data)
 
 # @api_view(['GET'])
 # @authentication_classes([TokenAuthentication])
