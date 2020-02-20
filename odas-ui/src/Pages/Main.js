@@ -1,22 +1,36 @@
 import React from 'react';
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Button, Modal, Form} from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 import "../Layout/Main.css"
+import { connect } from "react-redux";
+import { login } from "../Actions";
 
-export default class Main extends React.Component {
+class Main extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            modalState: false
+            modalState: false,
+            username: '',
+            password: ''
         }
     }
 
-    setModalState(state) {
+    handleInputChange = e => {
         this.setState({
-            modalState: state
+            [e.target.name]: e.target.value
         });
-    }
+    };
+
+    handleLogin = e => {
+        e.preventDefault();
+        this.props.login(this.state.username, this.state.password);
+
+        this.setState({
+            username: '',
+            password: ''
+        });
+    };
 
     render() {
         return (
@@ -32,11 +46,15 @@ export default class Main extends React.Component {
                                     name={"username"}
                                     placeholder={"Username"}
                                     className={"email-form"}
+                                    value={this.state.username}
+                                    onChange={this.handleInputChange}
                                 />
                                 <Form.Control
                                     type={"password"}
                                     name={"password"}
                                     placeholder={"Password"}
+                                    value={this.state.password}
+                                    onChange={this.handleInputChange}
                                 />
                                 <div className={"email-button-container"}>
                                     <div className={"email-button"}>
@@ -44,7 +62,7 @@ export default class Main extends React.Component {
                                             variant={"info"}
                                             type={"submit"}
                                             size={"lg"}
-                                            onClick={() => this.setModalState(true)}
+                                            onClick={this.handleLogin}
                                         >
                                             Login
                                         </Button>
@@ -57,45 +75,15 @@ export default class Main extends React.Component {
                         <img src={require("../Images/front-page.gif")} alt={""} />
                     </div>
                 </div>
-                <Modal
-                    size="med"
-                    show={this.state.modalState}
-                    onHide={() => this.setModalState(false)}
-                    aria-labelledby="example-modal-sizes-title-sm"
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title id="example-modal-sizes-title-sm">
-                            User Login
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form onSubmit={this.handleSubmit}>
-                            <div className={"email-form"}>
-                                <Form.Control type={"text"} placeholder={"Email"} />
-                            </div>
-                            <div>
-                                <Form.Control type={"password"} placeholder={"Password"} />
-                            </div>
-                            <Modal.Footer className={"modal-btn"}>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    onClick={() => console.log("Submit")}
-                                >
-                                    Login
-                                </Button>
-                                <Button
-                                    variant={"info"}
-                                    type={"submit"}
-                                    onClick={() => console.log("Submit")}
-                                >
-                                    Register
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
             </div>
         );
     }
 }
+
+const mapStateToProps = userState => {
+    return {
+        userLogin: userState.login
+    };
+};
+
+export default connect(mapStateToProps, { login })(Main);
