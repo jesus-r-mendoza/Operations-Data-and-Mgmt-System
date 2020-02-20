@@ -12,6 +12,23 @@ from .errors import error
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
+def satellites(request):
+    org = request.user.groups.all()
+    if len(org) == 0:
+        return error.USR_NOT_IN_ORG
+    org = org[0] # Users only allowed to be in one organization; so queryset only contains one value
+    sat_queryset = Satellite.objects.filter(organization=org)
+    sats = [ { 'id': sat.id, 'name': sat.name } for sat in sat_queryset ]
+    data = {
+        'satellites': sats,
+        'data': True,
+        'error': 'None'
+    }
+    return JsonResponse(data)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def components_of_satellite(request, satellite_id):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
