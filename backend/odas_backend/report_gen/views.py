@@ -27,7 +27,7 @@ def index(request):
         all_sats = Satellite.objects.all()
         sat_name1= all_sats[0].name
         desc_1 = all_sats[0].mission_description
-        
+
         concant_msg = sat_name1 + desc_1
         form = SubscriberForm(request.POST)
         if form.is_valid():
@@ -49,20 +49,17 @@ def dbemail(request):
     return render(request, 'emailsender/db_test.html', {
         'all_sats': all_sats
     })
-  
+
 def dbwritefile(request):
     all_sats = Satellite.objects.all()
     sat_name1= all_sats[0].name
     desc_1 = all_sats[0].mission_description
     concant_msg = sat_name1 + desc_1
-    cpath = os.path.join(settings.MEDIA_ROOT,'files','uploads', 'new.txt')       
+    cpath = os.path.join(settings.MEDIA_ROOT,'files','uploads', 'new.txt')
 
     file1 = open(cpath, "w")
-
     toFile = concant_msg
-
     file1.write(toFile)
-
     file1.close()
     return HttpResponse('File was saved to your files.')
 
@@ -88,29 +85,24 @@ def file_view(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def upload_view(request):
-    if request.method == 'POST':        
-        upfile = request.FILES.get('upfile')
-        desc = request.POST.get('description')
-        
-        if upfile and desc:
-            Upload.objects.create(upfile=upfile, description=desc, user = request.user)
-        else:
-            return JsonResponse( { 'data': False, 'error': 'Must provide both: upfile and description' } )
+    upfile = request.FILES.get('upfile')
+    desc = request.POST.get('description')
 
-        return JsonResponse( { 'data': True, 'error': 'None' } )
-    else:
-        return JsonResponse( { 'data': False, 'error': 'only POST requests allowed' } )
+    if not upfile or not desc:
+        return error.MISSING_PARAMS
+
+    Upload.objects.create(upfile=upfile, description=desc, user=request.user)
+    return JsonResponse( { 'data': True, 'error': 'None' } )
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_file(request, pk):
     try:
-        if request.method == 'POST':
-            user_file = Upload.objects.get(pk=pk)
-            if user_file.user != request.user:
-                return error.WRONG_USER
-            user_file.delete()
+        user_file = Upload.objects.get(pk=pk)
+        if user_file.user != request.user:
+            return error.WRONG_USER
+        user_file.delete()
         # return redirect('file_list')
         return JsonResponse({ 'data': True, 'error': 'None' })
     except Upload.DoesNotExist:
@@ -121,22 +113,24 @@ def delete_file(request, pk):
 @permission_classes([IsAuthenticated])
 def download_view(request, fid):
     try:
-        fUpload = Upload.objects.get(pk=fid)
-        url = settings.MEDIA_ROOT + '/' + fUpload.upfile.name 
+        user_file = Upload.objects.get(pk=fid)
+        if user_file.user != request.user:
+            return error.WRONG_USER
+        url = settings.MEDIA_ROOT + '/' + user_file.upfile.name
         print(url)
         response = FileResponse(open(url, 'rb'))
-        response['content_type'] = "application/octet-stream"
+        response['content_type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
         return response
     except Upload.DoesNotExist:
         return error.FILE_DNE
     except Exception:
         raise Http404
+
 @csrf_exempt
-@api_view(['POST'])
+@api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-
 def file_point(request):
     all_entries = Upload.objects.filter(user = request.user)
     data = {}
@@ -147,13 +141,12 @@ def file_point(request):
             'name': f.upfile.name,
             'description': f.description
         }
-
         files.append(entry)
-    data['files']= files
-    data['data']= True
-    data['error']= 'None'
-    # all_ids = [upload_obj.id for upload_obj in all_entries]
-    # all_fnames = [upload_obj.upfile.name for upload_obj in all_entries]
+
+    data['files'] = files
+    data['data'] = True
+    data['error'] = 'None'
+
     return JsonResponse(data)
 
 # @api_view(['GET'])
