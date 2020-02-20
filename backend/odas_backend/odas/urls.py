@@ -1,19 +1,17 @@
 from rest_framework import routers
 
-from .api import SatelliteViewSet, ComponentViewSet, MeasurementViewSet, UnitsViewSet
+from .api import UnitsViewSet
 from django.urls import path, register_converter
 from . import views, converters
 
 router = routers.DefaultRouter()
-router.register('api/sat', SatelliteViewSet, 'sat')
-router.register('api/comp', ComponentViewSet, 'comp')
-router.register('api/meas', MeasurementViewSet, 'meas')
 router.register('api/units', UnitsViewSet, 'units')
 
 register_converter(converters.ManyIdConverter, 'many-id')
 register_converter(converters.DateTimeConverter, 'dt')
 
 urlpatterns = [
+    path('api/sat/', views.satellites, name='satellites'),
     path('api/sat/<int:satellite_id>/recent/<int:quantity>/', views.recent_measurements, name='recent'),
     path('api/sat/<int:satellite_id>/comp/<int:component_id>/recent/<int:quantity>/', views.recent_by_component, name='recent_by_comp'),
     path('api/sat/<int:satellite_id>/comp/', views.components_of_satellite, name='sat_comp'),

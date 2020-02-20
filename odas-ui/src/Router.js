@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 // Components
 import Header from "./Components/Header";
 import Main from "./Pages/Main";
@@ -18,14 +18,14 @@ export default class App extends React.Component {
         return (
             <Router>
                 <Header />
-                <div>
+                <Switch>
                     <Route path={"/"} exact component={Main} />
                     <Route path={"/query"} component={QueryData} />
                     <Route path={"/upload"} component={UploadData} />
                     <Route path={"/documentation"} component={Documentation} />
                     <Route path={"/user-dashboard"} component={Dashboard} />
                     <Route path={"/register"} component={Register} />
-                </div>
+                </Switch>
             </Router>
         );
     }

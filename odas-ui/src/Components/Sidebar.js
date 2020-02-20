@@ -2,11 +2,11 @@ import React from 'react';
 import CheckComponent from "./CheckComponent";
 // Stylesheets
 import '../Layout/Sidebar.css'
-import {Button} from "react-bootstrap";
-import {Divider} from "semantic-ui-react";
+import { Button } from "react-bootstrap";
+import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
-import LoadSpinner from "./LoadSpinner";
+// import LoadSpinner from "./LoadSpinner";
 // Redux
 import { connect } from 'react-redux';
 import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
@@ -25,7 +25,7 @@ class Sidebar extends React.Component {
             checkboxes: COMPONENTS.reduce(
                 (options, option) => ({
                     ...options,
-                    [option]: true
+                    [option]: false
                 }),
                 {}
             ),
@@ -41,6 +41,8 @@ class Sidebar extends React.Component {
                 }
             }));
         });
+
+        console.log(this.state.checkboxes);
     };
 
     selectAll = () => this.selectAllCheckboxes(true);
@@ -94,66 +96,60 @@ class Sidebar extends React.Component {
     render() {
         let satellites = this.props.satellites;
         let components = this.props.components;
-        console.log(this.props.sats);
 
-        if (this.state.isLoading === true) {
-            return (
-                <LoadSpinner/>
-            );
-        } else {
-            return (
-                <div>
-                    <form onSubmit={this.handleFormSubmit}>
-                        <div className={"sidebar"}>
-                            <div className={"sidebar-title"}>
-                                <span>{this.props.children}</span>
+        return (
+            <div>
+                <form onSubmit={this.handleFormSubmit}>
+                    <div className={"sidebar"}>
+                        <div className={"sidebar-title"}>
+                            <span>{this.props.children}</span>
+                        </div>
+                        <div>
+                            <div className={"dropdown-style"}>
+                                <Select
+                                    name="form-field-name"
+                                    value="one"
+                                    options={satellites}
+                                    onChange={this.dropDownChange}
+                                    placeholder={this.state.satPlaceHolder}
+                                />
                             </div>
-                            <div>
-                                <div className={"dropdown-style"}>
-                                    <Select
-                                        name="form-field-name"
-                                        value="one"
-                                        options={satellites}
-                                        onChange={this.dropDownChange}
-                                        placeholder={this.state.satPlaceHolder}
-                                    />
-                                </div>
-                                <div className={"checkbox-selection-btn"}>
-                                    <Divider horizontal>Components</Divider>
-                                        {this.createCheckboxes(components)}
-                                        <div className={"selection-buttons"}>
-                                            <Button
-                                                variant={"outline-success"}
-                                                onClick={this.selectAll}
-                                                size={"sm"}
-                                            >
-                                                Select All
-                                            </Button>
-                                            <Button
-                                                variant={"outline-danger"}
-                                                onClick={this.deselectAll}
-                                                size={"sm"}
-                                            >
-                                                Deselect All
-                                            </Button>
-                                        </div>
+                            <div className={"checkbox-selection-btn"}>
+                                <Divider horizontal>Components</Divider>
+                                    {this.createCheckboxes(components)}
+                                    <div className={"selection-buttons"}>
+                                        <Button
+                                            variant={"outline-success"}
+                                            onClick={this.selectAll}
+                                            size={"sm"}
+                                        >
+                                            Select All
+                                        </Button>
+                                        <Button
+                                            variant={"outline-danger"}
+                                            onClick={this.deselectAll}
+                                            size={"sm"}
+                                        >
+                                            Deselect All
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
-                        <div className={"gen-button-container"}>
-                            <Button
-                                type={"submit"}
-                                variant={"info"}
-                                className={"gen-button"}
-                            >
-                                Generate Report
-                            </Button>
                         </div>
-                    </form>
-                </div>
-            );
-        }
+                    <div className={"gen-button-container"}>
+                        <Button
+                            type={"submit"}
+                            variant={"info"}
+                            className={"gen-button"}
+                        >
+                            Generate Report
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        );
     }
+
 }
 
 const mapStateToProps = state => {
@@ -163,5 +159,3 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents, satCompQuery })(Sidebar)
-
-// TODO Bring api calls back into sidebar

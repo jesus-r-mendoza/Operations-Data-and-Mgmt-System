@@ -3,11 +3,9 @@
 ### The following guide provides details about available **API** endpoints
 
 ---
-Method | Endpoint | Description | JSON Response | Rquires Authentication
+Method | Endpoint | Description | JSON Response | Requires Authentication
 --- | --- | --- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized) | No
-GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized) | No
-GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized) | No
+GET | api/sat/ | Get ***all*** of the satellites that belong to the requesting user's organization | [Serialized](#Serialized) | Yes
 GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized) | No
 GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized) | Yes
 GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
@@ -18,7 +16,7 @@ GET | api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | 
 GET | api/sat/\<sat id>/meas/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded by the specified components within the specified datetime range | [Unspecified Components](#Unspecified-Components) | Yes
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request | | Not yet
 POST | writetest/ | Writes file directly to media folder  | | Not yet
-POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Not yet
+POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Yes
 POST | files/delete/\<file id>/ | Deletes the specified file from our **ODAS** server. Specify the id of the file | | Yes
 POST | filelist/ | Returns a JSONResponse that provides a list of objects containing the fields: id, description, and file name | | Yes
 POST | files/download/\<file id>/ | This endpoint allows the user to download a file from the files page without having to click a download button so long as the provide the file id, with proper authorization | | Yes
@@ -26,8 +24,8 @@ POST | register/ | Allows a user to sign up to use ODAS, must provide **username
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
 POST | login/ | Allows user to login, returns authentication token if login successful. Must provide **username** and **pass** in POST request | | No
 DELETE | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
+POST | join/ | Allows users who have already registered with ODAS, but have *NOT* yet joined an organization to join an organization using its specific invite code (presumably provided by another member of that organization). Must provide **code** (the invite code for the organization the user will join) in POST request | | Yes
 
----
 
 ## Authentication
 

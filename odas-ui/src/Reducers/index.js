@@ -20,11 +20,16 @@ import {
     selectStartDateReducer
 } from "./SelectionReducers";
 
+// Files
+import {
+    postFileReducer
+} from "./FileReducers"
+
 // Authentication
 import {
     loginReducer,
-    registerReducer
-
+    registerReducer,
+    logoutReducer
 } from "./AuthReducers";
 
 export default combineReducers({
@@ -36,6 +41,8 @@ export default combineReducers({
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
     satComponentQuery: satComponentQueryReducer,
-    userLogin: loginReducer,
-    register: registerReducer
+    login: loginReducer,
+    register: registerReducer,
+    logout: logoutReducer,
+    postFile: postFileReducer
 });

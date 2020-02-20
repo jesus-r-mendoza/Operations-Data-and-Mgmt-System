@@ -39,17 +39,3 @@ export const fetchSatellites = () => async dispatch => {
 
     dispatch({type: "FETCH_SATS", payload: response.data});
 };
-
-// TODO Post a file to the server *Currently not implemented*
-export function postFile (file) {
-    console.log(file);
-    return (dispatch, getState) => {
-        dispatch({type: "REQUEST STARTED"});
-
-        SatApi.post("files/upload/", {data: file})
-            .then(
-                res => dispatch({type: "REQUEST_ACCEPTED", payload: res}),
-                error => dispatch({type: "REQUEST_FAILED", error: error})
-            )
-    }
-}

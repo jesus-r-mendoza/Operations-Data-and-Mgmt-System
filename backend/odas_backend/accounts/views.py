@@ -47,7 +47,6 @@ def register(request):
     except Invite.DoesNotExist:
         return error.INVITE_CODE_INVALID
 
-
 @csrf_exempt
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
@@ -74,9 +73,34 @@ def register_org(request):
             except IntegrityError:
                 unique = False
 
-        return JsonResponse( { 'data': True, 'invite_code': invite_code, 'error': 'None' } )
+        return JsonResponse( { 'data': True, 'organization': org.name, 'code': invite_code, 'error': 'None' } )
     except IntegrityError:
         return error.ORG_NAME_EXISTS
+
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def join_org(request):
+    if len(request.user.groups.all()) > 0:
+        return error.ALREADY_IN_ORG
+    try:
+        inv = request.POST.get('code')
+        if inv:
+            invite = Invite.objects.get(link=inv)
+            request.user.groups.add(invite.organization)
+            request.user.save()
+        else:
+            return error.MISSING_INVITE_CODE
+    except Invite.DoesNotExist:
+        return error.INVITE_CODE_INVALID
+    data = {
+        'data': True,
+        'organization': invite.organization.name,
+        'code': invite.link,
+        'error': 'None'
+    }
+    return JsonResponse(data)
 
 @csrf_exempt
 @api_view(['POST'])
@@ -100,8 +124,14 @@ def login(request):
         'data': True,
         'error': 'None'
     }
+    if len(user.groups.all()) > 0:
+        data['organization'] = user.groups.all()[0].name
+        invite = Invite.objects.filter(organization=user.groups.all()[0])[0] # The first result of the queryset is the Invite object
+        data['code'] = invite.link
+    else:
+        data['organization'] = 'None'
+        data['code'] = 'None'
     return JsonResponse(data)
-
 
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
