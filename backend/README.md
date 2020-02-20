@@ -5,9 +5,7 @@
 ---
 Method | Endpoint | Description | JSON Response | Requires Authentication
 --- | --- | --- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized) | No
-GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized) | No
-GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized) | No
+GET | api/sat/ | Get ***all*** of the satellites that belong to the requesting user's organization | [Serialized](#Serialized) | Yes
 GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized) | No
 GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized) | Yes
 GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
