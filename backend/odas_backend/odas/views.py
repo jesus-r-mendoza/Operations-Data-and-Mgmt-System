@@ -19,6 +19,8 @@ def satellites(request):
     org = org[0] # Users only allowed to be in one organization; so queryset only contains one value
     sat_queryset = Satellite.objects.filter(organization=org)
     sats = [ { 'id': sat.id, 'name': sat.name } for sat in sat_queryset ]
+    if not sats:
+        return error.ORG_HAS_NO_SATS
     data = {
         'satellites': sats,
         'data': True,

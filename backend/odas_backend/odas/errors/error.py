@@ -25,4 +25,5 @@ ALREADY_IN_ORG = Response( { 'data': False, 'error': 'User is already in an orga
 DEP_INVALID = Response( { 'data': False, 'error': 'You are not authorized to use this endpoint.' }, status=status.HTTP_401_UNAUTHORIZED )
 METHOD_INVALID = Response( { 'data': False, 'error': 'Method type not allowed.' }, status=status.HTTP_400_BAD_REQUEST )
 
-USR_NOT_IN_ORG = Response( { 'data': False, 'error': "You are not in an organization yet, so you don't have access to any Satellites" }, status=status.HTTP_204_NO_CONTENT )
+USR_NOT_IN_ORG = Response( { 'data': False, 'error': "You are not in an organization yet, so you do not have access to any Satellites" }, status=status.HTTP_204_NO_CONTENT )
+ORG_HAS_NO_SATS = Response( { 'data': False, 'error': 'Get to work! Your organization does not have any satellites' }, status=status.HTTP_204_NO_CONTENT )
