@@ -108,8 +108,11 @@ def delete_file(request, pk):
     try:
         if request.method == 'POST':
             user_file = Upload.objects.get(pk=pk)
+            if user_file.user != request.user:
+                return error.WRONG_USER
             user_file.delete()
-        return redirect('file_list')
+        # return redirect('file_list')
+        return JsonResponse({ 'data': True, 'error': 'None' })
     except Upload.DoesNotExist:
         return error.FILE_DNE
 
