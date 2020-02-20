@@ -1,7 +1,7 @@
 import React from 'react';
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import "../Layout/Main.css"
 import { connect } from "react-redux";
 import { login } from "../Actions";

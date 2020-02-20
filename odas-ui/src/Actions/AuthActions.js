@@ -88,8 +88,8 @@ export const logout = () => async dispatch => {
     };
 
     fetch("http://localhost:8080/logout/", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
+        // .then(response => response.text())
+        .then(response => dispatch({type: 'LOGOUT', payload: response}))
         .catch(error => console.log('error', error));
 
     // dispatch({type: 'LOGOUT', payload: response})
