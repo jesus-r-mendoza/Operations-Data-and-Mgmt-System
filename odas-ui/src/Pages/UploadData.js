@@ -12,7 +12,7 @@ import "../Layout/UploadData.css"
 import {Button, FormControl, Container} from "react-bootstrap";
 import axios from "axios";
 
-const acceptedExtensions = [".tlm", ".bin", ".txt"];
+const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
 
 const apis = {
     unit: `${apiURL}api/units/`,
@@ -196,7 +196,6 @@ class UploadData extends React.Component {
         }
     }
 }
-
 
 const mapStateToProps = uploadState => {
     return {
