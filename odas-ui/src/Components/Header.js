@@ -25,7 +25,8 @@ class Header extends React.Component {
         this.state = {
             modalState: false,
             toastState: false,
-            loginBtnState: true,
+            toastMessage: '',
+            toastTitle: '',
             username: '',
             email: '',
             password: ''
@@ -40,6 +41,7 @@ class Header extends React.Component {
         })
     }
 
+    // Set the input state
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -50,14 +52,34 @@ class Header extends React.Component {
 
     handleLogin = e => {
         e.preventDefault();
-        this.setElementStates('loginBtnState', true);
         this.props.login(this.state.username, this.state.password);
-        this.showLoginToast();
+
+        this.setElementStates('modalState', false);
+        // Check login status response every 2 seconds and show success toast when true
+        let toastInterval = setInterval(() => {
+            if (this.props.userLogin.status === true) {
+                this.setElementStates('toastTitle', 'Welcome!');
+                this.setElementStates('toastMessage', 'in');
+                this.setElementStates('toastState', true);
+                clearInterval(toastInterval)
+            }
+        }, 2000)
     };
 
     handleLogout = e => {
         e.preventDefault();
         this.props.logout();
+
+        this.setElementStates('username', '');
+        this.setElementStates('password', '');
+        let toastInterval = setInterval(() => {
+            if (this.props.userLogin.status === true) {
+                this.setElementStates('toastTitle', 'See you next time!');
+                this.setElementStates('toastMessage', 'out');
+                this.setElementStates('toastState', true);
+                clearInterval(toastInterval)
+            }
+        }, 2000)
     };
 
     changeLoginButton () {
@@ -80,17 +102,9 @@ class Header extends React.Component {
         }
     }
 
-    showLoginToast = () => {
-        if (this.props.userLogin === true) {
-            this.setElementStates('modalState', false);
-            this.setElementStates('toastState', true);
-        } else {
-
-        }
-    };
-
     render() {
         console.log(this.props.userLogin);
+        console.log(this.props.userLogout);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -109,7 +123,7 @@ class Header extends React.Component {
                                 </Button>
                             </Link>
                             <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
-                            {this.changeLoginButton(this.props.userLogin.pop())}
+                            {this.changeLoginButton()}
                         </div>
                     </Container>
                 </Navbar>
@@ -174,9 +188,9 @@ class Header extends React.Component {
                     className={"login-toast"}
                 >
                     <Toast.Header>
-                        <strong className={"toast-title"}>Welcome!</strong>
+                        <strong className={"toast-title"}>{this.state.toastTitle}</strong>
                     </Toast.Header>
-                    <Toast.Body className={"toast-body"}>You have logged in successfully.</Toast.Body>
+                    <Toast.Body className={"toast-body"}>You have successfully logged {this.state.toastMessage}.</Toast.Body>
                 </Toast>
             </div>
         )

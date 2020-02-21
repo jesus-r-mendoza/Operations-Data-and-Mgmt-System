@@ -88,7 +88,7 @@ export const logout = () => async dispatch => {
     };
 
     fetch(`${apiURL}logout/`, requestOptions)
-        .then(result => console.log(result.json()))
+        .then(result => result.json())
         .then(response => dispatch({type: 'LOGOUT', payload: response}))
         .catch(error => console.log('error', error));
 };

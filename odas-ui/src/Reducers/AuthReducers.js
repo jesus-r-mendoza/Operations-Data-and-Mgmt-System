@@ -12,10 +12,12 @@ export const loginReducer = (loginState = [], action) => {
         );
 
         cookie.set("auth", action.payload.token);
-        return [...loginState, action.payload.data];
+        // Message is user info object on success; Status is true
+        return {message: action.payload, status: action.payload.data};
     } else if (action.type === 'LOGIN_FAIL') {
+        // Message is the error message on failure; Status is false
         // TODO use the error message returned from the API
-        return [...loginState, action.payload.response.data.error, action.payload.response.data.data];
+        return {message: action.payload.response.data.error, status: action.payload.response.data.data};
     }
 
 
