@@ -10,7 +10,7 @@ export const postFile = (file, desc = "None") => async dispatch => {
 
     headers.append("Authorization", `Token ${authToken}`);
     formData.append("upfile", file);
-    formData.append("description", "hello");
+    formData.append("description", desc);
 
     const requestOptions = {
         method: 'POST',
@@ -20,7 +20,7 @@ export const postFile = (file, desc = "None") => async dispatch => {
     };
 
     fetch(`${apiURL}files/upload/`, requestOptions)
-        .then(response => response.text())
-        .then(result => dispatch({type: "FILE_ACCEPTED", payload: result, result: true}))
-        .catch(error => dispatch({type: "FILE_ACCEPTED", payload: error, isLoading: false}));
+        .then(response => response.json())
+        .then(result => dispatch({type: "FILE_ACCEPTED", payload: result}))
+        .catch(error => dispatch({type: "FILE_FAILED", payload: error}));
 };

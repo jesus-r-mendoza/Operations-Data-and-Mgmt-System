@@ -1,3 +1,4 @@
+/*File selection*/
 .file-container {
     display: flex;
     flex-direction: column;
@@ -9,7 +10,7 @@
 .file-input {
     display: flex;
     flex-direction: column;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 }
 
 .file-label {
@@ -27,6 +28,7 @@
 
 .input-box {
     width: 500px;
+    margin-bottom: 10px;
 }
 
 .input-error {
@@ -41,7 +43,6 @@
 
 .upload-btn-wrapper {
     position: relative;
-    /*overflow: hidden;*/
     display: inline-block;
     padding-left: 20px;
 }
@@ -65,4 +66,10 @@
     opacity: 85%;
     padding-top: 20px;
     font-size: larger;
+}
+
+.warning-message {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
 }
