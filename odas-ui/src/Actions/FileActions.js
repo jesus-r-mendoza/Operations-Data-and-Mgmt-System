@@ -1,35 +1,26 @@
 import { apiURL } from "../Apis/SatApi";
-import axios from 'axios';
+import Cookies from 'universal-cookie';
 
-// TODO needs user auth now I think
-export const postFile = (file, desc = "None")=> async dispatch => {
-    let errorMessage = '';
-    let fileFd = new FormData();
+const cookie = new Cookies();
+export const postFile = (file, desc = "None") => async dispatch => {
+    console.log("File", file.name);
+    const headers = new Headers();
+    const formData = new FormData();
+    const authToken = cookie.get('auth');
 
-    fileFd.append("upfile", file);
-    fileFd.append("description", desc);
+    headers.append("Authorization", `Token ${authToken}`);
+    formData.append("upfile", file);
+    formData.append("description", desc);
 
-    console.log(fileFd.get("upfile"));
-    console.log(fileFd.get("description"));
-
-    // const response = dispatch({type: "REQUEST STARTED", isLoading: true});
-
-    const response = await axios({
+    const requestOptions = {
         method: 'POST',
-        url: `${apiURL}files/upload/`,
-        header: {'Content-type': 'multipart/from-data'},
-        data: fileFd
-    })
-        .catch(function (error) {
-            errorMessage = error
-        });
+        headers: headers,
+        body: formData,
+        redirect: 'follow'
+    };
 
-    if (errorMessage === '') {
-        console.log(response);
-        dispatch({type: "FILE_ACCEPTED", payload: response, isLoading: false});
-    } else {
-        console.log(errorMessage);
-        dispatch({type: "FILE_FAILED", payload: errorMessage, isLoading: false})
-    }
-
+    fetch(`${apiURL}files/upload/`, requestOptions)
+        .then(response => response.json())
+        .then(result => dispatch({type: "FILE_ACCEPTED", payload: result}))
+        .catch(error => dispatch({type: "FILE_FAILED", payload: error}));
 };
