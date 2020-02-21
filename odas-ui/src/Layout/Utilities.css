@@ -21,3 +21,12 @@
     position: absolute;
     z-index: 1;
 }
+
+.toast-text {
+    font-size: large;
+}
+
+.toast-title {
+    font-size: medium;
+    margin-left: auto;
+}

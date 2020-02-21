@@ -48,6 +48,7 @@ class Main extends React.Component {
                                     className={"email-form"}
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
+                                    required
                                 />
                                 <Form.Control
                                     type={"password"}
@@ -55,6 +56,7 @@ class Main extends React.Component {
                                     placeholder={"Password"}
                                     value={this.state.password}
                                     onChange={this.handleInputChange}
+                                    required
                                 />
                                 <div className={"email-button-container"}>
                                     <div className={"email-button"}>

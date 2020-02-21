@@ -52,8 +52,7 @@ class Header extends React.Component {
         e.preventDefault();
         this.setElementStates('loginBtnState', true);
         this.props.login(this.state.username, this.state.password);
-        this.setElementStates('modalState', false);
-        this.setElementStates('toastState', true);
+        this.showLoginToast();
     };
 
     handleLogout = e => {
@@ -80,6 +79,15 @@ class Header extends React.Component {
             );
         }
     }
+
+    showLoginToast = () => {
+        if (this.props.userLogin === true) {
+            this.setElementStates('modalState', false);
+            this.setElementStates('toastState', true);
+        } else {
+
+        }
+    };
 
     render() {
         console.log(this.props.userLogin);
@@ -125,6 +133,7 @@ class Header extends React.Component {
                                     placeholder={"Username"}
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
+
                                 />
                             </div>
                             <div>
@@ -134,6 +143,7 @@ class Header extends React.Component {
                                     placeholder={"Password"}
                                     value={this.state.password}
                                     onChange={this.handleInputChange}
+
                                 />
                             </div>
                             <Modal.Footer className={"modal-footer"}>
@@ -164,9 +174,9 @@ class Header extends React.Component {
                     className={"login-toast"}
                 >
                     <Toast.Header>
-                        <strong className="mr-auto">Welcome!</strong>
+                        <strong className={"toast-title"}>Welcome!</strong>
                     </Toast.Header>
-                    <Toast.Body>You have logged in successfully</Toast.Body>
+                    <Toast.Body className={"toast-body"}>You have logged in successfully.</Toast.Body>
                 </Toast>
             </div>
         )

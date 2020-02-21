@@ -87,7 +87,8 @@ export const logout = () => async dispatch => {
         redirect: 'follow'
     };
 
-    fetch(`${apiURL}/logout/`, requestOptions)
+    fetch(`${apiURL}logout/`, requestOptions)
+        .then(result => console.log(result.json()))
         .then(response => dispatch({type: 'LOGOUT', payload: response}))
         .catch(error => console.log('error', error));
 };

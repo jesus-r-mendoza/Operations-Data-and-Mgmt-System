@@ -12,11 +12,10 @@ export const loginReducer = (loginState = [], action) => {
         );
 
         cookie.set("auth", action.payload.token);
-
         return [...loginState, action.payload.data];
     } else if (action.type === 'LOGIN_FAIL') {
-
-        return [...loginState, action.payload.response.data.data];
+        // TODO use the error message returned from the API
+        return [...loginState, action.payload.response.data.error, action.payload.response.data.data];
     }
 
 
