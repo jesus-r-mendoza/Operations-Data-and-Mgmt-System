@@ -40,3 +40,11 @@ export const logoutReducer = (logoutState = [], action) => {
 
     return logoutState;
 };
+
+export const createOrgReducer = (orgState = [], action) => {
+    if (action.type === "CREATE_ORG") {
+        return [...orgState]
+    }
+
+    return [...orgState];
+};

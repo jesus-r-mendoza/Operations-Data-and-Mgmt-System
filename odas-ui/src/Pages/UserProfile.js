@@ -1,7 +1,7 @@
 import React from 'react';
 //Redux
 import { connect } from "react-redux"
-import { fetchUnits, fetchComponents, fetchSatellites } from "../Actions";
+import { fetchUnits, fetchComponents, fetchSatellites, createOrg } from "../Actions";
 // Components
 import LoadSpinner from "../Components/LoadSpinner";
 import { Jumbotron } from "react-bootstrap";
@@ -74,9 +74,14 @@ const mapStateToProps = state => {
     return {
         units: state.units,
         components: state.components,
-        satObjects: state.satObjects
+        satObjects: state.satObjects,
     };
 };
 
 // Connect returns a function and second parenthesis invokes returned function
-export default connect(mapStateToProps, { fetchUnits, fetchComponents, fetchSatellites })(UserProfile)
+export default connect(mapStateToProps, {
+    fetchUnits,
+    fetchComponents,
+    fetchSatellites,
+    createOrg
+})(UserProfile)

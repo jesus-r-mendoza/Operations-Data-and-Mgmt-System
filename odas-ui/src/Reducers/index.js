@@ -29,7 +29,8 @@ import {
 import {
     loginReducer,
     registerReducer,
-    logoutReducer
+    logoutReducer,
+    createOrgReducer
 } from "./AuthReducers";
 
 export default combineReducers({
@@ -44,5 +45,6 @@ export default combineReducers({
     login: loginReducer,
     register: registerReducer,
     logout: logoutReducer,
-    postFile: postFileReducer
+    postFile: postFileReducer,
+    createOrg: createOrgReducer
 });

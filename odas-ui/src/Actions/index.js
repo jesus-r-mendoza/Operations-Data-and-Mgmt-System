@@ -22,7 +22,8 @@ import {
 import {
     register,
     login,
-    logout
+    logout,
+    createOrg
 } from "./AuthActions";
 
 // Files
@@ -42,7 +43,8 @@ export {
     register,
     login,
     logout,
-    postFile
+    postFile,
+    createOrg
 };
 
 

@@ -1,4 +1,4 @@
-import SatApi from "../Apis/SatApi"
+import SatApi from "../Definitions/SatApi"
 import Cookies from "universal-cookie";
 /*GET requests from API*/
 

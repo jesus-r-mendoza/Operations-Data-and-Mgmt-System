@@ -1,4 +1,4 @@
-import { apiURL } from "../Apis/SatApi";
+import { apiURL } from "../Definitions/SatApi";
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 

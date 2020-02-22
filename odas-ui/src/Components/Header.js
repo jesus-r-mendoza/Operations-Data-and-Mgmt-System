@@ -117,9 +117,9 @@ class Header extends React.Component {
                                 <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                                 <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
                             </DropdownButton>
-                            <Link to={"/user-dashboard"}>
+                            <Link to={"/profile"}>
                                 <Button>
-                                    Dashboard
+                                    Profile
                                 </Button>
                             </Link>
                             <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>

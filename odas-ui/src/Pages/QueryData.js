@@ -3,7 +3,7 @@ import React from 'react';
 import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
-import {apiURL} from "../Apis/SatApi";
+import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";

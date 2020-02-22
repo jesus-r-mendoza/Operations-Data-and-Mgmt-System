@@ -8,7 +8,7 @@ import ReportHeader from "../Components/ReportHeader";
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
-import { apiURL } from "../Apis/SatApi";
+import { apiURL } from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";

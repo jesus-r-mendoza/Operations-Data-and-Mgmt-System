@@ -1,6 +1,8 @@
-import { apiURL } from "../Apis/SatApi";
+import { apiURL } from "../Definitions/SatApi";
 import axios from "axios";
 import Cookies from "universal-cookie/lib";
+// TODO Temporary pass variable for testing
+import { createOrgPassword } from "../Definitions/Password";
 
 const cookie = new Cookies();
 // Register a new user
@@ -91,4 +93,22 @@ export const logout = () => async dispatch => {
         .then(result => result.json())
         .then(response => dispatch({type: 'LOGOUT', payload: response}))
         .catch(error => console.log('error', error));
+};
+
+export const createOrg = (orgName) => async dispatch => {
+    const orgForm = new FormData();
+    const authToken = cookie.get('auth');
+    console.log("Super secret password", createOrgPassword);
+
+    orgForm.append("org_name", orgName);
+    orgForm.append("pass", createOrgPassword);
+
+    const response = axios({
+        method: 'POST',
+        url: `${apiURL}create-org/`,
+        headers: {'Authorization': `Token ${authToken}`},
+        body: orgForm
+    });
+
+    dispatch({type: "CREATE_ORG", payload: response})
 };
