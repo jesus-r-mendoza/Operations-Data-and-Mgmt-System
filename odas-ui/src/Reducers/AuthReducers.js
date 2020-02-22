@@ -16,7 +16,6 @@ export const loginReducer = (loginState = [], action) => {
         return {message: action.payload, status: action.payload.data};
     } else if (action.type === 'LOGIN_FAIL') {
         // Message is the error message on failure; Status is false
-        // TODO use the error message returned from the API
         return {message: action.payload.response.data.error, status: action.payload.response.data.data};
     }
 

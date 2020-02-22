@@ -1,5 +1,4 @@
 import React from 'react';
-import CheckComponent from "./CheckComponent";
 // Stylesheets
 import '../Layout/Sidebar.css'
 import { Button } from "react-bootstrap";
@@ -7,6 +6,7 @@ import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
 // import LoadSpinner from "./LoadSpinner";
+import CheckComponent from "./CheckComponent";
 // Redux
 import { connect } from 'react-redux';
 import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
@@ -94,6 +94,7 @@ class Sidebar extends React.Component {
     };
 
     render() {
+        console.log(this.props.components);
         let satellites = this.props.satellites;
         let components = this.props.components;
 
@@ -118,13 +119,13 @@ class Sidebar extends React.Component {
                                 <Divider horizontal>Components</Divider>
                                     {this.createCheckboxes(components)}
                                     <div className={"selection-buttons"}>
-                                        <Button
-                                            variant={"outline-success"}
-                                            onClick={this.selectAll}
-                                            size={"sm"}
-                                        >
-                                            Select All
-                                        </Button>
+                                        {/*<Button*/}
+                                        {/*    variant={"outline-success"}*/}
+                                        {/*    onClick={this.selectAll}*/}
+                                        {/*    size={"sm"}*/}
+                                        {/*>*/}
+                                        {/*    Select All*/}
+                                        {/*</Button>*/}
                                         <Button
                                             variant={"outline-danger"}
                                             onClick={this.deselectAll}
@@ -154,7 +155,7 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        sats: state.name
+        components: state.components
     };
 };
 

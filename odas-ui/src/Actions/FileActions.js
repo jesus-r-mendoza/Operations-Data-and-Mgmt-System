@@ -1,5 +1,6 @@
 import { apiURL } from "../Apis/SatApi";
 import Cookies from 'universal-cookie';
+import axios from 'axios';
 
 const cookie = new Cookies();
 export const postFile = (file, desc = "None") => async dispatch => {
@@ -19,7 +20,7 @@ export const postFile = (file, desc = "None") => async dispatch => {
         redirect: 'follow'
     };
 
-    fetch(`${apiURL}files/upload/`, requestOptions)
+    axios.post(`${apiURL}files/upload/`, requestOptions)
         .then(response => response.json())
         .then(result => dispatch({type: "FILE_ACCEPTED", payload: result}))
         .catch(error => dispatch({type: "FILE_FAILED", payload: error}));

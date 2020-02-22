@@ -10,7 +10,7 @@ import Register from "./Pages/Register";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
-import Dashboard from "./Pages/Dashboard";
+import Dashboard from "./Pages/UserProfile";
 
 export default class App extends React.Component {
 

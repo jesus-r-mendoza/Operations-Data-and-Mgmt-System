@@ -98,7 +98,7 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        <ReportCard />
+                        {/*<ReportCard />*/}
                     </div>
                 </div>
             );

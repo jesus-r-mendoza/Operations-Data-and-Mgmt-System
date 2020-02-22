@@ -57,9 +57,9 @@ export const login = (username, pass) => async dispatch => {
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .catch((function (error) {
+        .catch(function (error) {
             errorMessage = error
-        }));
+        });
     
     // If errorMessage remains empty, success is dispatched to the reducer
     if (errorMessage === '') {
