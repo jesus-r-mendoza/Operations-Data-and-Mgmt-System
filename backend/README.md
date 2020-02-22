@@ -18,7 +18,7 @@ POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***yo
 POST | writetest/ | Writes file directly to media folder  | | Not yet
 POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Yes
 POST | files/delete/\<file id>/ | Deletes the specified file from our **ODAS** server. Specify the id of the file | | Yes
-POST | filelist/ | Returns a JSONResponse that provides a list of objects containing the fields: id, description, and file name | | Yes
+GET | filelist/ | Returns a JSONResponse that provides a list of objects containing the fields: id, description, and file name | | Yes
 POST | files/download/\<file id>/ | This endpoint allows the user to download a file from the files page without having to click a download button so long as the provide the file id, with proper authorization | | Yes
 POST | register/ | Allows a user to sign up to use ODAS, must provide **username**, **email**, and **pass** in POST request to sign up. Optionally, if **code** is provided, (this is the 12 char invite code), then a user can sign up and will automatically be added to the organization which provided that invite code | | No
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
