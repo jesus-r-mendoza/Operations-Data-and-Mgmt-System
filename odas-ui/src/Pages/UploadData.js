@@ -1,14 +1,17 @@
 import React from 'react';
 import axios from "axios";
 // Redux
-import { postFile } from "../Actions";
+import { postFile, getFileList } from "../Actions";
 import { connect } from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
+import FilesTable from "../Components/FilesTable";
 import { apiURL } from "../Definitions/SatApi";
+
+
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
@@ -48,6 +51,7 @@ class UploadData extends React.Component {
                 console.log(err)
             });
 
+        this.props.getFileList();
         this.setState({
             isLoading: false
         });
@@ -184,6 +188,12 @@ class UploadData extends React.Component {
                     >
                         Submit
                     </Button>
+                    <div className={"files-table"}>
+                        <FilesTable
+                            filename={this.props.fileList.name}
+                            description={this.props.fileList.description}
+                        />
+                    </div>
                 </div>
             );
         }
@@ -199,6 +209,7 @@ class UploadData extends React.Component {
     }
 
     render() {
+        console.log(this.props.fileList);
         console.log(this.props.uploadFile);
         let components = this.createArray("components");
 
@@ -211,9 +222,7 @@ class UploadData extends React.Component {
         if(!this.state.isLoading) {
             return (
                 <div className={"report-container"}>
-                    <Sidebar
-                        components={components}
-                    >
+                    <Sidebar components={components}>
                         Upload a Dataset
                     </Sidebar>
                     <div className={"report-body"}>
@@ -225,10 +234,11 @@ class UploadData extends React.Component {
     }
 }
 
-const mapStateToProps = uploadState => {
+const mapStateToProps = state => {
     return {
-        uploadFile: uploadState.postFile
+        uploadFile: state.postFile,
+        fileList: state.getFileList
     };
 };
 
-export default connect(mapStateToProps, { postFile })(UploadData);
+export default connect(mapStateToProps, { postFile, getFileList })(UploadData);

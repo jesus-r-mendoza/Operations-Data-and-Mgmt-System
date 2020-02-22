@@ -1,13 +1,10 @@
-import { apiURL } from "../Definitions/SatApi";
-import Cookies from 'universal-cookie';
-import axios from 'axios';
+import SatApi, { apiURL } from "../Definitions/SatApi";
+import {authToken} from "../Definitions/BrowserCookie";
 
-const cookie = new Cookies();
 export const postFile = (file, desc = "None") => async dispatch => {
     console.log("File", file.name);
     const headers = new Headers();
     const formData = new FormData();
-    const authToken = cookie.get('auth');
 
     headers.append("Authorization", `Token ${authToken}`);
     formData.append("upfile", file);
@@ -20,8 +17,18 @@ export const postFile = (file, desc = "None") => async dispatch => {
         redirect: 'follow'
     };
 
-    axios.post(`${apiURL}files/upload/`, requestOptions)
+    fetch(`${apiURL}files/upload/`, requestOptions)
         .then(response => response.json())
         .then(result => dispatch({type: "FILE_ACCEPTED", payload: result}))
         .catch(error => dispatch({type: "FILE_FAILED", payload: error}));
+};
+
+export const getFileList = () => dispatch => {
+    SatApi.get(`${apiURL}filelist/`, {
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
+    })
+        .then(response => dispatch({type: "FILE_LIST", payload: response.data.files}))
+        .catch(error => console.log(error))
 };

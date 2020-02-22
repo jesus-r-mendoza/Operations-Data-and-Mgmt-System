@@ -28,7 +28,8 @@ import {
 
 // Files
 import {
-    postFile
+    postFile,
+    getFileList
 } from "./FileActions";
 
 export {
@@ -44,7 +45,8 @@ export {
     login,
     logout,
     postFile,
-    createOrg
+    createOrg,
+    getFileList
 };
 
 

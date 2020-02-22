@@ -14,3 +14,11 @@ export const postFileReducer = (fileState = [], action) => {
             return false;
     }
 };
+
+export const fileListReducer = (fileState = [], action) => {
+    if (action.type === "FILE_LIST") {
+       return action.payload;
+    }
+
+    return [...fileState, action.payload]
+};

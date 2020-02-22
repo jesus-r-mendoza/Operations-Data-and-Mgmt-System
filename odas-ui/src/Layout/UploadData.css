@@ -73,3 +73,13 @@
     flex-direction: column;
     width: 20%;
 }
+
+.files-table {
+    width: 60%;
+    margin-top: 3%;
+}
+
+.file-table-text {
+    font-size: xx-large;
+    color: black;
+}

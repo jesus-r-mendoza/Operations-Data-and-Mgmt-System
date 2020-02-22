@@ -1,6 +1,7 @@
 import { apiURL } from "../Definitions/SatApi";
 import axios from "axios";
 import Cookies from "universal-cookie/lib";
+import { authToken } from "../Definitions/BrowserCookie";
 // TODO Temporary pass variable for testing
 import { createOrgPassword } from "../Definitions/Password";
 
@@ -77,7 +78,6 @@ export const login = (username, pass) => async dispatch => {
 
 // Log the user out using the Auth token
 export const logout = () => async dispatch => {
-    const authToken = cookie.get('auth');
     console.log(authToken);
 
     const myHeaders = new Headers();
@@ -97,7 +97,6 @@ export const logout = () => async dispatch => {
 
 export const createOrg = (orgName) => async dispatch => {
     const orgForm = new FormData();
-    const authToken = cookie.get('auth');
     console.log("Super secret password", createOrgPassword);
 
     orgForm.append("org_name", orgName);
