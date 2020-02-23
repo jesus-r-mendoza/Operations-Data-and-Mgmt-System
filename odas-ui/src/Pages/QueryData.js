@@ -1,6 +1,6 @@
 import React from 'react';
 //Components
-import ReportCard from "../Components/ReportCard";
+// import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
 import {apiURL} from "../Definitions/SatApi";

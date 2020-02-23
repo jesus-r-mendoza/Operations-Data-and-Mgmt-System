@@ -1,20 +1,19 @@
 import React from 'react';
 import axios from "axios";
 // Redux
-import { postFile, getFileList } from "../Actions";
-import { connect } from "react-redux";
+import {getFileList, postFile} from "../Actions";
+import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
-import FilesTable from "../Components/FilesTable";
-import { apiURL } from "../Definitions/SatApi";
-
-
+// import FilesList from "../Components/FilesList";
+import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
+import {Table} from "semantic-ui-react";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
 
@@ -65,11 +64,9 @@ class UploadData extends React.Component {
             console.log("VALUES: ", values);
             return values;
         } else if(type === "components") {
-            let values = this.state.COMPONENTS.map(function (components) {
+            return this.state.COMPONENTS.map(function (components) {
                 return (components.name);
             });
-            console.log("VALUES: ", values);
-            return values;
         }
     }
 
@@ -137,6 +134,7 @@ class UploadData extends React.Component {
     };
 
     renderFileInput() {
+        console.log(this.props.fileList);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -189,10 +187,22 @@ class UploadData extends React.Component {
                         Submit
                     </Button>
                     <div className={"files-table"}>
-                        <FilesTable
-                            filename={this.props.fileList.name}
-                            description={this.props.fileList.description}
-                        />
+                        <div>
+                            <span className={"file-table-text"}>Recent Files</span>
+                            <Table>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>File Name</Table.HeaderCell>
+                                        {/*<Table.HeaderCell>Date</Table.HeaderCell>*/}
+                                        <Table.HeaderCell>Description</Table.HeaderCell>
+                                    </Table.Row>
+                                    {/*<FilesList*/}
+                                    {/*    name={this.props.fileList.name}*/}
+                                    {/*    description={this.props.fileList.description}*/}
+                                    {/*/>*/}
+                                </Table.Header>
+                            </Table>
+                        </div>
                     </div>
                 </div>
             );
@@ -209,8 +219,6 @@ class UploadData extends React.Component {
     }
 
     render() {
-        console.log(this.props.fileList);
-        console.log(this.props.uploadFile);
         let components = this.createArray("components");
 
         if (this.state.isLoading) {

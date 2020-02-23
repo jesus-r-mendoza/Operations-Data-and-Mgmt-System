@@ -94,7 +94,6 @@ class Sidebar extends React.Component {
     };
 
     render() {
-        console.log(this.props.components);
         let satellites = this.props.satellites;
         let components = this.props.components;
 

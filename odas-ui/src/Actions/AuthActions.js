@@ -1,11 +1,9 @@
-import { apiURL } from "../Definitions/SatApi";
 import axios from "axios";
-import Cookies from "universal-cookie/lib";
+import { apiURL } from "../Definitions/SatApi";
 import { authToken } from "../Definitions/BrowserCookie";
 // TODO Temporary pass variable for testing
 import { createOrgPassword } from "../Definitions/Password";
 
-const cookie = new Cookies();
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
@@ -54,6 +52,7 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
+    // TODO refactor to look like fileactions get request
     const response = await axios({
         method: 'POST',
         url: `${apiURL}login/`,
@@ -95,19 +94,24 @@ export const logout = () => async dispatch => {
         .catch(error => console.log('error', error));
 };
 
-export const createOrg = (orgName) => async dispatch => {
+export const createOrg = (orgName='testorg') => async dispatch => {
+    const headers = new Headers();
     const orgForm = new FormData();
-    console.log("Super secret password", createOrgPassword);
+
+    headers.append("Authorization", `Token ${authToken}`);
 
     orgForm.append("org_name", orgName);
     orgForm.append("pass", createOrgPassword);
 
-    const response = axios({
+    const requestOptions = {
         method: 'POST',
-        url: `${apiURL}create-org/`,
-        headers: {'Authorization': `Token ${authToken}`},
-        body: orgForm
-    });
+        headers: headers,
+        body: orgForm,
+        redirect: 'follow'
+    };
 
-    dispatch({type: "CREATE_ORG", payload: response})
+    await fetch(`${apiURL}create-org/`, requestOptions)
+        .then(res => res.json())
+        .then(response => dispatch({type: "CREATE_ORG", payload: response}))
+        .catch(error => dispatch({type: "ORG_FAIL", payload: error}))
 };

@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from "react-redux"
 import { fetchUnits, fetchComponents, fetchSatellites, createOrg } from "../Actions";
 // Components
-import LoadSpinner from "../Components/LoadSpinner";
 import { Jumbotron } from "react-bootstrap";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -30,44 +29,44 @@ class UserProfile extends React.Component {
         });
     }
 
-    render() {
-        if(this.state.isLoading) {
-            return (
-                <LoadSpinner />
-            );
-        } else {
-            const test = this.props;
-            console.log(test);
+    createOrganization = e => {
+        e.preventDefault();
+        this.props.createOrg("orgnametest")
+    };
 
-            return (
-                <div className={"user-container"}>
-                    <div className={"jumbo-container"}>
-                        <Jumbotron>
-                            <h1>Hello, user</h1>
-                            <p>Welcome back</p>
-                        </Jumbotron>
-                    </div>
-                    <div className={"section-container"}>
-                        <SegmentGroup className={"info-sections"}>
-                            <Segment>
-                                <div className={"jumbo-header"}>
-                                    <Header>Organizations{"\xa0\xa0"}</Header>
-                                    <Button icon={"add"} size={"mini"} />
-                                </div>
-                                    <p>User's organizations can be listed here as they join them</p>
-                                    <Divider section />
-                                <div className={"jumbo-header"}>
-                                    <Header>Satellites{"\xa0\xa0"}</Header>
-                                    <Button icon={"add"} size={"mini"} />
-                                </div>
-                                    <p>User's associated satellites can be viewed here</p>
-                            </Segment>
-                        </SegmentGroup>
-                    </div>
+    render() {
+        // const test = this.props;
+        console.log(this.props.org);
+
+        return (
+            <div className={"user-container"}>
+                <div className={"jumbo-container"}>
+                    <Jumbotron>
+                        <h1>Hello, user</h1>
+                        <p>Welcome back</p>
+                    </Jumbotron>
                 </div>
-            );
-        }
+                <div className={"section-container"}>
+                    <SegmentGroup className={"info-sections"}>
+                        <Segment>
+                            <div className={"jumbo-header"}>
+                                <Header>Organizations{"\xa0\xa0"}</Header>
+                                <Button onClick={this.createOrganization} icon={"add"} size={"mini"} />
+                            </div>
+                                <p>User's organizations can be listed here as they join them</p>
+                                <Divider section />
+                            <div className={"jumbo-header"}>
+                                <Header>Satellites{"\xa0\xa0"}</Header>
+                                <Button icon={"add"} size={"mini"} />
+                            </div>
+                                <p>User's associated satellites can be viewed here</p>
+                        </Segment>
+                    </SegmentGroup>
+                </div>
+            </div>
+        );
     }
+
 }
 
 const mapStateToProps = state => {
@@ -75,6 +74,7 @@ const mapStateToProps = state => {
         units: state.units,
         components: state.components,
         satObjects: state.satObjects,
+        org: state.createOrg
     };
 };
 

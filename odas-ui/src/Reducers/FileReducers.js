@@ -16,9 +16,12 @@ export const postFileReducer = (fileState = [], action) => {
 };
 
 export const fileListReducer = (fileState = [], action) => {
-    if (action.type === "FILE_LIST") {
-       return action.payload;
+    switch (action.type) {
+        case "FILE_LIST":
+            return action.payload.data.files;
+        case "FILE_LIST_FAIL":
+            return {errorMessage: action.payload.response.data.detail};
+        default:
+            return [...fileState, action.payload]
     }
-
-    return [...fileState, action.payload]
 };

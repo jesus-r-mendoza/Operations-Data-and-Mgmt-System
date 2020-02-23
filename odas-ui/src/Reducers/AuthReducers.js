@@ -1,6 +1,5 @@
-import Cookie from 'universal-cookie';
+import {cookie} from "../Definitions/BrowserCookie";
 
-const cookie = new Cookie();
 export const loginReducer = (loginState = [], action) => {
     if (action.type === 'LOGIN_SUCCESS') {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
@@ -42,9 +41,12 @@ export const logoutReducer = (logoutState = [], action) => {
 };
 
 export const createOrgReducer = (orgState = [], action) => {
-    if (action.type === "CREATE_ORG") {
-        return [...orgState]
+    switch (action.type) {
+        case "CREATE_ORG":
+            return action.payload;
+        case "ORG_FAIL":
+            return action.payload;
+        default:
+            return "Defaulted";
     }
-
-    return [...orgState];
 };
