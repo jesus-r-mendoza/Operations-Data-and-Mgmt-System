@@ -1,7 +1,13 @@
 import React from 'react';
 //Redux
 import { connect } from "react-redux"
-import { fetchUnits, fetchComponents, fetchSatellites, createOrg } from "../Actions";
+import {
+    fetchUnits,
+    fetchComponents,
+    fetchSatellites,
+    createOrg,
+    joinOrg
+} from "../Actions";
 // Components
 import {Jumbotron, Modal, Tab, Tabs, Form} from "react-bootstrap";
 import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react";
@@ -9,15 +15,18 @@ import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Layout/UserProfile.css";
 
-
 class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
             isLoading: true,
             testing: null,
-            orgName: ''
+            orgName: '',
+            inviteCode: '',
+            masterPassword: ''
         });
+
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     componentDidMount() {
@@ -41,9 +50,22 @@ class UserProfile extends React.Component {
         this.props.createOrg(this.state.orgName);
     };
 
+    joinOrganization = e => {
+        e.preventDefault();
+        this.props.joinOrg(this.state.inviteCode);
+    };
+
+    handleInputChange = e => {
+        e.preventDefault();
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
+
     render() {
         // const test = this.props;
-        console.log(this.props.org);
+        console.log(this.props.orgCreate);
+        console.log(this.props.orgJoin);
 
         return (
             <div className={"user-container"}>
@@ -86,24 +108,60 @@ class UserProfile extends React.Component {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
-                            Create
+                            Join or Create an Organization
                         </Modal.Title>
                     </Modal.Header>
                     <Tabs>
                         <Tab eventKey={"Join"} title={"Join"}>
-                            <Form.Control
-                                name={"org-name"}
-                            />
+                            <Form className={"org-form"}>
+                                <Form.Control
+                                    name={"inviteCode"}
+                                    placeholder={"Enter your invite code"}
+                                    className={"org-input"}
+                                    value={this.state.inviteCode}
+                                    onChange={this.handleInputChange}
+                                />
+                                <div className={"org-submit-btn"}>
+                                    <Button
+                                        className={"org-submit-btn"}
+                                        onClick={this.joinOrganization}
+                                    >
+                                        Submit
+                                    </Button>
+                                </div>
+                            </Form>
                         </Tab>
                         <Tab eventKey={"Create"} title={"Create"}>
-                            Hello
+                            <Form className={"org-form"}>
+                                <Form.Control
+                                    name={"orgName"}
+                                    className={"org-input"}
+                                    placeholder={"Enter the organization name"}
+                                    value={this.state.orgName}
+                                    onChange={this.handleInputChange}
+                                />
+                                <Form.Control
+                                    name={"masterPassword"}
+                                    type={"password"}
+                                    placeholder={"Enter the master password"}
+                                    className={"org-input"}
+                                    onChange={this.handleInputChange}
+                                    value={this.state.masterPassword}
+                                />
+                                <div className={"org-submit-btn"}>
+                                    <Button
+                                        onClick={this.createOrganization}
+                                    >
+                                        Submit
+                                    </Button>
+                                </div>
+                            </Form>
                         </Tab>
                     </Tabs>
                 </Modal>
             </div>
         );
     }
-
 }
 
 const mapStateToProps = state => {
@@ -111,7 +169,8 @@ const mapStateToProps = state => {
         units: state.units,
         components: state.components,
         satObjects: state.satObjects,
-        org: state.createOrg
+        orgCreate: state.createOrg,
+        orgJoin: state.joinOrg
     };
 };
 
@@ -120,5 +179,6 @@ export default connect(mapStateToProps, {
     fetchUnits,
     fetchComponents,
     fetchSatellites,
-    createOrg
+    createOrg,
+    joinOrg
 })(UserProfile)

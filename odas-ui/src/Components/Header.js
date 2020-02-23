@@ -79,7 +79,9 @@ class Header extends React.Component {
                 this.setElementStates('toastState', true);
                 clearInterval(toastInterval)
             }
-        }, 2000)
+        }, 2000);
+
+        return toastInterval;
     };
 
     changeLoginButton () {
@@ -158,7 +160,6 @@ class Header extends React.Component {
                                     placeholder={"Password"}
                                     value={this.state.password}
                                     onChange={this.handleInputChange}
-
                                 />
                             </div>
                             <Modal.Footer className={"modal-footer"}>

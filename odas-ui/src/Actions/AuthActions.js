@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiURL } from "../Definitions/SatApi";
+import SatApi, { apiURL } from "../Definitions/SatApi";
 import { authToken } from "../Definitions/BrowserCookie";
 // TODO Temporary pass variable for testing
 import { createOrgPassword } from "../Definitions/Password";
@@ -114,4 +114,24 @@ export const createOrg = (orgName='testorg') => async dispatch => {
         .then(res => res.json())
         .then(response => dispatch({type: "CREATE_ORG", payload: response}))
         .catch(error => dispatch({type: "ORG_FAIL", payload: error}))
+};
+
+export const joinOrg = inviteCode => async dispatch => {
+    const myHeaders = new Headers();
+    const orgData = new FormData();
+
+    myHeaders.append("Authorization", `Token ${authToken}`);
+    orgData.append("code", inviteCode);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: orgData,
+        redirect: 'follow'
+    };
+
+    fetch(`${apiURL}join/`, requestOptions)
+        .then(result => result.json())
+        .then(response => dispatch({type: 'JOIN_ORG', payload: response}))
+        .catch(error => dispatch({type: 'JOIN_ORG_FAIL', payload: error}));
 };
