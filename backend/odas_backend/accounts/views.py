@@ -32,15 +32,8 @@ def register(request):
             user.groups.add(invite.organization)
         user.save()
         tkn = Token.objects.create(user=user)
-        data = {
-            'id': user.id,
-            'username': user.username,
-            'token': tkn.key,
-            'data': True,
-            'error': 'None'
-        }
-        if inv:
-            data['organization'] = user.groups.all()[0].name
+
+        data = _info_response(user, token=tkn)
         return JsonResponse(data)
     except IntegrityError:
         return error.USERNAME_EXISTS
@@ -52,6 +45,9 @@ def register(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def register_org(request):
+    if len(request.user.groups.all()) > 0:
+        return error.ALREADY_IN_ORG
+
     org_name = request.POST.get('org_name')
     psw = request.POST.get('pass')
 
@@ -73,7 +69,8 @@ def register_org(request):
             except IntegrityError:
                 unique = False
 
-        return JsonResponse( { 'data': True, 'organization': org.name, 'code': invite_code, 'error': 'None' } )
+        data = _info_response(request.user)
+        return JsonResponse(data)
     except IntegrityError:
         return error.ORG_NAME_EXISTS
 
@@ -94,12 +91,8 @@ def join_org(request):
             return error.MISSING_INVITE_CODE
     except Invite.DoesNotExist:
         return error.INVITE_CODE_INVALID
-    data = {
-        'data': True,
-        'organization': invite.organization.name,
-        'code': invite.link,
-        'error': 'None'
-    }
+
+    data = _info_response(request.user)
     return JsonResponse(data)
 
 @csrf_exempt
@@ -117,20 +110,8 @@ def login(request):
         return error.USR_OR_PASS_INVALID
 
     tkn = Token.objects.get_or_create(user=user)
-    data = {
-        'id': user.id,
-        'username': user.username,
-        'token': tkn[0].key,
-        'data': True,
-        'error': 'None'
-    }
-    if len(user.groups.all()) > 0:
-        data['organization'] = user.groups.all()[0].name
-        invite = Invite.objects.filter(organization=user.groups.all()[0])[0] # The first result of the queryset is the Invite object
-        data['code'] = invite.link
-    else:
-        data['organization'] = 'None'
-        data['code'] = 'None'
+
+    data = _info_response(user, token=tkn[0])
     return JsonResponse(data)
 
 @api_view(['DELETE'])
@@ -149,3 +130,25 @@ def deploy(request):
     os.chdir(f'{settings.BASE_DIR[:-12]}scripts')
     os.system('./deploy.sh')
     return JsonResponse( {'data': True} )
+
+def _info_response(user, token=False):
+    data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+    }
+    if token:
+        data['token'] = token.key
+
+    if len(user.groups.all()) > 0:
+        data['organization'] = user.groups.all()[0].name
+        invite = Invite.objects.filter(organization=user.groups.all()[0])[0] # The first result of the queryset is the Invite object
+        data['code'] = invite.link
+    else:
+        data['organization'] = 'None'
+        data['code'] = 'None'
+
+    data['data'] = True
+    data['error'] = 'None'
+
+    return data
