@@ -87,6 +87,7 @@ class Header extends React.Component {
             return (
                 <Button
                     onClick={() => this.setElementStates('modalState', true)}
+                    variant={"info"}
                 >
                     Sign in
                 </Button>
@@ -95,6 +96,7 @@ class Header extends React.Component {
             return (
                 <Button
                     onClick={this.handleLogout}
+                    variant={"info"}
                 >
                     Sign out
                 </Button>
@@ -113,12 +115,12 @@ class Header extends React.Component {
                     </NavbarBrand>
                     <Container>
                         <div className={"nav-items"}>
-                            <DropdownButton id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
+                            <DropdownButton variant={"info"} id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
                                 <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                                 <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
                             </DropdownButton>
                             <Link to={"/profile"}>
-                                <Button>
+                                <Button variant={"info"}>
                                     Profile
                                 </Button>
                             </Link>
@@ -131,10 +133,9 @@ class Header extends React.Component {
                     size={"med"}
                     show={this.state.modalState}
                     onHide={() => this.setElementStates('modalState', false)}
-                    aria-labelledby={"example-modal-sizes-title-sm"}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title id={"example-modal-sizes-title-sm"}>
+                        <Modal.Title>
                             User Login
                         </Modal.Title>
                     </Modal.Header>

@@ -3,19 +3,20 @@ import React from 'react';
 import { connect } from "react-redux"
 import { fetchUnits, fetchComponents, fetchSatellites, createOrg } from "../Actions";
 // Components
-import { Jumbotron } from "react-bootstrap";
+import {Jumbotron, Modal, Tab, Tabs, Form} from "react-bootstrap";
+import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Layout/UserProfile.css";
-import {SegmentGroup, Segment, Header, Divider} from "semantic-ui-react";
-import {Button} from "semantic-ui-react";
+
 
 class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
             isLoading: true,
-            testing: null
+            testing: null,
+            orgName: ''
         });
     }
 
@@ -29,9 +30,15 @@ class UserProfile extends React.Component {
         });
     }
 
+    setElementState = (element, state) => {
+        this.setState({
+            [element]: state
+        });
+    };
+
     createOrganization = e => {
         e.preventDefault();
-        this.props.createOrg("orgnametest")
+        this.props.createOrg(this.state.orgName);
     };
 
     render() {
@@ -51,18 +58,48 @@ class UserProfile extends React.Component {
                         <Segment>
                             <div className={"jumbo-header"}>
                                 <Header>Organizations{"\xa0\xa0"}</Header>
-                                <Button onClick={this.createOrganization} icon={"add"} size={"mini"} />
+                                <Button
+                                    onClick={() => this.setElementState('modalState', true)}
+                                    icon={"add"}
+                                    size={"mini"}
+                                />
                             </div>
                                 <p>User's organizations can be listed here as they join them</p>
                                 <Divider section />
                             <div className={"jumbo-header"}>
                                 <Header>Satellites{"\xa0\xa0"}</Header>
-                                <Button icon={"add"} size={"mini"} />
+                                <Button
+                                    onClick={() => this.setElementState('modalState', true)}
+                                    icon={"add"}
+                                    size={"mini"}
+                                />
                             </div>
                                 <p>User's associated satellites can be viewed here</p>
                         </Segment>
                     </SegmentGroup>
                 </div>
+                <Modal
+                    size={"med"}
+                    show={this.state.modalState}
+                    onHide={() => this.setElementState('modalState', false)}
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Create
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Tabs>
+                        <Tab eventKey={"Join"} title={"Join"}>
+                            <Form.Control
+                                name={"org-name"}
+                            />
+                        </Tab>
+                        <Tab eventKey={"Create"} title={"Create"}>
+                            Hello
+                        </Tab>
+                    </Tabs>
+                </Modal>
             </div>
         );
     }
