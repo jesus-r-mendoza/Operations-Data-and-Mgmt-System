@@ -17,11 +17,13 @@ export const postFileReducer = (fileState = [], action) => {
 
 export const fileListReducer = (fileState = [], action) => {
     switch (action.type) {
+        case 'FETCHING_FILES':
+            return {files: [], isLoading: action.isLoading};
         case "FILE_LIST":
-            return action.payload.data.files;
+            return {files: action.payload.data.files, isLoading: action.isLoading};
         case "FILE_LIST_FAIL":
-            return {errorMessage: action.payload.response.data.detail};
+            return {errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
         default:
-            return [...fileState, action.payload]
+            return {files: [], isLoading: action.isLoading};
     }
 };

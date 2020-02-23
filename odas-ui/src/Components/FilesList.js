@@ -2,16 +2,16 @@ import React from "react";
 import {Table} from "semantic-ui-react";
 
 const FilesList = (props) => {
-    const fileList = props.fileList.map((file) => {
-        return (<Table.Row>
-                <Table.HeaderCell>{file}</Table.HeaderCell>
+    console.log(props.files);
+    return props.files.map((file) => {
+        return (
+            <Table.Row key={file.id}>
+                <Table.Cell>{file.name}</Table.Cell>
                 {/*<Table.HeaderCell>{props.fileUploadDate}</Table.HeaderCell>*/}
-                <Table.HeaderCell>{file}</Table.HeaderCell>
+                <Table.Cell>{file.description}</Table.Cell>
             </Table.Row>
         )
     });
-
-    return {fileList};
 };
 
 export default FilesList;

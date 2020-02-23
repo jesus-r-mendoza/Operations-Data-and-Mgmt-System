@@ -47,7 +47,6 @@ html, body {
 .datetime-pickers {
     border-radius: 10px;
     height: 40px;
-    position: absolute;
     margin-right: 20px;
 }
 

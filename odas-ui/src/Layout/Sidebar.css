@@ -10,14 +10,14 @@ html, body {
 
 /*Sidebar container*/
 .sidebar {
-    height: fit-content;
+    height: 100vh;
     width: 22em;
     background-color: #f4f3f1;
     box-shadow: 0 2px 2px 0 darkgray inset;
     overflow-y: scroll;
     position: sticky;
     position: -webkit-sticky;
-    bottom: 0;
+    /*bottom: 0;*/
 }
 
 .sidebar-title {

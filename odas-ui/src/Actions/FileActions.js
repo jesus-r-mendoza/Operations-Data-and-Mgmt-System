@@ -24,14 +24,14 @@ export const postFile = (file, desc = "None") => async dispatch => {
 };
 
 export const getFileList = () => async dispatch => {
-    // dispatch({type: "FETCHING_FILES", })
+    dispatch({type: "FETCHING_FILES", isLoading: true});
 
-    await SatApi.get('filelist/', {
+    const response = await SatApi.get('filelist/', {
         headers: {
             'Authorization': `Token ${authToken}`
         }
-    })
-        .then(response => dispatch({type: "FILE_LIST", payload: response}))
-        .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error}))
-        .catch(err => console.log(err));
+    });
+
+       dispatch({type: "FILE_LIST", payload: response, isLoading: false})
+        // .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error, isLoading: false}))
 };

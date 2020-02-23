@@ -136,15 +136,15 @@ class Sidebar extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    <div className={"gen-button-container"}>
-                        <Button
-                            type={"submit"}
-                            variant={"info"}
-                            className={"gen-button"}
-                        >
-                            Generate Report
-                        </Button>
-                    </div>
+                    {/*<div className={"gen-button-container"}>*/}
+                    {/*    <Button*/}
+                    {/*        type={"submit"}*/}
+                    {/*        variant={"info"}*/}
+                    {/*        className={"gen-button"}*/}
+                    {/*    >*/}
+                    {/*        Generate Report*/}
+                    {/*    </Button>*/}
+                    {/*</div>*/}
                 </form>
             </div>
         );

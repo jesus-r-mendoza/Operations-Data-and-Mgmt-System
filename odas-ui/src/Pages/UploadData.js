@@ -8,7 +8,7 @@ import ReportHeader from "../Components/ReportHeader";
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
-// import FilesList from "../Components/FilesList";
+import FilesList from "../Components/FilesList";
 import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
@@ -27,7 +27,6 @@ class UploadData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
             currentPage: "upload",
             selectedFile: '',
             description: '',
@@ -51,9 +50,6 @@ class UploadData extends React.Component {
             });
 
         this.props.getFileList();
-        this.setState({
-            isLoading: false
-        });
     }
 
     createArray(type) {
@@ -133,8 +129,30 @@ class UploadData extends React.Component {
         }
     };
 
+
+    extractFileDetails(fileList, detail) {
+        let fileNames = [];
+        let fileDescriptions = [];
+
+        switch (detail) {
+            case 'name':
+                for (const i in fileList) {
+                    fileNames = [...fileNames, fileList[i].name];
+                }
+                return fileNames;
+
+            case 'description':
+                for (const i in fileList) {
+                    fileDescriptions = [...fileDescriptions, fileList[i].description]
+                }
+                return fileDescriptions;
+
+            default:
+                return null;
+        }
+    }
+
     renderFileInput() {
-        console.log(this.props.fileList);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -196,10 +214,9 @@ class UploadData extends React.Component {
                                         {/*<Table.HeaderCell>Date</Table.HeaderCell>*/}
                                         <Table.HeaderCell>Description</Table.HeaderCell>
                                     </Table.Row>
-                                    {/*<FilesList*/}
-                                    {/*    name={this.props.fileList.name}*/}
-                                    {/*    description={this.props.fileList.description}*/}
-                                    {/*/>*/}
+                                    <FilesList
+                                        files={this.props.fileList.files}
+                                    />
                                 </Table.Header>
                             </Table>
                         </div>
@@ -221,13 +238,11 @@ class UploadData extends React.Component {
     render() {
         let components = this.createArray("components");
 
-        if (this.state.isLoading) {
+        if (this.props.fileList.isLoading === true) {
             return(
                 <LoadSpinner />
             );
-        }
-
-        if(!this.state.isLoading) {
+        } else {
             return (
                 <div className={"report-container"}>
                     <Sidebar components={components}>
