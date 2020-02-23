@@ -4,9 +4,13 @@ html, body {
     overflow: hidden;
 }
 
+.sidebar-container{
+    height: 100vh;
+}
+
 /*Sidebar container*/
 .sidebar {
-    height: 88vh;
+    height: fit-content;
     width: 22em;
     background-color: #f4f3f1;
     box-shadow: 0 2px 2px 0 darkgray inset;

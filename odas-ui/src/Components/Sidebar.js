@@ -98,7 +98,7 @@ class Sidebar extends React.Component {
         let components = this.props.components;
 
         return (
-            <div>
+            <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
                     <div className={"sidebar"}>
                         <div className={"sidebar-title"}>

@@ -14,6 +14,7 @@ html, body {
     position: absolute;
     width: 100vw;
     overflow-y: scroll;
+    height: 100vh;
     /*border: solid green 3px;*/
 }
 
