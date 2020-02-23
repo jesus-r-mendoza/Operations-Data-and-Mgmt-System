@@ -1,9 +1,9 @@
 import Cookie from 'universal-cookie';
 
+const cookie = new Cookie();
 export const loginReducer = (loginState = [], action) => {
     if (action.type === 'LOGIN_SUCCESS') {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
-        const cookie = new Cookie();
 
         cookie.addChangeListener(
             function() {
@@ -33,6 +33,8 @@ export const registerReducer = (registerState = [], action) => {
 
 export const logoutReducer = (logoutState = [], action) => {
     if (action.type === "LOGOUT") {
+        cookie.remove('auth');
+
         return [...logoutState, action.payload];
     }
 
