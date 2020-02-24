@@ -94,7 +94,7 @@ def upload_view(request):
     Upload.objects.create(upfile=upfile, description=desc, user=request.user)
     return JsonResponse( { 'data': True, 'error': 'None' } )
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_file(request, pk):
@@ -139,7 +139,8 @@ def file_point(request):
         entry = {
             'id': f.id,
             'name': f.upfile.name,
-            'description': f.description
+            'description': f.description,
+            'date': f.date_uploaded
         }
         files.append(entry)
 
