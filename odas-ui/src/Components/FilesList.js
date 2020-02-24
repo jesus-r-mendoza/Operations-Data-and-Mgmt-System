@@ -30,6 +30,11 @@ const FilesList = ({ files, isLoading, downloadHandler }) => {
                             icon={"download"}
                             onClick={() => downloadHandler(file.id, file.name)}
                         />
+                        <Button
+                            size={"tiny"}
+                            icon={"delete"}
+                            onClick={() => console.log("Delete", file.id, file.name)}
+                        />
                     </Table.Cell>
                 </Table.Row>
             )

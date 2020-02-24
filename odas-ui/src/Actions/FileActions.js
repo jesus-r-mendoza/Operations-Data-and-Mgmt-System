@@ -41,5 +41,5 @@ export const downloadFile = (fileId, fileName) => async dispatch => {
         headers: {'Authorization': `Token ${authToken}`}
     })
         .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
-        .catch(error => console.log(error))
+        .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
 };

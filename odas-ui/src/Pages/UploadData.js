@@ -196,7 +196,7 @@ class UploadData extends React.Component {
                                         <Table.HeaderCell>File Name</Table.HeaderCell>
                                         <Table.HeaderCell>Date</Table.HeaderCell>
                                         <Table.HeaderCell>Description</Table.HeaderCell>
-                                        <Table.HeaderCell>Download</Table.HeaderCell>
+                                        <Table.HeaderCell>Options</Table.HeaderCell>
                                     </Table.Row>
                                     <FilesList
                                         files={this.props.fileList.files}

@@ -19,10 +19,13 @@ export const fileListReducer = (fileState = [], action) => {
     switch (action.type) {
         case 'FETCHING_FILES':
             return {files: [], isLoading: action.isLoading};
+
         case "FILE_LIST":
             return {files: action.payload.data.files, isLoading: action.isLoading};
+
         case "FILE_LIST_FAIL":
             return {errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
+
         default:
             return {files: [], isLoading: action.isLoading};
     }
@@ -32,9 +35,12 @@ export const downloadFileReducer = (downloadState = [], action) => {
 
     switch (action.type) {
         case 'FILE_DOWN':
-            // return action.payload;
             download(action.payload, action.fileName);
             return action.payload;
+
+        case 'FILE_DOWN_ERROR':
+            return action.payload;
+
         default:
             return [...downloadState];
     }
