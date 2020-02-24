@@ -13,6 +13,7 @@ export const loginReducer = (loginState = [], action) => {
         cookie.set("auth", action.payload.token);
         // Message is user info object on success; Status is true
         return {message: action.payload, status: action.payload.data};
+
     } else if (action.type === 'LOGIN_FAIL') {
         // Message is the error message on failure; Status is false
         return {message: action.payload.response.data.error, status: action.payload.response.data.data};

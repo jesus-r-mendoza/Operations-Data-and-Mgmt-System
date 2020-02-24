@@ -62,8 +62,8 @@ class UserProfile extends React.Component {
         });
     };
 
+
     render() {
-        // const test = this.props;
         console.log(this.props.orgCreate);
         console.log(this.props.orgJoin);
 
@@ -91,7 +91,7 @@ class UserProfile extends React.Component {
                             <div className={"jumbo-header"}>
                                 <Header>Satellites{"\xa0\xa0"}</Header>
                                 <Button
-                                    onClick={() => this.setElementState('modalState', true)}
+                                    onClick={() => console.log("Satellites")}
                                     icon={"add"}
                                     size={"mini"}
                                 />

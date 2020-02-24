@@ -57,19 +57,18 @@ export const login = (username, pass) => async dispatch => {
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .catch(function (error) {
-            errorMessage = error
-        });
+        .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
+        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }));
     
     // If errorMessage remains empty, success is dispatched to the reducer
     if (errorMessage === '') {
         console.log(response);
 
-        dispatch({ type: "LOGIN_SUCCESS", payload: response.data })
+
     } else {
         console.log(errorMessage);
 
-        dispatch({ type: "LOGIN_FAIL", payload: errorMessage })
+
     }
 };
 

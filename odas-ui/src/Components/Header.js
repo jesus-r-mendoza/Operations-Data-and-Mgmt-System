@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Cookie from 'universal-cookie';
 // Stylesheets
 import {
     Container,
@@ -16,8 +15,8 @@ import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
-
-let cookie = new Cookie();
+// Definitions
+import {cookie} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -80,8 +79,6 @@ class Header extends React.Component {
                 clearInterval(toastInterval)
             }
         }, 2000);
-
-        return toastInterval;
     };
 
     changeLoginButton () {
@@ -108,7 +105,6 @@ class Header extends React.Component {
 
     render() {
         console.log(this.props.userLogin);
-        console.log(this.props.userLogout);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
