@@ -22,6 +22,8 @@ import {
 
 // Files
 import {
+    downloadFileReducer,
+    fileListReducer,
     postFileReducer
 } from "./FileReducers"
 
@@ -29,7 +31,9 @@ import {
 import {
     loginReducer,
     registerReducer,
-    logoutReducer
+    logoutReducer,
+    createOrgReducer,
+    joinOrgReducer
 } from "./AuthReducers";
 
 export default combineReducers({
@@ -44,5 +48,9 @@ export default combineReducers({
     login: loginReducer,
     register: registerReducer,
     logout: logoutReducer,
-    postFile: postFileReducer
+    postFile: postFileReducer,
+    createOrg: createOrgReducer,
+    getFileList: fileListReducer,
+    joinOrg: joinOrgReducer,
+    downloadFile: downloadFileReducer
 });

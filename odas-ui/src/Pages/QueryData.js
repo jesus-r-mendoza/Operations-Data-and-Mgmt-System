@@ -1,9 +1,9 @@
 import React from 'react';
 //Components
-import ReportCard from "../Components/ReportCard";
+// import ReportCard from "../Components/ReportCard";
 import ReportHeader from "../Components/ReportHeader";
 import axios from "axios";
-import {apiURL} from "../Apis/SatApi";
+import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
@@ -98,7 +98,7 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        <ReportCard />
+                        {/*<ReportCard />*/}
                     </div>
                 </div>
             );

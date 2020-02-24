@@ -1,8 +1,9 @@
-import { apiURL } from "../Apis/SatApi";
 import axios from "axios";
-import Cookies from "universal-cookie/lib";
+import SatApi, { apiURL } from "../Definitions/SatApi";
+import { authToken } from "../Definitions/BrowserCookie";
+// TODO Temporary pass variable for testing
+import { createOrgPassword } from "../Definitions/Password";
 
-const cookie = new Cookies();
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
@@ -51,15 +52,16 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
+    // TODO refactor to look like fileactions get request
     const response = await axios({
         method: 'POST',
         url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .catch((function (error) {
+        .catch(function (error) {
             errorMessage = error
-        }));
+        });
     
     // If errorMessage remains empty, success is dispatched to the reducer
     if (errorMessage === '') {
@@ -75,7 +77,6 @@ export const login = (username, pass) => async dispatch => {
 
 // Log the user out using the Auth token
 export const logout = () => async dispatch => {
-    const authToken = cookie.get('auth');
     console.log(authToken);
 
     const myHeaders = new Headers();
@@ -87,7 +88,50 @@ export const logout = () => async dispatch => {
         redirect: 'follow'
     };
 
-    fetch(`${apiURL}/logout/`, requestOptions)
+    fetch(`${apiURL}logout/`, requestOptions)
+        .then(result => result.json())
         .then(response => dispatch({type: 'LOGOUT', payload: response}))
         .catch(error => console.log('error', error));
+};
+
+export const createOrg = (orgName='testorg') => async dispatch => {
+    const headers = new Headers();
+    const orgForm = new FormData();
+
+    headers.append("Authorization", `Token ${authToken}`);
+
+    orgForm.append("org_name", orgName);
+    orgForm.append("pass", createOrgPassword);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: orgForm,
+        redirect: 'follow'
+    };
+
+    await fetch(`${apiURL}create-org/`, requestOptions)
+        .then(res => res.json())
+        .then(response => dispatch({type: "CREATE_ORG", payload: response}))
+        .catch(error => dispatch({type: "ORG_FAIL", payload: error}))
+};
+
+export const joinOrg = inviteCode => async dispatch => {
+    const myHeaders = new Headers();
+    const orgData = new FormData();
+
+    myHeaders.append("Authorization", `Token ${authToken}`);
+    orgData.append("code", inviteCode);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: orgData,
+        redirect: 'follow'
+    };
+
+    fetch(`${apiURL}join/`, requestOptions)
+        .then(result => result.json())
+        .then(response => dispatch({type: 'JOIN_ORG', payload: response}))
+        .catch(error => dispatch({type: 'JOIN_ORG_FAIL', payload: error}));
 };

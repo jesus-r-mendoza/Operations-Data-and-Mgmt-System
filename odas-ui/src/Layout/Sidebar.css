@@ -4,16 +4,20 @@ html, body {
     overflow: hidden;
 }
 
+.sidebar-container{
+    height: 100vh;
+}
+
 /*Sidebar container*/
 .sidebar {
-    height: 88vh;
+    height: 100vh;
     width: 22em;
     background-color: #f4f3f1;
     box-shadow: 0 2px 2px 0 darkgray inset;
     overflow-y: scroll;
     position: sticky;
     position: -webkit-sticky;
-    bottom: 0;
+    /*bottom: 0;*/
 }
 
 .sidebar-title {
@@ -49,7 +53,7 @@ html, body {
     display: flex;
     justify-content: center;
     background-color: #f4f3f1;
-    box-shadow: 1px 1px 4px 0 lightgray inset;
+    box-shadow: 1px 1px 4px 0 lightgray;
     bottom: 0;
     padding-bottom: 10px;
     width: 100%;

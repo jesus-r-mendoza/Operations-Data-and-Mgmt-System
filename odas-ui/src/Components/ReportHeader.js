@@ -23,11 +23,11 @@ class ReportHeader extends React.Component {
         return (
             <div className={"report-header"}>
                 <div className={"report-header-btn"}>
-                    <div>
-                        <button>
-                            <img className={"back-btn"} src={require('../Images/back1.png')} alt={""}/>
-                        </button>
-                    </div>
+                    {/*<div>*/}
+                    {/*    <button>*/}
+                    {/*        <img className={"back-btn"} src={require('../Images/back1.png')} alt={""}/>*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                     <Select
                         className={"recent-selector"}
                         options={recentNumbersOptions}
@@ -47,12 +47,6 @@ class ReportHeader extends React.Component {
                         disableClock
                         className={"datetime-pickers"}
                     />
-                    {/*<Select*/}
-                    {/*    className={"unit-filters"}*/}
-                    {/*    placeholder={"Filters"}*/}
-                    {/*    value={this.props.filter}*/}
-                    {/*    // onChange={e => this.props.selectFilters(e)}*/}
-                    {/*/>*/}
                 </div>
             </div>
         );

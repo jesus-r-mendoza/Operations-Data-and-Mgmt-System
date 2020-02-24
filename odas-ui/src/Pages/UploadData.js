@@ -1,17 +1,18 @@
 import React from 'react';
 import axios from "axios";
 // Redux
-import { postFile } from "../Actions";
-import { connect } from "react-redux";
+import {getFileList, postFile, downloadFile} from "../Actions";
+import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
-import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
-import { apiURL } from "../Apis/SatApi";
+import FilesList from "../Components/FilesList";
+import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
+import {Table} from "semantic-ui-react";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
 
@@ -25,7 +26,6 @@ class UploadData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
             currentPage: "upload",
             selectedFile: '',
             description: '',
@@ -48,9 +48,7 @@ class UploadData extends React.Component {
                 console.log(err)
             });
 
-        this.setState({
-            isLoading: false
-        });
+        this.props.getFileList();
     }
 
     createArray(type) {
@@ -61,11 +59,9 @@ class UploadData extends React.Component {
             console.log("VALUES: ", values);
             return values;
         } else if(type === "components") {
-            let values = this.state.COMPONENTS.map(function (components) {
+            return this.state.COMPONENTS.map(function (components) {
                 return (components.name);
             });
-            console.log("VALUES: ", values);
-            return values;
         }
     }
 
@@ -132,7 +128,14 @@ class UploadData extends React.Component {
         }
     };
 
+    handleDownload = (id, name) => {
+        console.log("download", id, name);
+
+        this.props.downloadFile(id, name);
+    };
+
     renderFileInput() {
+        console.log(this.props.downFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -184,6 +187,26 @@ class UploadData extends React.Component {
                     >
                         Submit
                     </Button>
+                    <div className={"files-table"}>
+                        <div>
+                            <span className={"file-table-text"}>Recent Files</span>
+                            <Table>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>File Name</Table.HeaderCell>
+                                        <Table.HeaderCell>Date</Table.HeaderCell>
+                                        <Table.HeaderCell>Description</Table.HeaderCell>
+                                        <Table.HeaderCell>Options</Table.HeaderCell>
+                                    </Table.Row>
+                                    <FilesList
+                                        files={this.props.fileList.files}
+                                        downloadHandler={this.handleDownload}
+                                        isLoading={this.props.fileList.isLoading}
+                                    />
+                                </Table.Header>
+                            </Table>
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -199,36 +222,27 @@ class UploadData extends React.Component {
     }
 
     render() {
-        console.log(this.props.uploadFile);
         let components = this.createArray("components");
 
-        if (this.state.isLoading) {
-            return(
-                <LoadSpinner />
-            );
-        }
-
-        if(!this.state.isLoading) {
-            return (
-                <div className={"report-container"}>
-                    <Sidebar
-                        components={components}
-                    >
-                        Upload a Dataset
-                    </Sidebar>
-                    <div className={"report-body"}>
-                        {this.renderFileInput()}
-                    </div>
+        return (
+            <div className={"report-container"}>
+                <Sidebar components={components}>
+                    Upload a Dataset
+                </Sidebar>
+                <div className={"report-body"}>
+                    {this.renderFileInput()}
                 </div>
-            );
-        }
+            </div>
+        );
     }
 }
 
-const mapStateToProps = uploadState => {
+const mapStateToProps = state => {
     return {
-        uploadFile: uploadState.postFile
+        uploadFile: state.postFile,
+        fileList: state.getFileList,
+        downFile: state.downloadFile
     };
 };
 
-export default connect(mapStateToProps, { postFile })(UploadData);
+export default connect(mapStateToProps, { postFile, getFileList, downloadFile })(UploadData);

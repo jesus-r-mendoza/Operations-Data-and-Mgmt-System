@@ -1,6 +1,5 @@
-import Cookie from 'universal-cookie';
+import {cookie} from "../Definitions/BrowserCookie";
 
-const cookie = new Cookie();
 export const loginReducer = (loginState = [], action) => {
     if (action.type === 'LOGIN_SUCCESS') {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
@@ -12,11 +11,11 @@ export const loginReducer = (loginState = [], action) => {
         );
 
         cookie.set("auth", action.payload.token);
-
-        return [...loginState, action.payload.data];
+        // Message is user info object on success; Status is true
+        return {message: action.payload, status: action.payload.data};
     } else if (action.type === 'LOGIN_FAIL') {
-
-        return [...loginState, action.payload.response.data.data];
+        // Message is the error message on failure; Status is false
+        return {message: action.payload.response.data.error, status: action.payload.response.data.data};
     }
 
 
@@ -39,4 +38,26 @@ export const logoutReducer = (logoutState = [], action) => {
     }
 
     return logoutState;
+};
+
+export const createOrgReducer = (orgState = [], action) => {
+    switch (action.type) {
+        case "CREATE_ORG":
+            return action.payload;
+        case "ORG_FAIL":
+            return action.payload;
+        default:
+            return "Defaulted";
+    }
+};
+
+export const joinOrgReducer = (orgState = [], action) => {
+    switch (action.type) {
+        case 'JOIN_ORG':
+            return action.payload;
+        case 'JOIN_ORG_FAIL':
+            return action.payload;
+        default:
+            return orgState;
+    }
 };

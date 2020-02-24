@@ -1,5 +1,4 @@
 import React from 'react';
-import CheckComponent from "./CheckComponent";
 // Stylesheets
 import '../Layout/Sidebar.css'
 import { Button } from "react-bootstrap";
@@ -7,6 +6,7 @@ import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
 // import LoadSpinner from "./LoadSpinner";
+import CheckComponent from "./CheckComponent";
 // Redux
 import { connect } from 'react-redux';
 import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
@@ -98,7 +98,7 @@ class Sidebar extends React.Component {
         let components = this.props.components;
 
         return (
-            <div>
+            <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
                     <div className={"sidebar"}>
                         <div className={"sidebar-title"}>
@@ -118,13 +118,13 @@ class Sidebar extends React.Component {
                                 <Divider horizontal>Components</Divider>
                                     {this.createCheckboxes(components)}
                                     <div className={"selection-buttons"}>
-                                        <Button
-                                            variant={"outline-success"}
-                                            onClick={this.selectAll}
-                                            size={"sm"}
-                                        >
-                                            Select All
-                                        </Button>
+                                        {/*<Button*/}
+                                        {/*    variant={"outline-success"}*/}
+                                        {/*    onClick={this.selectAll}*/}
+                                        {/*    size={"sm"}*/}
+                                        {/*>*/}
+                                        {/*    Select All*/}
+                                        {/*</Button>*/}
                                         <Button
                                             variant={"outline-danger"}
                                             onClick={this.deselectAll}
@@ -136,15 +136,15 @@ class Sidebar extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    <div className={"gen-button-container"}>
-                        <Button
-                            type={"submit"}
-                            variant={"info"}
-                            className={"gen-button"}
-                        >
-                            Generate Report
-                        </Button>
-                    </div>
+                    {/*<div className={"gen-button-container"}>*/}
+                    {/*    <Button*/}
+                    {/*        type={"submit"}*/}
+                    {/*        variant={"info"}*/}
+                    {/*        className={"gen-button"}*/}
+                    {/*    >*/}
+                    {/*        Generate Report*/}
+                    {/*    </Button>*/}
+                    {/*</div>*/}
                 </form>
             </div>
         );
@@ -154,7 +154,7 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        sats: state.name
+        components: state.components
     };
 };
 

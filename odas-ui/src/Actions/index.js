@@ -22,12 +22,16 @@ import {
 import {
     register,
     login,
-    logout
+    logout,
+    createOrg,
+    joinOrg
 } from "./AuthActions";
 
 // Files
 import {
-    postFile
+    postFile,
+    getFileList,
+    downloadFile
 } from "./FileActions";
 
 export {
@@ -42,7 +46,11 @@ export {
     register,
     login,
     logout,
-    postFile
+    postFile,
+    createOrg,
+    getFileList,
+    joinOrg,
+    downloadFile
 };
 
 
