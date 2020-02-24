@@ -1,8 +1,6 @@
 import axios from "axios";
-import SatApi, { apiURL } from "../Definitions/SatApi";
+import { apiURL } from "../Definitions/SatApi";
 import { authToken } from "../Definitions/BrowserCookie";
-// TODO Temporary pass variable for testing
-import { createOrgPassword } from "../Definitions/Password";
 
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
@@ -101,7 +99,6 @@ export const createOrg = (orgName='testorg') => async dispatch => {
     headers.append("Authorization", `Token ${authToken}`);
 
     orgForm.append("org_name", orgName);
-    orgForm.append("pass", createOrgPassword);
 
     const requestOptions = {
         method: 'POST',
