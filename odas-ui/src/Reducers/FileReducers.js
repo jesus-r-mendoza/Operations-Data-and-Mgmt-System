@@ -27,3 +27,15 @@ export const fileListReducer = (fileState = [], action) => {
             return {files: [], isLoading: action.isLoading};
     }
 };
+export const downloadFileReducer = (downloadState = [], action) => {
+    let download = require('js-file-download');
+
+    switch (action.type) {
+        case 'FILE_DOWN':
+            // return action.payload;
+            download(action.payload, action.fileName);
+            return action.payload;
+        default:
+            return [...downloadState];
+    }
+};

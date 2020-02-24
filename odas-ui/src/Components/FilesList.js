@@ -1,17 +1,40 @@
 import React from "react";
-import {Table} from "semantic-ui-react";
+// Components
+import {Table, Button} from "semantic-ui-react";
+import {Spinner} from "react-bootstrap";
+// Stylesheets
+import "../Layout/Utilities.css"
 
-const FilesList = (props) => {
-    console.log(props.files);
-    return props.files.map((file) => {
+// Explicit declaration of props require {}
+// Files is array of objects, map() iterates over for each {file} object
+const FilesList = ({ files, isLoading, downloadHandler }) => {
+    console.log(files);
+    if (isLoading) {
         return (
-            <Table.Row key={file.id}>
-                <Table.Cell>{file.name}</Table.Cell>
-                {/*<Table.HeaderCell>{props.fileUploadDate}</Table.HeaderCell>*/}
-                <Table.Cell>{file.description}</Table.Cell>
-            </Table.Row>
-        )
-    });
+            <Spinner
+                as={"tr"}
+                animation={"border"}
+                role={"status"}
+            />
+        );
+    } else {
+        return files.map((file) => {
+            return (
+                <Table.Row key={file.id}>
+                    <Table.Cell>{file.name}</Table.Cell>
+                    <Table.Cell>Today</Table.Cell>
+                    <Table.Cell>{file.description}</Table.Cell>
+                    <Table.Cell>
+                        <Button
+                            size={"tiny"}
+                            icon={"download"}
+                            onClick={() => downloadHandler(file.id, file.name)}
+                        />
+                    </Table.Cell>
+                </Table.Row>
+            )
+        });
+    }
 };
 
 export default FilesList;

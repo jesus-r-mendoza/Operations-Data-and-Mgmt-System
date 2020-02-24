@@ -1,5 +1,6 @@
 import SatApi, { apiURL } from "../Definitions/SatApi";
 import {authToken} from "../Definitions/BrowserCookie";
+import axios from 'axios';
 
 export const postFile = (file, desc = "None") => async dispatch => {
     console.log("File", file.name);
@@ -26,12 +27,19 @@ export const postFile = (file, desc = "None") => async dispatch => {
 export const getFileList = () => async dispatch => {
     dispatch({type: "FETCHING_FILES", isLoading: true});
 
-    const response = await SatApi.get('filelist/', {
+    await SatApi.get('filelist/', {
         headers: {
             'Authorization': `Token ${authToken}`
         }
-    });
+    })
+        .then(response => dispatch({type: "FILE_LIST", payload: response, isLoading: false}))
+        .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error, isLoading: false}))
+};
 
-       dispatch({type: "FILE_LIST", payload: response, isLoading: false})
-        // .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error, isLoading: false}))
+export const downloadFile = (fileId, fileName) => async dispatch => {
+    await axios.get(`${apiURL}files/download/${fileId}/`, {
+        headers: {'Authorization': `Token ${authToken}`}
+    })
+        .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
+        .catch(error => console.log(error))
 };

@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from "axios";
 // Redux
-import {getFileList, postFile} from "../Actions";
+import {getFileList, postFile, downloadFile} from "../Actions";
 import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
-import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
@@ -129,30 +128,14 @@ class UploadData extends React.Component {
         }
     };
 
+    handleDownload = (id, name) => {
+        console.log("download", id, name);
 
-    extractFileDetails(fileList, detail) {
-        let fileNames = [];
-        let fileDescriptions = [];
-
-        switch (detail) {
-            case 'name':
-                for (const i in fileList) {
-                    fileNames = [...fileNames, fileList[i].name];
-                }
-                return fileNames;
-
-            case 'description':
-                for (const i in fileList) {
-                    fileDescriptions = [...fileDescriptions, fileList[i].description]
-                }
-                return fileDescriptions;
-
-            default:
-                return null;
-        }
-    }
+        this.props.downloadFile(id, name);
+    };
 
     renderFileInput() {
+        console.log(this.props.downFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -211,11 +194,14 @@ class UploadData extends React.Component {
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell>File Name</Table.HeaderCell>
-                                        {/*<Table.HeaderCell>Date</Table.HeaderCell>*/}
+                                        <Table.HeaderCell>Date</Table.HeaderCell>
                                         <Table.HeaderCell>Description</Table.HeaderCell>
+                                        <Table.HeaderCell>Download</Table.HeaderCell>
                                     </Table.Row>
                                     <FilesList
                                         files={this.props.fileList.files}
+                                        downloadHandler={this.handleDownload}
+                                        isLoading={this.props.fileList.isLoading}
                                     />
                                 </Table.Header>
                             </Table>
@@ -238,30 +224,25 @@ class UploadData extends React.Component {
     render() {
         let components = this.createArray("components");
 
-        if (this.props.fileList.isLoading === true) {
-            return(
-                <LoadSpinner />
-            );
-        } else {
-            return (
-                <div className={"report-container"}>
-                    <Sidebar components={components}>
-                        Upload a Dataset
-                    </Sidebar>
-                    <div className={"report-body"}>
-                        {this.renderFileInput()}
-                    </div>
+        return (
+            <div className={"report-container"}>
+                <Sidebar components={components}>
+                    Upload a Dataset
+                </Sidebar>
+                <div className={"report-body"}>
+                    {this.renderFileInput()}
                 </div>
-            );
-        }
+            </div>
+        );
     }
 }
 
 const mapStateToProps = state => {
     return {
         uploadFile: state.postFile,
-        fileList: state.getFileList
+        fileList: state.getFileList,
+        downFile: state.downloadFile
     };
 };
 
-export default connect(mapStateToProps, { postFile, getFileList })(UploadData);
+export default connect(mapStateToProps, { postFile, getFileList, downloadFile })(UploadData);

@@ -13,7 +13,6 @@ import "./Layout/Main.css";
 import Dashboard from "./Pages/UserProfile";
 
 export default class App extends React.Component {
-
     render() {
         return (
             <Router>

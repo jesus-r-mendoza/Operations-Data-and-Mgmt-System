@@ -30,7 +30,8 @@ import {
 // Files
 import {
     postFile,
-    getFileList
+    getFileList,
+    downloadFile
 } from "./FileActions";
 
 export {
@@ -48,7 +49,8 @@ export {
     postFile,
     createOrg,
     getFileList,
-    joinOrg
+    joinOrg,
+    downloadFile
 };
 
 
