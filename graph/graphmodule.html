@@ -22,25 +22,7 @@
 		<script>	
 			console.log('start');
 			const myHeaders = new Headers();
-			var url = 'http://127.0.0.1:8000/api/';
-			var out;
-			var compSpecified = false;
-			var quantity; 
-			var realQuantity;
-			var checkQuantities;
-			var outSort;
-			var data;
-			var sortedMeasurements = [];
-			var allUnits = [];
-			var allNames = [];
-			var distinct;
-			var distinctUnits;
-			var numUniqueUnits;
-			var distinctNames;
-			var numUniqueNames;
-			var totalNumGraphs;
-			var totalGraphsArray;
-			var altcurrentData;
+			var url = 'http://127.0.0.1:8080/api/';
 			
 			function testheaders(myHeaders){
 			myHeaders.append('Content-Type', 'application/json');
@@ -60,32 +42,27 @@
 			fetch(request)//, {mode: 'no-cors', headers: {'Access-Control-Allow-Origin':'*'}})//"same-origin"})//no-cors"})
 				.then(res => res.json())
 				.then((out2) => {
-					window.out = out2;
-					checkData();
-					createDataUnit();
-					sortMeasurements();
-					makeParameters();
-					makeGraphArray();
-					reorder();
-					setGraphType();
-					plotGraph();
+					//window.
+					var compSpecified = false;
+					var out = out2;
+					checkData(out, compSpecified);
 				})
 				.catch(err => console.error(err));
 				
-			function checkData(){
+			function checkData(out, compSpecified){
 				var error;
 				console.log('Test 1: Full API:', out);
 				if(out.data==true){
 					titleSpecs(out);
-					window.compSpecified = false;
+					//window.
+					compSpecified = false;
 					checkCompSpecified(out);
-					quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
-					realQuantity = 0;
+					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
+					var realQuantity = 0;
 					realQuantity = out.Measurements.length;
-					checkQuantities = false;
-					checkQuantitiesMatch(quantity, realQuantity);
-					outSort = out; //will leave original out untouched.
-					data = [];
+					var checkQuantities = false;
+					checkQuantitiesMatch(quantity, realQuantity, checkQuantities);
+					createDataUnit(out, realQuantity, compSpecified);
 				}
 				else if(out.data==false){
 					error = out.error;
@@ -97,9 +74,10 @@
 				}
 			}
 			
-			function createDataUnit(){
+			function createDataUnit(out, realQuantity, compSpecified){
 				for(var c=0;c<realQuantity;c++){
 					var dataUnit = [];
+					var data = [];
 					if(compSpecified == true){
 						dataUnit.push(out.Component.category);
 						dataUnit.push(out.Component.description);
@@ -112,11 +90,16 @@
 						data.push(dataUnit);
 				}
 					console.log('Test 4: Formatted Data Array: ', data);
+					var outSort = out;
+					sortMeasurements(outSort, realQuantity, compSpecified);
 			}
 			
-			function sortMeasurements(){
+			function sortMeasurements(outSort, realQuantity, compSpecified){
 				outSort.Measurements.sort(compare.bind(null, 'units'));
 				console.log('Test 5: Sorted Out: ', outSort.Measurements);
+				var allUnits = [];
+				var allNames = [];
+				var sortedMeasurements = [];
 					for(var a=0;a<realQuantity;a++){
 						sortedMeasurements.push(outSort.Measurements[a]);
 						allUnits.push(outSort.Measurements[a].units);
@@ -124,31 +107,33 @@
 							allNames.push(outSort.Measurements[a].component_name[0]);
 						}
 					}
-				console.log('Test SortedMeasurements JSON: ', sortedMeasurements);				
+				console.log('Test SortedMeasurements JSON: ', sortedMeasurements);	
+				makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 			
-			function makeParameters(){
+			function makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified){
 				console.log('Test 6: Data Attributes: ');
-				distinct = (value, index, self) => {
+				var distinct = (value, index, self) => {
 					return self.indexOf(value) === index;
 				}
-				distinctUnits = allUnits.filter(distinct);
+				var distinctUnits = allUnits.filter(distinct);
 				console.log('Test Distinct Units: ', distinctUnits);
-				numUniqueUnits = distinctUnits.length;
+				var numUniqueUnits = distinctUnits.length;
 				console.log('Test Num Unique Units: ', numUniqueUnits);
-				distinctNames = allNames.filter(distinct);
+				var distinctNames = allNames.filter(distinct);
 				console.log('Test Distinct Names: ', distinctNames);
-				numUniqueNames = distinctNames.length;
+				var numUniqueNames = distinctNames.length;
 				console.log('Test Num Unique Names: ', numUniqueNames);
 				
-				totalNumGraphs = numUniqueUnits*numUniqueNames;
+				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified == false){
 					totalNumGraphs = numUniqueUnits;
 				}
 				console.log('Total Num Graphs: ', totalNumGraphs);
+				makeGraphArray(totalNumGraphs, numUniqueNames, distinctNames, numUniqueUnits, distinctUnits, realQuantity, sortedMeasurements, compSpecified);
 			}
-			function makeGraphArray(){
-				totalGraphsArray = [];
+			function makeGraphArray(totalNumGraphs, numUniqueNames, distinctNames, numUniqueUnits, distinctUnits, realQuantity, sortedMeasurements, compSpecified){
+				var totalGraphsArray = [];
 				for(var a=0;a<totalNumGraphs;a++){
 					//make dummy positions
 					var dummyGraph = [];
@@ -173,8 +158,9 @@
 				}
 				console.log('Test 7: Total Graphs Array: ', totalGraphsArray);
 				console.log('Test Total Graphs Array Length', totalGraphsArray.length);
+				reorder(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
-			function reorder(){
+			function reorder(totalGraphsArray, totalNumGraphs, compSpecified){
 				//Flip components to list them in correct sequential order.
 				for(var a=0;a<totalGraphsArray.length;a++){
 					if(totalGraphsArray[a].length>1){
@@ -185,9 +171,10 @@
 					}
 				}
 				console.log('Test 8: Reordered Total Graphs Array: ', totalGraphsArray);
+				setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
-			function setGraphType(){
-				altcurrentData = [];
+			function setGraphType(totalGraphsArray, totalNumGraphs, compSpecified){
+				var altcurrentData = [];
 				for(var a=0;a<totalNumGraphs;a++){
 					if (totalGraphsArray[a].length!=0&&totalGraphsArray[a].length!=null){
 						for(var b=0;b<totalGraphsArray[a].length;b++){
@@ -208,8 +195,9 @@
 					console.log('Example Unspecified Unit-Name(Specified): ');
 					exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
 				}
+				plotGraph(compSpecified);
 			}
-			function plotGraph(){
+			function plotGraph(compSpecified){
 				console.log('Example Graph Data: ', exampleGraphData);
 				exampleTime = [];
 				exampleValue = [];
@@ -333,7 +321,7 @@
 			window.compSpecified = out.comp_specified;
 			console.log('Test 2: Component Specified?: ', compSpecified);
 		}
-		function checkQuantitiesMatch(quantity, realQuantity){
+		function checkQuantitiesMatch(quantity, realQuantity, checkQuantities){
 			if(quantity==realQuantity){
 				checkQuantities = true;
 				window.checkQuantities = true;
@@ -344,6 +332,7 @@
 			if(quantity==realQuantity==0){
 				console.log('Error: No Data');
 			}
+			return checkQuantities;
 		}
 		function compare(key,a,b){
 			if(a.key<b.key){
@@ -366,7 +355,7 @@
 			var textnode = document.createTextNode(error);
 			var textnode2 = document.createTextNode(error);
 			node.appendChild(textnode);
-			node2.appendChild(textnode2);
+			node2.appendChild(textnode2);+
 			document.getElementById("toptitle").appendChild(node);
 			document.getElementById("tablechart").appendChild(node2);
 		}
