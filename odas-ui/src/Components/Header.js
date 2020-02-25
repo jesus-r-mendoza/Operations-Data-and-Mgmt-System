@@ -31,7 +31,7 @@ class Header extends React.Component {
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
-    }
+    };
 
     componentDidMount() {
         if (cookie.get('auth')) {
@@ -39,15 +39,15 @@ class Header extends React.Component {
                 signedIn: true
             })
         }
-    }
+    };
 
     setElementStates(element, state) {
         this.setState({
             [element]: state
         })
-    }
+    };
 
-    // Set the input state
+    // Set input states
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -61,15 +61,8 @@ class Header extends React.Component {
         this.props.login(this.state.username, this.state.password);
 
         this.setElementStates('modalState', false);
-        // Check login status response every 2 seconds and show success toast when true
-        let toastInterval = setInterval(() => {
-            if (this.props.userLogin.status === true) {
-                this.setElementStates('toastTitle', 'Welcome!');
-                this.setElementStates('toastMessage', 'in');
-                this.setElementStates('toastState', true);
-                clearInterval(toastInterval)
-            }
-        }, 2000)
+        this.setElementStates('signedIn', true);
+        this.setElementStates('toastState', true);
     };
 
     handleLogout = e => {
@@ -78,11 +71,12 @@ class Header extends React.Component {
 
         this.setElementStates('username', '');
         this.setElementStates('password', '');
-        this.showLoginModal();
+        this.setElementStates('signedIn', false);
+        this.setElementStates('toastState', true);
     };
 
     showLoginModal() {
-        if (this.state.signedIn) {
+        if (this.state.signedIn === true) {
             return (
                 <Toast
                     onClose={() => this.setElementStates('toastState', false)}

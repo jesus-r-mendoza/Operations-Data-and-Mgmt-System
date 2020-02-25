@@ -18,6 +18,7 @@ export const loginReducer = (loginState = [], action) => {
             if (action.payload.response) {
                 return {message: action.payload.response.data.error, status: action.payload.response.data.data};
             } else {
+                // Prevents the front end from crashing if there is no backend server
                 return {message: "Something went wrong", status: false}
             }
 
