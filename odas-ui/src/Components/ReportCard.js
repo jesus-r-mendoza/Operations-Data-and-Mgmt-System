@@ -40,7 +40,9 @@ export default class ReportCard extends React.Component {
 	}
 		
 	componentDidMount() {
-		this.getDataFetch();
+	//	this.getDataFetch();
+	var jsonString = require('./testapi.json');
+	console.log(jsonString);
 //	this.initial(response);
 	this.initial();
 	setInterval(this.increaseGraphic, 1000);

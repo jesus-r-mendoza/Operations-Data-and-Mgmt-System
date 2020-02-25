@@ -29,7 +29,7 @@
     "Quantities": {
         "Comp 1": 1
     },
-    "comp_specified": false,
+"comp_specified": false,
     "data": true,
     "error": "None"
-}
+	}
