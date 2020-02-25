@@ -51,7 +51,7 @@ export const login = (username, pass) => async dispatch => {
     console.log("Password", loginData.get("pass"));
 
     // TODO refactor to look like fileactions get request
-    const response = await axios({
+    await axios({
         method: 'POST',
         url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
@@ -60,16 +60,6 @@ export const login = (username, pass) => async dispatch => {
         .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
         .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }));
     
-    // If errorMessage remains empty, success is dispatched to the reducer
-    if (errorMessage === '') {
-        console.log(response);
-
-
-    } else {
-        console.log(errorMessage);
-
-
-    }
 };
 
 // Log the user out using the Auth token

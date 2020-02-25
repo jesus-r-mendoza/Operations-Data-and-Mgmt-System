@@ -2,9 +2,6 @@ import React from 'react';
 //Redux
 import { connect } from "react-redux"
 import {
-    fetchUnits,
-    fetchComponents,
-    fetchSatellites,
     createOrg,
     joinOrg
 } from "../Actions";
@@ -150,7 +147,7 @@ class UserProfile extends React.Component {
                                 />
                                 <div className={"org-submit-btn"}>
                                     <Button
-                                        onClick={this.createOrganization}
+                                        onClick={console.log("Create satellite object")}
                                     >
                                         Submit
                                     </Button>
@@ -166,9 +163,6 @@ class UserProfile extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        units: state.units,
-        components: state.components,
-        satObjects: state.satObjects,
         orgCreate: state.createOrg,
         orgJoin: state.joinOrg
     };
@@ -176,9 +170,6 @@ const mapStateToProps = state => {
 
 // Connect returns a function and second parenthesis invokes returned function
 export default connect(mapStateToProps, {
-    fetchUnits,
-    fetchComponents,
-    fetchSatellites,
     createOrg,
     joinOrg
 })(UserProfile)
