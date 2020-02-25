@@ -27,9 +27,6 @@ class UserProfile extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchSatellites();
-        this.props.fetchUnits();
-        this.props.fetchComponents();
 
         this.setState({
             isLoading: false
@@ -147,7 +144,7 @@ class UserProfile extends React.Component {
                                 />
                                 <div className={"org-submit-btn"}>
                                     <Button
-                                        onClick={console.log("Create satellite object")}
+                                        onClick={this.createOrganization}
                                     >
                                         Submit
                                     </Button>

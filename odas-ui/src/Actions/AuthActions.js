@@ -50,7 +50,7 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
-    // TODO refactor to look like fileactions get request
+    // TODO refactor to look like file actions get request
     await axios({
         method: 'POST',
         url: `${apiURL}login/`,
