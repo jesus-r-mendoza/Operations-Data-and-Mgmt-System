@@ -1,7 +1,12 @@
 import React from 'react';
 import axios from "axios";
 // Redux
-import {getFileList, postFile, downloadFile} from "../Actions";
+import {
+    getFileList,
+    postFile,
+    downloadFile,
+    deleteFile
+} from "../Actions";
 import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
@@ -129,13 +134,16 @@ class UploadData extends React.Component {
     };
 
     handleDownload = (id, name) => {
-        console.log("download", id, name);
-
         this.props.downloadFile(id, name);
+    };
+
+    handleDelete = (id) => {
+        this.props.deleteFile(id)
     };
 
     renderFileInput() {
         console.log(this.props.downFile);
+        console.log(this.props.delFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -200,8 +208,9 @@ class UploadData extends React.Component {
                                     </Table.Row>
                                     <FilesList
                                         files={this.props.fileList.files}
-                                        downloadHandler={this.handleDownload}
                                         isLoading={this.props.fileList.isLoading}
+                                        downloadHandler={this.handleDownload}
+                                        deleteHandler={this.handleDelete}
                                     />
                                 </Table.Header>
                             </Table>
@@ -241,8 +250,14 @@ const mapStateToProps = state => {
     return {
         uploadFile: state.postFile,
         fileList: state.getFileList,
-        downFile: state.downloadFile
+        downFile: state.downloadFile,
+        delFile: state.deleteFile
     };
 };
 
-export default connect(mapStateToProps, { postFile, getFileList, downloadFile })(UploadData);
+export default connect(mapStateToProps, {
+    postFile,
+    getFileList,
+    downloadFile,
+    deleteFile
+})(UploadData);

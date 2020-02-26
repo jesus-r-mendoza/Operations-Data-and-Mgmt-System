@@ -24,7 +24,7 @@ export const fileListReducer = (fileState = [], action) => {
             return {files: action.payload.data.files, isLoading: action.isLoading};
 
         case "FILE_LIST_FAIL":
-            return {errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
+            return {files: [], errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
 
         default:
             return {files: [], isLoading: action.isLoading};
@@ -43,5 +43,16 @@ export const downloadFileReducer = (downloadState = [], action) => {
 
         default:
             return [...downloadState];
+    }
+};
+
+export const deleteFileReducer = (deleteState = [], action) => {
+    switch (action.type) {
+        case 'FILE_DELETE':
+            return deleteState;
+        case 'FILE_DELETE_FAIL':
+            return deleteState;
+        default:
+            return [...deleteState];
     }
 };

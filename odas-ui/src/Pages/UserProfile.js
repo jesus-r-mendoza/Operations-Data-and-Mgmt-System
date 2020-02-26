@@ -2,9 +2,6 @@ import React from 'react';
 //Redux
 import { connect } from "react-redux"
 import {
-    fetchUnits,
-    fetchComponents,
-    fetchSatellites,
     createOrg,
     joinOrg
 } from "../Actions";
@@ -30,9 +27,6 @@ class UserProfile extends React.Component {
     }
 
     componentDidMount() {
-        this.props.fetchSatellites();
-        this.props.fetchUnits();
-        this.props.fetchComponents();
 
         this.setState({
             isLoading: false
@@ -62,8 +56,8 @@ class UserProfile extends React.Component {
         });
     };
 
+
     render() {
-        // const test = this.props;
         console.log(this.props.orgCreate);
         console.log(this.props.orgJoin);
 
@@ -91,7 +85,7 @@ class UserProfile extends React.Component {
                             <div className={"jumbo-header"}>
                                 <Header>Satellites{"\xa0\xa0"}</Header>
                                 <Button
-                                    onClick={() => this.setElementState('modalState', true)}
+                                    onClick={() => console.log("Satellites")}
                                     icon={"add"}
                                     size={"mini"}
                                 />
@@ -166,9 +160,6 @@ class UserProfile extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        units: state.units,
-        components: state.components,
-        satObjects: state.satObjects,
         orgCreate: state.createOrg,
         orgJoin: state.joinOrg
     };
@@ -176,9 +167,7 @@ const mapStateToProps = state => {
 
 // Connect returns a function and second parenthesis invokes returned function
 export default connect(mapStateToProps, {
-    fetchUnits,
-    fetchComponents,
-    fetchSatellites,
     createOrg,
-    joinOrg
+    joinOrg,
+
 })(UserProfile)

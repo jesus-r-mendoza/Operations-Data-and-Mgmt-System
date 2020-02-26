@@ -12,8 +12,7 @@ export const componentsReducer = (state = [], action) => {
         case 'FETCH_COMPS':
             return [...state, action.payload];
         case 'SIGNED_OUT':
-            console.log(action.payload);
-            return [action.payload];
+            return action.payload;
         default:
             return state;
     }

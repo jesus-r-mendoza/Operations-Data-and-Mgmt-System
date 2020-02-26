@@ -7,7 +7,7 @@ import "../Layout/Utilities.css"
 
 // Explicit declaration of props require {}
 // Files is array of objects, map() iterates over for each {file} object
-const FilesList = ({ files, isLoading, downloadHandler }) => {
+const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
     console.log(files);
     if (isLoading) {
         return (
@@ -33,7 +33,7 @@ const FilesList = ({ files, isLoading, downloadHandler }) => {
                         <Button
                             size={"tiny"}
                             icon={"delete"}
-                            onClick={() => console.log("Delete", file.id, file.name)}
+                            onClick={() => deleteHandler(file.id)}
                         />
                     </Table.Cell>
                 </Table.Row>

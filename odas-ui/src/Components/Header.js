@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Cookie from 'universal-cookie';
 // Stylesheets
 import {
     Container,
@@ -16,8 +15,8 @@ import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
-
-let cookie = new Cookie();
+// Definitions
+import {cookie} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -25,23 +24,30 @@ class Header extends React.Component {
         this.state = {
             modalState: false,
             toastState: false,
-            toastMessage: '',
-            toastTitle: '',
+            signedIn: false,
             username: '',
             email: '',
             password: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
-    }
+    };
+
+    componentDidMount() {
+        if (cookie.get('auth')) {
+            this.setState({
+                signedIn: true
+            })
+        }
+    };
 
     setElementStates(element, state) {
         this.setState({
             [element]: state
         })
-    }
+    };
 
-    // Set the input state
+    // Set input states
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -55,15 +61,8 @@ class Header extends React.Component {
         this.props.login(this.state.username, this.state.password);
 
         this.setElementStates('modalState', false);
-        // Check login status response every 2 seconds and show success toast when true
-        let toastInterval = setInterval(() => {
-            if (this.props.userLogin.status === true) {
-                this.setElementStates('toastTitle', 'Welcome!');
-                this.setElementStates('toastMessage', 'in');
-                this.setElementStates('toastState', true);
-                clearInterval(toastInterval)
-            }
-        }, 2000)
+        this.setElementStates('signedIn', true);
+        this.setElementStates('toastState', true);
     };
 
     handleLogout = e => {
@@ -72,17 +71,41 @@ class Header extends React.Component {
 
         this.setElementStates('username', '');
         this.setElementStates('password', '');
-        let toastInterval = setInterval(() => {
-            if (this.props.userLogin.status === true) {
-                this.setElementStates('toastTitle', 'See you next time!');
-                this.setElementStates('toastMessage', 'out');
-                this.setElementStates('toastState', true);
-                clearInterval(toastInterval)
-            }
-        }, 2000);
-
-        return toastInterval;
+        this.setElementStates('signedIn', false);
+        this.setElementStates('toastState', true);
     };
+
+    showLoginModal() {
+        if (this.props.userLogin) {
+            return (
+                <Toast
+                    onClose={() => this.setElementStates('toastState', false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className={"toast-title"}>Welcome!</strong>
+                    </Toast.Header>
+                    <Toast.Body className={"toast-body"}>You have successfully logged in.</Toast.Body>
+                </Toast>
+            );
+        } else if (this.props.userLogout) {
+            return (
+                <Toast
+                    onClose={() => this.setElementStates('toastState', false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className={"toast-title"}>See you next time!</strong>
+                    </Toast.Header>
+                    <Toast.Body className={"toast-body"}>You have successfully logged out.</Toast.Body>
+                </Toast>
+            );
+        }
+    }
 
     changeLoginButton () {
         if (!cookie.get('auth')) {
@@ -107,8 +130,8 @@ class Header extends React.Component {
     }
 
     render() {
-        console.log(this.props.userLogin);
-        console.log(this.props.userLogout);
+        console.log(this.props.userLogin.status);
+        console.log(this.props.userLogout.error);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -183,17 +206,7 @@ class Header extends React.Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
-                <Toast
-                    onClose={() => this.setElementStates('toastState', false)}
-                    show={this.state.toastState}
-                    delay={3000} autohide
-                    className={"login-toast"}
-                >
-                    <Toast.Header>
-                        <strong className={"toast-title"}>{this.state.toastTitle}</strong>
-                    </Toast.Header>
-                    <Toast.Body className={"toast-body"}>You have successfully logged {this.state.toastMessage}.</Toast.Body>
-                </Toast>
+                {this.showLoginModal()}
             </div>
         )
     }

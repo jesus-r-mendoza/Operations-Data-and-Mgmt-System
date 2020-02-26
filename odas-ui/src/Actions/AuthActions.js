@@ -42,7 +42,6 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
 // Log the user in and obtain an Auth token
 export const login = (username, pass) => async dispatch => {
     const loginData = new FormData();
-    let errorMessage = '';
 
     loginData.append("username", username);
     loginData.append("pass", pass);
@@ -50,27 +49,15 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
-    // TODO refactor to look like fileactions get request
-    const response = await axios({
+    // TODO refactor to look like file actions get request
+    await axios({
         method: 'POST',
         url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .catch(function (error) {
-            errorMessage = error
-        });
-    
-    // If errorMessage remains empty, success is dispatched to the reducer
-    if (errorMessage === '') {
-        console.log(response);
-
-        dispatch({ type: "LOGIN_SUCCESS", payload: response.data })
-    } else {
-        console.log(errorMessage);
-
-        dispatch({ type: "LOGIN_FAIL", payload: errorMessage })
-    }
+        .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
+        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }))
 };
 
 // Log the user out using the Auth token
