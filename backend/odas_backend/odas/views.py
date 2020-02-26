@@ -8,6 +8,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework import status
 from rest_framework.response import Response
 from .errors import error
+from datetime import datetime
+from report_gen.models import Upload
+from report_gen.errors.error import WRONG_USER, FILE_DNE
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -260,14 +263,71 @@ def _build_comp_response(comp_query_set):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def insert_file_data(request, satellite_id, file_id, units):
-    pass
+    try:
+        sat = Satellite.objects.get(pk=satellite_id)
+        if not request.user.groups.filter(name=sat.organization.name).exists():
+            return error.SAT_PERM_DEN
+
+        upload = Upload.objects.get(pk=file_id)
+        print(request.user, upload.user)
+        if request.user != upload.user:
+            return WRONG_USER
+
+        comp_name, data = _process_file(upload)
+
+        comp = Component.objects.filter(name=comp_name)
+        if len(comp) > 0:
+            comp = comp[0] # There should only be one component with this name
+        else:
+            comp = Component.objects.create(satellite=sat, name=comp_name)
+            print(f'Created component: {comp_name}: ', comp)
+
+        unit = Units.objects.filter(units=units)
+        if len(unit) > 0:
+            unit = unit[0]
+        else:
+            unit = Units.objects.create(units=units)
+            print(f'Created units: {units}: ', unit)
+
+        for value, timestamp in data:
+            m = Measurement.objects.create(satellite=sat, component=comp, units=unit, value=value, time_measured=timestamp)
+            print('Created Measurement:', m)
+
+        return JsonResponse({'data': True, 'error': 'None'})
+    except Satellite.DoesNotExist:
+        return error.SAT_DNE
+    except Group.DoesNotExist:
+        return error.SAT_NOT_OF_ORG
+    except Upload.DoesNotExist:
+        return FILE_DNE
+    except TypeError:
+        # Can't unpack boolean (because _process_file returned False, due to error)
+        return error.INVALID_FILE_FORMAT
 
 def _process_file(filefield):
     try:
-        with filefield.upfile.open() as csv:
+        with filefield.upfile.open(mode='r') as csv:
             lines = csv.readlines()
 
-        print(*lines, sep='\n')
+        data = []
+        for line in lines:
+            parts = line.split(',')
+            component = parts[0]
+            value = float(parts[1])
+            dt = datetime.fromtimestamp(float(parts[2]))
+            data.append( (value, dt) )
+
+        return component, data
 
     except FileNotFoundError:
         return False
+    except TypeError:
+        return False
+    except UnicodeDecodeError:
+        return False
+
+# from odas.views import _process_file
+# from report_gen.models import *
+# u = Upload.objects.all()[20]
+# _process_file(u)
+# Measurement.objects.create(satellite=c.satellite, component=c, units=u, value=12.2, time_measured=dt)
