@@ -307,12 +307,12 @@ export default class ReportCard extends React.Component {
 							pause.bind(this)()
 						
 						var interval = setInterval(this.increasePlot(initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys), 15);
-						if(paused === true){
+						/*if(paused === true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(interval);
 									console.log('Stopped!');
 								}	
-							console.log('finish');
+						*/	console.log('finish');
 						}
 
 					increasePlot = (initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys) => {
@@ -347,6 +347,7 @@ export default class ReportCard extends React.Component {
 							//getX.bind(this)()
 							
 							getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
+				console.log('exampleValue', exampleValue);
 								if(exampleValue[count]!==null){
 				console.log('getY', count, initialDataArray);
 									this.getData(count, initialDataArray, tableKeys);
@@ -415,7 +416,7 @@ export default class ReportCard extends React.Component {
             <div className={"card"}>
                 <div className={"graph-report"}>{this.props.children}
 				          <TitleBar/>
-					          <Plot 
+					         <Plot 
 					          data={[
 							        this.state.line1, 
 							        //this.state.line2,
@@ -423,7 +424,7 @@ export default class ReportCard extends React.Component {
 					          layout = {this.state.layout}
 					          revision={this.state.revision}
 					          graphDiv = "graph"
-					          />
+					          /> 
 					         <BottomGraph/>
                 </div>
              </div>
