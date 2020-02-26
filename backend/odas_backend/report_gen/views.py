@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authtoken.models import Token
 from django.forms.models import model_to_dict
 from .models import Upload
 
@@ -114,12 +115,15 @@ def delete_file(request, pk):
         return error.FILE_DNE
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def download_view(request, fid):
+def download_view(request, fid, token):
+    print('new')
     try:
+        user = Token.objects.filter(key=token)
+        if len(user) == 0:
+            return error.INVALID_TOKEN
+        user = user[0] # filter returns a queryset. grabbing first result which will be the actual user object
         user_file = Upload.objects.get(pk=fid)
-        if user_file.user != request.user:
+        if user_file.user != user:
             return error.WRONG_USER
         url = settings.MEDIA_ROOT + '/' + user_file.upfile.name
         print(url)
