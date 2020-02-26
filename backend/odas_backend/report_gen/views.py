@@ -116,17 +116,19 @@ def delete_file(request, pk):
 
 @api_view(['GET'])
 def download_view(request, fid, token):
-    print('new')
     try:
         user = Token.objects.filter(key=token)
         if len(user) == 0:
             return error.INVALID_TOKEN
-        user = user[0] # filter returns a queryset. grabbing first result which will be the actual user object
+        user = user[0].user # filter returns a queryset. grabbing first result which will be the actual user object
         user_file = Upload.objects.get(pk=fid)
+        print('\n\n',user, user_file.user,'\n\n')
         if user_file.user != user:
             return error.WRONG_USER
         url = settings.MEDIA_ROOT + '/' + user_file.upfile.name
         print(url)
+        if not os.path.exists(url):
+            return error.FILE_NOT_UPLOADED
         response = FileResponse(open(url, 'rb'))
         response['content_type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
