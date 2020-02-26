@@ -105,6 +105,8 @@ def delete_file(request, pk):
         path = f'{settings.MEDIA_ROOT}/{user_file.upfile.name}'
         if not os.path.exists(path):
             return error.FILE_NOT_UPLOADED
+        # File will only be deleted from DB and system if it exists on the system currently running the server
+        # either localhost or ECST server
         res = user_file.delete()
         # return redirect('file_list')
         return JsonResponse({ 'data': True, 'error': 'None' })
@@ -141,7 +143,7 @@ def file_point(request):
     for f in all_entries:
         entry = {
             'id': f.id,
-            'name': f.upfile.name,
+            'name': f.upfile.name[len('files/uploads/'):],
             'description': f.description,
             'date': f.date_uploaded
         }
