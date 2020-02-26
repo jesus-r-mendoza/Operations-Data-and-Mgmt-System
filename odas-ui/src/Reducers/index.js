@@ -22,6 +22,7 @@ import {
 
 // Files
 import {
+    deleteFileReducer,
     downloadFileReducer,
     fileListReducer,
     postFileReducer
@@ -52,5 +53,6 @@ export default combineReducers({
     createOrg: createOrgReducer,
     getFileList: fileListReducer,
     joinOrg: joinOrgReducer,
-    downloadFile: downloadFileReducer
+    downloadFile: downloadFileReducer,
+    deleteFile: deleteFileReducer
 });

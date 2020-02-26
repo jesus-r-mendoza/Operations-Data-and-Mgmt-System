@@ -76,7 +76,7 @@ class Header extends React.Component {
     };
 
     showLoginModal() {
-        if (this.state.signedIn === true) {
+        if (this.props.userLogin) {
             return (
                 <Toast
                     onClose={() => this.setElementStates('toastState', false)}
@@ -90,7 +90,7 @@ class Header extends React.Component {
                     <Toast.Body className={"toast-body"}>You have successfully logged in.</Toast.Body>
                 </Toast>
             );
-        } else {
+        } else if (this.props.userLogout) {
             return (
                 <Toast
                     onClose={() => this.setElementStates('toastState', false)}
@@ -105,7 +105,6 @@ class Header extends React.Component {
                 </Toast>
             );
         }
-
     }
 
     changeLoginButton () {
@@ -131,7 +130,8 @@ class Header extends React.Component {
     }
 
     render() {
-        console.log(this.props.userLogin);
+        console.log(this.props.userLogin.status);
+        console.log(this.props.userLogout.error);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>

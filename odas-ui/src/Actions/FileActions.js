@@ -43,3 +43,12 @@ export const downloadFile = (fileId, fileName) => async dispatch => {
         .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
         .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
 };
+
+export const deleteFile = (fileId) => async dispatch => {
+    await axios(`${apiURL}files/delete/${fileId}/`, {
+        method: 'POST',
+        headers: {'Authorization': `Token ${authToken}`}
+    })
+        .then(response => dispatch({type: "FILE_DELETE", payload: response}))
+        .catch(error => dispatch({type: "FILE_DELETE_FAIL", payload: error}))
+};

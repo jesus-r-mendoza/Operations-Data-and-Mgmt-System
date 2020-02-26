@@ -168,5 +168,6 @@ const mapStateToProps = state => {
 // Connect returns a function and second parenthesis invokes returned function
 export default connect(mapStateToProps, {
     createOrg,
-    joinOrg
+    joinOrg,
+
 })(UserProfile)

@@ -42,7 +42,6 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
 // Log the user in and obtain an Auth token
 export const login = (username, pass) => async dispatch => {
     const loginData = new FormData();
-    let errorMessage = '';
 
     loginData.append("username", username);
     loginData.append("pass", pass);
@@ -58,8 +57,7 @@ export const login = (username, pass) => async dispatch => {
         data: loginData
     })
         .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
-        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }));
-    
+        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }))
 };
 
 // Log the user out using the Auth token

@@ -45,3 +45,14 @@ export const downloadFileReducer = (downloadState = [], action) => {
             return [...downloadState];
     }
 };
+
+export const deleteFileReducer = (deleteState = [], action) => {
+    switch (action.type) {
+        case 'FILE_DELETE':
+            return deleteState;
+        case 'FILE_DELETE_FAIL':
+            return deleteState;
+        default:
+            return [...deleteState];
+    }
+};

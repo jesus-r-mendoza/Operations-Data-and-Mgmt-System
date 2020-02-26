@@ -9,7 +9,11 @@ export const loginReducer = (loginState = [], action) => {
                     console.log("COOKIE CHANGE");
                 }
             );
+
             cookie.set("auth", action.payload.token);
+            cookie.set('username', action.payload.username);
+            cookie.set('org', action.payload.organization);
+            cookie.set('invCode', action.payload.code);
          // Message is user info object on success; Status is true
          return {message: action.payload, status: action.payload.data};
 
@@ -38,6 +42,9 @@ export const registerReducer = (registerState = [], action) => {
 export const logoutReducer = (logoutState = [], action) => {
     if (action.type === "LOGOUT") {
         cookie.remove('auth');
+        cookie.remove('username');
+        cookie.remove('org');
+        cookie.remove('invCode');
 
         return action.payload;
     }
