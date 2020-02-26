@@ -255,3 +255,19 @@ def _build_comp_response(comp_query_set):
     data['data'] = True
     data['error'] = 'None'
     return data
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def insert_file_data(request, satellite_id, file_id, units):
+    pass
+
+def _process_file(filefield):
+    try:
+        with filefield.upfile.open() as csv:
+            lines = csv.readlines()
+
+        print(*lines, sep='\n')
+
+    except FileNotFoundError:
+        return False
