@@ -10,5 +10,5 @@ urlpatterns = [
     path('writetest/', views.dbwritefile, name='db_test'),
     path('files/upload/', views.upload_view, name='upload_file'),
     path('files/delete/<int:pk>/', views.delete_file, name='delete_file'),
-    path('files/download/<int:fid>/', views.download_view, name='file_download'),
+    path('files/download/<int:fid>/<token>/', views.download_view, name='file_download'),
 ]

@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authtoken.models import Token
 from django.forms.models import model_to_dict
 from .models import Upload
 
@@ -102,22 +103,32 @@ def delete_file(request, pk):
         user_file = Upload.objects.get(pk=pk)
         if user_file.user != request.user:
             return error.WRONG_USER
-        user_file.delete()
+        path = f'{settings.MEDIA_ROOT}/{user_file.upfile.name}'
+        if not os.path.exists(path):
+            return error.FILE_NOT_UPLOADED
+        # File will only be deleted from DB and system if it exists on the system currently running the server
+        # either localhost or ECST server
+        res = user_file.delete()
         # return redirect('file_list')
         return JsonResponse({ 'data': True, 'error': 'None' })
     except Upload.DoesNotExist:
         return error.FILE_DNE
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def download_view(request, fid):
+def download_view(request, fid, token):
     try:
+        user = Token.objects.filter(key=token)
+        if len(user) == 0:
+            return error.INVALID_TOKEN
+        user = user[0].user # filter returns a queryset. grabbing first result which will be the actual user object
         user_file = Upload.objects.get(pk=fid)
-        if user_file.user != request.user:
+        print('\n\n',user, user_file.user,'\n\n')
+        if user_file.user != user:
             return error.WRONG_USER
         url = settings.MEDIA_ROOT + '/' + user_file.upfile.name
         print(url)
+        if not os.path.exists(url):
+            return error.FILE_NOT_UPLOADED
         response = FileResponse(open(url, 'rb'))
         response['content_type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
@@ -138,7 +149,7 @@ def file_point(request):
     for f in all_entries:
         entry = {
             'id': f.id,
-            'name': f.upfile.name,
+            'name': f.upfile.name[len('files/uploads/'):],
             'description': f.description,
             'date': f.date_uploaded
         }

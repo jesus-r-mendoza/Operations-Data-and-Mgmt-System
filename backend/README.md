@@ -14,6 +14,7 @@ GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<q
 GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
 GET | api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component) | Yes
 GET | api/sat/\<sat id>/meas/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded by the specified components within the specified datetime range | [Unspecified Components](#Unspecified-Components) | Yes
+POST | apit/sat/\<sat id>/file/\<file id>/units/\<units name>/ | Processes the selected file and inserts the CSV telemetry and inserts the data to the appropiate component, and satellite. Checks if file belongs to user, if user is in an org, and if satellite belongs to their org. No POST request parameters needed to pass as json | | Yes
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request | | Not yet
 POST | writetest/ | Writes file directly to media folder  | | Not yet
 POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Yes
