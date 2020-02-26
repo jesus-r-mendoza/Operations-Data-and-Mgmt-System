@@ -259,7 +259,7 @@ def _build_comp_response(comp_query_set):
     data['error'] = 'None'
     return data
 
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def insert_file_data(request, satellite_id, file_id, units):
@@ -325,9 +325,3 @@ def _process_file(filefield):
         return False
     except UnicodeDecodeError:
         return False
-
-# from odas.views import _process_file
-# from report_gen.models import *
-# u = Upload.objects.all()[20]
-# _process_file(u)
-# Measurement.objects.create(satellite=c.satellite, component=c, units=u, value=12.2, time_measured=dt)
