@@ -102,7 +102,10 @@ def delete_file(request, pk):
         user_file = Upload.objects.get(pk=pk)
         if user_file.user != request.user:
             return error.WRONG_USER
-        user_file.delete()
+        path = f'{settings.MEDIA_ROOT}/{user_file.upfile.name}'
+        if not os.path.exists(path):
+            return error.FILE_NOT_UPLOADED
+        res = user_file.delete()
         # return redirect('file_list')
         return JsonResponse({ 'data': True, 'error': 'None' })
     except Upload.DoesNotExist:
