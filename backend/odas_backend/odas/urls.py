@@ -19,6 +19,7 @@ urlpatterns = [
     path('api/sat/<int:satellite_id>/meas/<dt:from_date>/<dt:to_date>/', views.comp_measu_from_to, name='meas_from_to'),
     path('api/sat/<int:satellite_id>/meas/comp/<int:component_id>/<dt:from_date>/<dt:to_date>/', views.comp_measu_from_to, name='comp_meas_from_to'),
     path('api/sat/<int:satellite_id>/meas/comp/<many-id:component_ids>/<dt:from_date>/<dt:to_date>/', views.with_many_components, name='range_by_many_comp'),
+    path('api/sat/<int:satellite_id>/file/<int:file_id>/units/<units>/', views.insert_file_data, name='process_file'),
 ]
 
 urlpatterns += router.urls
