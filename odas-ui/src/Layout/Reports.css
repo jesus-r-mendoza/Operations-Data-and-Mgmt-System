@@ -1,4 +1,5 @@
 html, body {
+	position: relative;
     margin: 0;
     padding: 0;
     height: 100vh;
@@ -74,16 +75,87 @@ html, body {
     margin-left: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
+	display: flex;
+	overflow-y: scroll;
+    overflow-x: scroll;
+	/*overflow: hidden;*/
 }
 
 .card-container {
+	/*position: relative;*/
     width: 100vw;
     height: 100vh;
+	display: flex;
+	overflow-y: scroll;
+    overflow-x: scroll;
     /*border: solid red 3px;*/
 }
 
 .graph-report {
-    position: relative;
-    overflow: hidden;
+    /*position: absolute;*/
+	overflow-y: scroll;
+    overflow-x: scroll;
+
 }
 
+#toptitle{
+	font-weight: bold;
+	font-size: 20px;
+    box-shadow: 0 2px 3px 0 darkgray;
+	background-color: #000000;
+	color: #f4f3f1;
+}
+
+#toptitle2{
+	font-weight: bold;
+	font-size: 20px;
+    box-shadow: 0 2px 3px 0 darkgray;
+}
+
+#tablechart{
+	font-weight: bold;
+	font-size: 20px;
+	box-shadow: 0 2px 3px 0 darkgray;
+	background-color: #000000;
+	color: #f4f3f1;
+}
+
+#fieldnames2{
+    font-weight: bold;
+	font-size: 18px;
+}
+
+#traces{
+	box-shadow: 0 2px 3px 0 darkgray;
+	background-color: #f4f3f1;
+	color: #000000;
+	border: 1px solid black;
+}
+
+#fieldnames{
+	font-weight: bold;
+	font-size: 18px;
+	color: #FFFFFF;
+	box-shadow: 0 2px 3px 0 darkgray;
+	background-color: #000000;
+	border: 1px solid black;
+}
+
+#data{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+#data2{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+#newcontent3{
+	font-weight: bold;
+}
+
+#pause{
+	font-weight: bold;
+	font-size: 15px;
+}

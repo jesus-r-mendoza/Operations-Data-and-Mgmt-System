@@ -379,6 +379,7 @@ export default class ReportCard extends React.Component {
 
 	initialDataPoints = (initialY, initialX) => {
     const { line1, layout } = this.state;
+console.log('initialDataPoints',initialY, initialX);
     line1.x.push(initialX);
 	//line1.x = initialX;
     line1.y.push(initialY);
@@ -390,7 +391,7 @@ export default class ReportCard extends React.Component {
     this.setState({ revision: this.state.revision + 1 });
     layout.datarevision = this.state.revision + 1;
   }
-					  
+/*					  
   rand = () => parseInt(Math.random() * 10 + this.state.revision, 10);
 	
 	increaseGraphic = () => {
@@ -410,6 +411,7 @@ export default class ReportCard extends React.Component {
     this.setState({ revision: this.state.revision + 1 });
     layout.datarevision = this.state.revision + 1;
   }
+  */
     render() {
         return (
         <div className={"card-container"}>
