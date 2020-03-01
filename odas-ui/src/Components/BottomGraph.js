@@ -3,7 +3,7 @@ import Plot from 'react-plotly.js';
 //Stylesheets
 import "../Layout/Reports.css"
 // TODO Bootstrap modals for the logs
-class BottomGraph extends React.Component{
+export default class BottomGraph extends React.Component{
 		render(){
 				return(
 					<div id = "bottomchart">
