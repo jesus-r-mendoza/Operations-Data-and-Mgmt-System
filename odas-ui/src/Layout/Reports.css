@@ -95,7 +95,6 @@ html, body {
     /*position: absolute;*/
 	overflow-y: scroll;
     overflow-x: scroll;
-
 }
 
 #toptitle{
@@ -104,12 +103,14 @@ html, body {
     box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #000000;
 	color: #f4f3f1;
+	width: 100%;
 }
 
 #toptitle2{
 	font-weight: bold;
-	font-size: 20px;
+	font-size: 18px;
     box-shadow: 0 2px 3px 0 darkgray;
+	
 }
 
 #tablechart{
@@ -139,6 +140,7 @@ html, body {
 	box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #000000;
 	border: 1px solid black;
+	margin-top: 15px;
 }
 
 #data{
@@ -158,4 +160,6 @@ html, body {
 #pause{
 	font-weight: bold;
 	font-size: 15px;
+	margin-left: 15px;
+	margin-bottom: 15px;
 }
