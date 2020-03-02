@@ -58,6 +58,39 @@ def read_reformat_and_store():
         stored = (vals, time)
         data.append(stored)
         save_csv_with_timestamp(csv, stored)
-    return data
 
 read_reformat_and_store()
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                            Generating new Features                          #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+def read_values():
+    values = []
+    for csv_file in data_files:
+        vals = []
+        path = f'{basedir}generated/{csv_file}'
+        with open(path, 'r') as csv:
+            data = csv.read()
+        lines = data.split('\n')
+        for line in lines:
+            parts = line.split(',')
+            if len(parts) == 2:
+                vals.append( float(parts[1]) )
+        values.append(vals)
+    return values
+
+all_csv_values = read_values()
+
+def moving_avg(values, window):
+    predictions = []
+    for i in range(window, len(values)):
+        vals = values[i-window:i]
+        avg = statistics.mean(vals)
+        pred, actual = avg, values[i]
+        predictions.append(pred)
+
+    # adding missing values
+    non_values = [ '-' for _ in range(window) ]
+    predictions = non_values + predictions
+    return predictions
