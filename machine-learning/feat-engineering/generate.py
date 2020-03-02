@@ -66,9 +66,11 @@ read_reformat_and_store()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def read_values():
+    date_strs = []
     values = []
     for csv_file in data_files:
         vals = []
+        dates = []
         path = f'{basedir}generated/{csv_file}'
         with open(path, 'r') as csv:
             data = csv.read()
@@ -76,21 +78,56 @@ def read_values():
         for line in lines:
             parts = line.split(',')
             if len(parts) == 2:
+                dates.append( parts[0] )
                 vals.append( float(parts[1]) )
+        date_strs.append(dates)
         values.append(vals)
-    return values
+    return date_strs, values
 
-all_csv_values = read_values()
+all_csv_dates, all_csv_values = read_values()
 
-def moving_avg(values, window):
+def generate_features(values, window):
     predictions = []
     for i in range(window, len(values)):
         vals = values[i-window:i]
         avg = statistics.mean(vals)
-        pred, actual = avg, values[i]
-        predictions.append(pred)
+        stdev = statistics.stdev(vals)
+        minimum = min(vals)
+        maximum = max(vals)
+        fluctuation = maximum - minimum
+        new_features = avg, stdev, minimum, maximum, fluctuation
+        predictions.append(new_features)
 
     # adding missing values
-    non_values = [ '-' for _ in range(window) ]
+    non_values = [ ('-','-','-','-','-') for _ in range(window) ]
     predictions = non_values + predictions
     return predictions
+
+def new_file_lines():
+    windows = 3, 5, 7
+    for x in range(len(data_files)):
+        lines = []
+
+        csv = data_files[x]
+        dates = all_csv_dates[x]
+        vals = all_csv_values[x]
+
+        gen_feats = []
+        for win in windows:
+            new_feats = generate_features(vals, win)
+            gen_feats.append(new_feats)
+
+        for i in range(len(vals)):
+            line = f'{dates[i]},{vals[i]},'
+            for feat_set_list in gen_feats:
+                for feat in feat_set_list[i]:
+                    line += f'{feat},'
+            line += '\n'
+            lines.append(line)
+
+        path = f'{basedir}generated/engineered/{csv}'
+        with open(path, 'w') as engineered_file:
+            engineered_file.writelines(lines)
+            print(f'Wrote {len(lines)} lines to {path}')
+
+new_file_lines()
