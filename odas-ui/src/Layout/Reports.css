@@ -162,4 +162,7 @@ html, body {
 	font-size: 15px;
 	margin-left: 15px;
 	margin-bottom: 15px;
+	background-color: #f44336; /* Red */ 
+	color: white;
+	border-radius: 5px;
 }

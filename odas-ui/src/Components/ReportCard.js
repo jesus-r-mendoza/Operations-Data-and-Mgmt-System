@@ -403,7 +403,7 @@ export default class ReportCard extends React.Component {
 								layout.datarevision = this.state.revision + 1;
 								}
 								else{
-									document.getElementById("pause").innerHTML = "Stopped";//Date();
+									document.getElementById("pause").innerHTML = "STOPPED";//Date();
 									clearInterval(window.interval);
 									console.log('Stopped! Finished plotting data, no more values left.');
 								}
