@@ -83,11 +83,8 @@ export default class ReportCard extends React.Component {
 	console.log('start');
 	console.log(response);
 	this.initial(response);
-//	console.log('interval'+window.initialDataArray+window.cnt+window.paused+window.exampleTime+window.alreadyStopped+window.exampleValue+window.tableKeys);
-	//window.interval = 
-	setInterval(this.increasePlot,1000);
+	window.interval = setInterval(this.increasePlot,1000);
 	//window.initialDataArray, window.cnt, window.paused, window.exampleTime, window.alreadyStopped, window.exampleValue, window.tableKeys), 1000);//15);
-//	setInterval(this.increaseGraphic, 1000);
 	} 
 	
 	initial = (response) => {
@@ -333,7 +330,6 @@ export default class ReportCard extends React.Component {
 					var toChart = tableKeys[b];
 					cellAdd.innerHTML = (toChart);
 				}
-				
 							//tableKeys = [];
 							var paused = false;
 							var alreadyStopped = false;
@@ -347,91 +343,71 @@ export default class ReportCard extends React.Component {
 							
 							//var cnt = 0;
 							document.getElementById("pause").addEventListener("click", pause);
-						var cnt2 = window.cnt;
 						window.initialDataArray = initialDataArray;
 						window.paused = paused;
 						window.exampleTime = exampleTime;
 						window.alreadyStopped = alreadyStopped;
 						window.exampleValue = exampleValue;
 						window.tableKeys = tableKeys;
-//						this.state.cnt = window.cnt,
-/*						this.state.initialDataArray = initialDataArray;
-//						paused: false, 
-						this.state.exampleTime = exampleTime; 
-//						alreadyStopped: false,
-						this.state.exampleValue = exampleValue;
-						this.state.tableKeys = tableKeys;*/
-//						var interval = setInterval(this.increasePlot(initialDataArray, cnt2, paused, exampleTime, alreadyStopped, exampleValue, tableKeys), 15);
-					/*	if(paused === true){
+//						var interval = setInterval(this.increasePlot(initialDataArray, window.cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys), 15);
+/*						if(paused === true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(interval);
 									console.log('Stopped!');
-								}*/	
-							console.log('finish');
+								}	
+*/							console.log('finish');
 							
 							function pause() {
 								console.log('Stop enabled.');
-//								paused = true;
+								paused = true;
 							}	
 							pause.bind(this)()
 						}
 
 					increasePlot = () => {
 //					initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys) => {
-								var initialDataArray = 
-								window.initialDataArray;
+								var initialDataArray = window.initialDataArray;
 								//this.state.initialDataArray;
-								var cnt = 
+								var cnt = this.state.cnt;
 								//window.cnt;
-								this.state.cnt;
-								var paused = 
+								var paused = this.state.paused; 
 								//window.paused;
-								this.state.paused;
-								var exampleTime = 
-								window.exampleTime;
+								var exampleTime = window.exampleTime;
 								//this.state.exampleTime;
-								var alreadyStopped = 
+								var alreadyStopped = this.state.alreadyStopped;
 								//window.alreadyStopped;
-								this.state.alreadyStopped;
-								var exampleValue = 
-								window.exampleValue;
+								var exampleValue = window.exampleValue;   
 								//this.state.exampleValue;
-								var tableKeys = 
-								window.tableKeys;
+								var tableKeys = window.tableKeys;
 								//this.state.tableKeys;
-								//[0] at the end of extendTraces because only 1 example trace.
-								//Plotly.extendTraces('chart',{ y:[[getY(cnt+1)]], x:[[getX(cnt+1)]]}, [0]); 
 							console.log('increasePlot'+cnt+paused);	
-//								while(this.getY(cnt+1, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys)!==null&&this.getX(cnt+1, exampleTime, alreadyStopped, paused)!==null){
-							console.log('increasePlot while');
+								//if(this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys)!==null&&this.getX(cnt, exampleTime, alreadyStopped, paused)!==null){
+								if(cnt<initialDataArray.length){
 //								this.initialDataPoints(this.getY(cnt+1, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys),this.getX(cnt+1, exampleTime, alreadyStopped, paused));
 								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
 								var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
 								const { line1, layout } = this.state;
-							console.log('line1', line1);
-							console.log('increasePlot initialDataPoints',initialY, initialX);
 								line1.x.push(initialX);
 								line1.y.push(initialY);
 								if (line1.x.length >= 500) {
 									line1.x.shift();
 									line1.y.shift();
 								} 
-//								window.cnt++;
-//							console.log('window cnt '+window.cnt);
-//								}
-//								if(cnt > 500) {
-//									Plotly.relayout('chart',{xaxis: {range: [cnt-500,cnt]}, yaxis: {range: [Math.min(exampleValue),Math.max(exampleValue)]}});
-//								}
-/*								if(paused === true){
+								if(paused === true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(window.interval);
 									console.log('Stopped!');
-								}*/
-							console.log('revision');
+								}
 							console.log('full',initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys);
 								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
 								layout.datarevision = this.state.revision + 1;
-							}//,15);
+								}
+								else{
+									document.getElementById("pause").innerHTML = "Stopped";//Date();
+									clearInterval(window.interval);
+									console.log('Stopped! Finished plotting data, no more values left.');
+								}
+							}
 
 							getX = (count, exampleTime, alreadyStopped, paused) => {
 							console.log('getX');
@@ -470,7 +446,6 @@ export default class ReportCard extends React.Component {
 									}
 								}
 							}
-							//getY.bind(this)()
 							
 						getData = (cnt, initialDataArray, tableKeys) => {
 									var table = document.getElementById("traces");
@@ -487,39 +462,16 @@ export default class ReportCard extends React.Component {
 										}
 								}
 							}  
-						//getData.bind(this)()
-
+/*
 	initialDataPoints = (initialY, initialX) => {
     const { line1, layout } = this.state;
 console.log('initialDataPoints',initialY, initialX);
     line1.x.push(initialX);
-	//line1.x = initialX;
     line1.y.push(initialY);
-	//line1.y = initialY;
     if (line1.x.length >= 500) {
       line1.x.shift();
       line1.y.shift();
     } 
-    this.setState({ revision: this.state.revision + 1 });
-    layout.datarevision = this.state.revision + 1;
-  }
-/*					  
-  rand = () => parseInt(Math.random() * 10 + this.state.revision, 10);
-	
-	increaseGraphic = () => {
-    const { line1, line2, layout } = this.state;
-    line1.x.push(this.rand());
-    line1.y.push(this.rand());
-    if (line1.x.length >= 10) {
-      line1.x.shift();
-      line1.y.shift();
-    } 
-    line2.x.push(this.rand());
-    line2.y.push(this.rand());
-    if (line2.x.length >= 10) {
-      line2.x.shift();
-      line2.y.shift();
-    }
     this.setState({ revision: this.state.revision + 1 });
     layout.datarevision = this.state.revision + 1;
   }
@@ -531,10 +483,7 @@ console.log('initialDataPoints',initialY, initialX);
                 <div className={"graph-report"}>{this.props.children}
 				          <TitleBar/>
 					         <Plot 
-					          data={[
-							        this.state.line1, 
-							        //this.state.line2,
-					          ]}
+					          data={[this.state.line1]}
 					          layout = {this.state.layout}
 					          revision={this.state.revision}
 					          graphDiv = "graph"
