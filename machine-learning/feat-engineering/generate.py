@@ -127,7 +127,12 @@ def new_file_lines():
 
         path = f'{basedir}generated/engineered/{csv}'
         with open(path, 'w') as engineered_file:
+            header = ',Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
+            header += 'Avg5,Stdev5,Minimum5,Maximum5,Fluctuation5,'
+            header += 'Avg7,Stdev7,Minimum7,Maximum7,Fluctuation7\n'
+            engineered_file.write(header)
             engineered_file.writelines(lines)
             print(f'Wrote {len(lines)} lines to {path}')
+    print()
 
 new_file_lines()
