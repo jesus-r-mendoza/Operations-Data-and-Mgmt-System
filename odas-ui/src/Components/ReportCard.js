@@ -54,9 +54,9 @@ export default class ReportCard extends React.Component {
 				pad: 4
 			},
 			width: 600,
-			paper_bgcolor: '#000000',
-			plot_bgcolor: '#FFFFFF',
-			font: {color:"#FFFFFF"},
+			paper_bgcolor: '#FFFFFF',
+			plot_bgcolor: '#000000',
+			font: {color:"#000000"},
 			datarevision: 0,
 		},
 		revision: 0,
@@ -342,7 +342,7 @@ export default class ReportCard extends React.Component {
 //							this.initialDataPoints(this.getY(0, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys),this.getX(0, exampleTime, alreadyStopped, paused));
 							
 							//var cnt = 0;
-							document.getElementById("pause").addEventListener("click", pause);
+			document.getElementById("pause").addEventListener('click', this.pause);
 						window.initialDataArray = initialDataArray;
 						window.paused = paused;
 						window.exampleTime = exampleTime;
@@ -356,13 +356,14 @@ export default class ReportCard extends React.Component {
 									console.log('Stopped!');
 								}	
 */							console.log('finish');
-							
-							function pause() {
-								console.log('Stop enabled.');
-								paused = true;
-							}	
-							pause.bind(this)()
 						}
+					
+					//function 
+					pause = () => {
+							console.log('Stop enabled.');
+							window.paused = true;
+						}	
+						//pause.bind(this)()
 
 					increasePlot = () => {
 //					initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys) => {
@@ -380,8 +381,14 @@ export default class ReportCard extends React.Component {
 								//this.state.exampleValue;
 								var tableKeys = window.tableKeys;
 								//this.state.tableKeys;
+//								document.getElementById("pause").addEventListener("click", this.pause());
 							console.log('increasePlot'+cnt+paused);	
 								//if(this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys)!==null&&this.getX(cnt, exampleTime, alreadyStopped, paused)!==null){
+								if(paused === true){
+									document.getElementById("pause").innerHTML = "PAUSED";//Date();
+									clearInterval(window.interval);
+									console.log('Paused by Click! 1');
+								}
 								if(cnt<initialDataArray.length){
 //								this.initialDataPoints(this.getY(cnt+1, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys),this.getX(cnt+1, exampleTime, alreadyStopped, paused));
 								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
@@ -394,12 +401,12 @@ export default class ReportCard extends React.Component {
 									line1.y.shift();
 								} 
 								if(paused === true){
-									document.getElementById("pause").innerHTML = "Paused";//Date();
+									document.getElementById("pause").innerHTML = "PAUSED";//Date();
 									clearInterval(window.interval);
-									console.log('Stopped!');
+									console.log('Paused by Click! 2');
 								}
 							console.log('full',initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys);
-								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
+								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
 								layout.datarevision = this.state.revision + 1;
 								}
 								else{
