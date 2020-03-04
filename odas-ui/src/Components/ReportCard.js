@@ -331,32 +331,21 @@ export default class ReportCard extends React.Component {
 					var toChart = tableKeys[b];
 					cellAdd.innerHTML = (toChart);
 				}
-							//tableKeys = [];
-							var paused = false;
-							var alreadyStopped = false;
-							
-
-						
-							//Plotly.plot('chart',[{y:[getY(0)],x:[getX(0)],type:'line'}]);
-			//				this.initialDataPoints(getY(0, initialDataArray), getX(0));
-			//				this.initialDataPoints(this.getY(0, initialDataArray), this.getX(0));
-//							this.initialDataPoints(this.getY(0, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys),this.getX(0, exampleTime, alreadyStopped, paused));
-							
-							//var cnt = 0;
-			document.getElementById("pause").addEventListener('click', this.pause);
-						window.initialDataArray = initialDataArray;
-						window.paused = paused;
-						window.exampleTime = exampleTime;
-						window.alreadyStopped = alreadyStopped;
-						window.exampleValue = exampleValue;
-						window.tableKeys = tableKeys;
-//						var interval = setInterval(this.increasePlot(initialDataArray, window.cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys), 15);
+				var paused = false;
+				var alreadyStopped = false;
+				document.getElementById("pause").addEventListener('click', this.pause);
+				window.initialDataArray = initialDataArray;
+				window.paused = paused;
+				window.exampleTime = exampleTime;
+				window.alreadyStopped = alreadyStopped;
+				window.exampleValue = exampleValue;
+				window.tableKeys = tableKeys;
 /*						if(paused === true){
 									document.getElementById("pause").innerHTML = "Paused";//Date();
 									clearInterval(interval);
 									console.log('Stopped!');
 								}	
-*/							console.log('finish');
+*/				console.log('finish');
 						}
 					
 					//function 
@@ -497,10 +486,9 @@ console.log('initialDataPoints',initialY, initialX);
 					          revision={this.state.revision}
 					          graphDiv = "graph"
 					          /> 
-					         <BottomGraph/>
+					         <BottomGraph></BottomGraph>
                 </div>
              </div>
-		<button id="pause" onClick={this.pause}>Stop Graph</button>
           </div>
         );
     }
