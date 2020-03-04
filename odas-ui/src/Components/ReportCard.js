@@ -10,7 +10,6 @@ export default class ReportCard extends React.Component {
 //		super();
 //		this.onClick = this.handleClick.bind(this);
 //	}*/
-
 	state = {
 		line1:{
 			x: [], 
@@ -72,6 +71,7 @@ export default class ReportCard extends React.Component {
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 //	}		
 	componentDidMount() {
+			this.pause = this.pause.bind(this);
 	window.cnt = this.state.cnt;
 	window.initialDataArray = this.state.initialDataArray;
 	window.paused = this.state.paused;
@@ -83,6 +83,7 @@ export default class ReportCard extends React.Component {
 	console.log('start');
 	console.log(response);
 	this.initial(response);
+//	document.getElementById('pause').addEventListener('click', this.pause);
 	window.interval = setInterval(this.increasePlot,1000);
 	//window.initialDataArray, window.cnt, window.paused, window.exampleTime, window.alreadyStopped, window.exampleValue, window.tableKeys), 1000);//15);
 	} 
@@ -362,6 +363,7 @@ export default class ReportCard extends React.Component {
 					pause = () => {
 							console.log('Stop enabled.');
 							window.paused = true;
+							this.setState({paused: true});
 						}	
 						//pause.bind(this)()
 
@@ -483,10 +485,10 @@ console.log('initialDataPoints',initialY, initialX);
     layout.datarevision = this.state.revision + 1;
   }
   */
-    render() {
+  render() {
         return (
-        <div className={"card-container"}>
-            <div className={"card"}>
+        <div {...this.props} className={"card-container"}>{this.props.children}
+            <div {...this.props} className={"card"}>{this.props.children}
                 <div className={"graph-report"}>{this.props.children}
 				          <TitleBar/>
 					         <Plot 
@@ -498,6 +500,7 @@ console.log('initialDataPoints',initialY, initialX);
 					         <BottomGraph/>
                 </div>
              </div>
+		<button id="pause" onClick={this.pause}>Stop Graph</button>
           </div>
         );
     }
