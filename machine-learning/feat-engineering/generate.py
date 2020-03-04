@@ -135,10 +135,10 @@ def save_new_file_lines():
 
         path = f'{basedir}generated/engineered/{csv}'
         with open(path, 'w') as engineered_file:
-            header = 'Time,Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
+            header = 'Timestamp,Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
             header += 'Avg5,Stdev5,Minimum5,Maximum5,Fluctuation5,'
             header += 'Avg7,Stdev7,Minimum7,Maximum7,Fluctuation7,'
-            header += 'Hour,Minunte,Second,Microsecond\n'
+            header += 'Hour,Minute,Second,Microsecond\n'
             engineered_file.write(header)
             engineered_file.writelines(lines)
             print(f'Wrote {len(lines)} lines to {path}')
