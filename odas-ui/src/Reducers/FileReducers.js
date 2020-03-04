@@ -35,7 +35,7 @@ export const downloadFileReducer = (downloadState = [], action) => {
 
     switch (action.type) {
         case 'FILE_DOWN':
-            download(action.payload, action.fileName);
+            download(action.payload.data, action.fileName);
             return action.payload;
 
         case 'FILE_DOWN_ERROR':

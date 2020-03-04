@@ -46,7 +46,7 @@ export const downloadFile = (fileId, fileName) => async dispatch => {
 
 export const deleteFile = (fileId) => async dispatch => {
     await axios(`${apiURL}files/delete/${fileId}/`, {
-        method: 'POST',
+        method: 'DELETE',
         headers: {'Authorization': `Token ${authToken}`}
     })
         .then(response => dispatch({type: "FILE_DELETE", payload: response}))
