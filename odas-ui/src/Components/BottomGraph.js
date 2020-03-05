@@ -1,6 +1,5 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
-import ReportCard from './ReportCard.js';
 //Stylesheets
 import "../Layout/Reports.css"
 // TODO Bootstrap modals for the logs
