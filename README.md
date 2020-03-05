@@ -1,6 +1,6 @@
 # Operations Data Analysis and Mgmt System ( ODAS )
 
-<div class="sub-header">
+<div style="display: flex; justify-content: space-around; align-items: center;">
     <img src="resources/imgs/csula-sm.png" />
     <h2>Senior Design Project sponsored by</h2>
     <img src="resources/imgs/boeing-sm.png" />
@@ -77,27 +77,4 @@ Once your in the base directory, simply run:
 
 This will run both the frontend and backend containers.
 
-For testing purposes, the backend container is accessible through your container's ip or localhost at port 8000; and the frontend container is accessible through your container's ip or localhost at port 3000.
-
-
-<style>
-.sub-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.github {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-}
-
-.sub-header img {
-    margin: 0 2em;
-}
-
-.github img {
-    margin-right: .5em;
-}
-</style>
+For testing purposes, the backend container is accessible through your container's ip or localhost at port 8080; and the frontend container is accessible through your container's ip or localhost at port 3000.
