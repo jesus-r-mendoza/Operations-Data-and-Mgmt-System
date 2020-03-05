@@ -78,29 +78,6 @@ For these example links to work, be sure that the backend server is running on y
 
 ---
 
-## Running ODAS with Docker
-
-### Step 1
-Install Docker. To learn how to install docker click [here](https://www.docker.com/products/docker-desktop). You'll see a button to install Docker Desktop; you'll need to create an account with Docker Hub if you don't already have one. Also make sure you have docker-compose installed with it.
-
-### Step 2
-If you don't have the ODAS repository, clone it using:
-
-> `$ git clone https://github.com/jesus-r-mendoza/Operations-Data-and-Mgmt-System.git`
-
-then, change directory into the repository's base directory using:
-
-> `$ cd Operations-Data-and-Mgmt-System`
-
-### Step 3
-Once your in the base directory, simply run:
-
-> `$ docker-compose up`
-
-This will run both the frontend and backend containers.
-
-For testing purposes, the backend container is accessible through your container's ip or localhost at port 8000; and the frontend container is accessible through your container's ip or localhost at port 3000.
-
 ## Running the Backend Server
 
 Note: You **MUST** have the configuration file in order to run the server
