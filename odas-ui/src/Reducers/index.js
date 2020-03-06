@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import {
     unitsReducer,
     componentsReducer,
-    satelliteReducer,
+    fetchSatellitesReducer,
 } from "./ApiReducers";
 
 // Queries
@@ -38,7 +38,7 @@ import {
 } from "./AuthReducers";
 
 export default combineReducers({
-    satObjects: satelliteReducer,
+    fetchSatellites: fetchSatellitesReducer,
     units: unitsReducer,
     components: componentsReducer,
     selectedSat: selectedSatReducer,
@@ -54,5 +54,5 @@ export default combineReducers({
     getFileList: fileListReducer,
     joinOrg: joinOrgReducer,
     downloadFile: downloadFileReducer,
-    deleteFile: deleteFileReducer
+    deleteFile: deleteFileReducer,
 });

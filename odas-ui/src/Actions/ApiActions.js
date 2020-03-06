@@ -1,8 +1,7 @@
-import SatApi from "../Definitions/SatApi"
-import Cookies from "universal-cookie";
+import SatApi, {apiURL} from "../Definitions/SatApi"
+import axios from 'axios';
+import {authToken} from "../Definitions/BrowserCookie";
 /*GET requests from API*/
-
-const cookie = new Cookies();
 
 // Get the unit values from API
 export const fetchUnits = () => async dispatch => {
@@ -21,8 +20,6 @@ export const fetchUnits = () => async dispatch => {
 // TODO return to implement after create/join organization
 // Get all components connected to given satellite existing in the database
 export const fetchComponents = (satId = 1) => async dispatch => {
-    // let errorMessage = '';
-    const authToken = cookie.get('auth');
 
     if (authToken !== undefined && authToken !== null) {
         const response = await SatApi.get(`api/sat/${satId}/comp/`, {
@@ -43,13 +40,15 @@ export const fetchComponents = (satId = 1) => async dispatch => {
 
 // Get satellite objects from API
 export const fetchSatellites = () => async dispatch => {
-    const response = await SatApi.get("api/sat/", {
-        method: "GET",
-        headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-        }
-    });
+    console.log(authToken);
 
-    dispatch({type: "FETCH_SATS", payload: response.data});
+    await axios(`${apiURL}api/sat/`, {
+        headers: {
+            'Authorization': `Token 7dfc96bade2c9d35e79d3161414e3fc9d5f56598`
+        }
+    })
+        .then(response => dispatch({type: "FETCH_SATS", payload: response.data}))
+        .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error}))
 };
+
+// export const

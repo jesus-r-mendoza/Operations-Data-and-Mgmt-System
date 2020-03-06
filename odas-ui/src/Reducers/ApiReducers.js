@@ -18,10 +18,12 @@ export const componentsReducer = (state = [], action) => {
     }
 };
 
-export const satelliteReducer = (state = [], action) => {
+export const fetchSatellitesReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_SATS':
-            return [...state, action.payload];
+            return action.payload;
+        case 'FETCH_SATS_FAIL':
+            return action.error;
         default:
             return state;
     }

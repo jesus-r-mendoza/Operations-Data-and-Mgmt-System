@@ -74,6 +74,8 @@ class Sidebar extends React.Component {
         this.setState({
             isLoading: false
         });
+
+        this.props.fetchSatellites()
     }
 
     handleFormSubmit = formSubmitEvent => {
@@ -96,6 +98,9 @@ class Sidebar extends React.Component {
     render() {
         let satellites = this.props.satellites;
         let components = this.props.components;
+
+        // TODO new satellite API state
+        console.log("This is it", this.props.satellites1.satellites);
 
         return (
             <div className={"sidebar-container"}>
@@ -154,8 +159,14 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        components: state.components
+        components: state.components,
+        satellites1: state.fetchSatellites
     };
 };
 
-export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents, satCompQuery })(Sidebar)
+export default connect(mapStateToProps, {
+    fetchSatellites,
+    fetchUnits,
+    fetchComponents,
+    satCompQuery
+})(Sidebar)
