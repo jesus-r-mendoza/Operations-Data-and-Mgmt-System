@@ -5,8 +5,7 @@ import { Button } from "react-bootstrap";
 import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
-// import LoadSpinner from "./LoadSpinner";
-import CheckComponent from "./CheckComponent";
+
 // Redux
 import { connect } from 'react-redux';
 import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
@@ -14,7 +13,6 @@ import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../A
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
-        let COMPONENTS = this.props.components;
 
         this.state = {
             isLoading: true,
@@ -22,13 +20,6 @@ class Sidebar extends React.Component {
             loadDropdown: true,
             satPlaceHolder: "Satellite",
             formSubmit: [],
-            checkboxes: COMPONENTS.reduce(
-                (options, option) => ({
-                    ...options,
-                    [option]: false
-                }),
-                {}
-            ),
         };
     }
 
@@ -48,45 +39,19 @@ class Sidebar extends React.Component {
     selectAll = () => this.selectAllCheckboxes(true);
     deselectAll = () => this.selectAllCheckboxes(false);
 
-    handleCheckboxChange = changeEvent => {
-        const { name } = changeEvent.target;
-
-        this.setState(prevState => ({
-            checkboxes: {
-                ...prevState.checkboxes,
-                [name]: !prevState.checkboxes[name]
-            }
-        }));
-    };
-
-    createCheckbox = option => (
-        <CheckComponent
-            label={option}
-            isSelected={this.state.checkboxes[option]}
-            onCheckboxChange={this.handleCheckboxChange}
-            key={option}
-        />
-    );
-
-    createCheckboxes = com => com.map(this.createCheckbox);
 
     componentDidMount() {
         this.setState({
             isLoading: false
         });
 
+        // API call to get list of satellites associated with current logged in user
         this.props.fetchSatellites()
     }
 
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
 
-        Object.keys(this.state.checkboxes)
-            .filter(checkbox => this.state.checkboxes[checkbox])
-            .forEach(checkbox => {
-                this.state.formSubmit.push(checkbox);
-                console.log(this.state.formSubmit)
-            });
     };
 
     dropDownChange = e => {
@@ -95,12 +60,25 @@ class Sidebar extends React.Component {
         })
     };
 
-    render() {
-        let satellites = this.props.satellites;
-        let components = this.props.components;
+    createSatelliteObject = satelliteObject => {
+        let satelliteOptions = [];
 
+        for (let i = 0; i < satelliteObject.length; i++) {
+            satelliteOptions.push(
+                Object.create(Object.prototype, {
+                    value: {value: satelliteObject[i].id},
+                    label: {value: satelliteObject[i].name}
+                })
+            )
+        }
+
+        return satelliteOptions;
+    };
+
+    render() {
         // TODO new satellite API state
-        console.log("This is it", this.props.satellites1.satellites);
+        console.log("This is it", this.props.satellites);
+        console.log(this.createSatelliteObject(this.props.satellites));
 
         return (
             <div className={"sidebar-container"}>
@@ -114,14 +92,14 @@ class Sidebar extends React.Component {
                                 <Select
                                     name="form-field-name"
                                     value="one"
-                                    options={satellites}
+                                    options={this.createSatelliteObject(this.props.satellites)}
                                     onChange={this.dropDownChange}
                                     placeholder={this.state.satPlaceHolder}
                                 />
                             </div>
                             <div className={"checkbox-selection-btn"}>
                                 <Divider horizontal>Components</Divider>
-                                    {this.createCheckboxes(components)}
+
                                     <div className={"selection-buttons"}>
                                         {/*<Button*/}
                                         {/*    variant={"outline-success"}*/}
@@ -160,7 +138,7 @@ class Sidebar extends React.Component {
 const mapStateToProps = state => {
     return {
         components: state.components,
-        satellites1: state.fetchSatellites
+        satellites: state.fetchSatellites
     };
 };
 

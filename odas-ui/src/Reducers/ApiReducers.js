@@ -19,13 +19,13 @@ export const componentsReducer = (state = [], action) => {
 };
 
 export const fetchSatellitesReducer = (state = [], action) => {
-    switch (action.type) {
+        switch (action.type) {
         case 'FETCH_SATS':
             return action.payload;
         case 'FETCH_SATS_FAIL':
             return action.error;
         default:
-            return state;
+            return [...state];
     }
 };
 

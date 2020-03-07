@@ -47,7 +47,7 @@ export const fetchSatellites = () => async dispatch => {
             'Authorization': `Token 7dfc96bade2c9d35e79d3161414e3fc9d5f56598`
         }
     })
-        .then(response => dispatch({type: "FETCH_SATS", payload: response.data}))
+        .then(response => dispatch({type: "FETCH_SATS", payload: response.data.satellites}))
         .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error}))
 };
 

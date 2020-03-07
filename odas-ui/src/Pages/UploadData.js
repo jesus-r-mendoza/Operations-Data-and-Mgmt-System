@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from "axios";
 // Redux
 import {
     getFileList,
@@ -13,19 +12,13 @@ import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
-import {apiURL} from "../Definitions/SatApi";
+// import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
 import {Table} from "semantic-ui-react";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
-
-const apis = {
-    unit: `${apiURL}api/units/`,
-    component: `${apiURL}api/comp/`,
-    satellites: `${apiURL}api/sat/`
-};
 
 class UploadData extends React.Component {
     constructor(props) {
@@ -35,23 +28,11 @@ class UploadData extends React.Component {
             selectedFile: '',
             description: '',
             loaded: 1,
-            MEASUREMENTS: [],
-            COMPONENTS: [],
         };
     }
 
     componentDidMount() {
-        axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
-            .then(axios.spread((...responses) => {
-                this.setState({
-                    MEASUREMENTS: responses[0].data,
-                    COMPONENTS: responses[1].data,
-                    satObjects: responses[2].data
-                })
-            }))
-            .catch(err => {
-                console.log(err)
-            });
+
 
         this.props.getFileList();
     }
@@ -79,9 +60,9 @@ class UploadData extends React.Component {
     };
 
     onFileChangeHandler = event => {
-        let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
-        let fileName = event.target.files[0].name;
-        let extension = extractExtension.exec(fileName)[0];
+        const extractExtension = new RegExp(/(?:\.([^.]+))?$/);
+        const fileName = event.target.files[0].name;
+        const extension = extractExtension.exec(fileName)[0];
 
         console.log(extension);
         if (acceptedExtensions.includes(extension)) {
@@ -117,9 +98,9 @@ class UploadData extends React.Component {
 
     showResultMessage = () => {
         // Returns false if file upload failed (See API)
-        let uploadData = this.props.uploadFile.data;
+        const uploadData = this.props.uploadFile.data;
         // Will be the error message upon upload failure
-        let uploadError = this.props.uploadFile.error;
+        const uploadError = this.props.uploadFile.error;
 
         if (uploadData === false) {
             return (
@@ -235,7 +216,9 @@ class UploadData extends React.Component {
 
         return (
             <div className={"report-container"}>
-                <Sidebar components={components}>
+                <Sidebar
+                    components={components}
+                >
                     Upload a Dataset
                 </Sidebar>
                 <div className={"report-body"}>
