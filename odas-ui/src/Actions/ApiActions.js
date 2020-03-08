@@ -1,5 +1,4 @@
-import SatApi, {apiURL} from "../Definitions/SatApi"
-import axios from 'axios';
+import SatApi from "../Definitions/SatApi"
 import {authToken} from "../Definitions/BrowserCookie";
 /*GET requests from API*/
 
@@ -19,35 +18,32 @@ export const fetchUnits = () => async dispatch => {
 
 // TODO return to implement after create/join organization
 // Get all components connected to given satellite existing in the database
-export const fetchComponents = (satId = 1) => async dispatch => {
-
-    if (authToken !== undefined && authToken !== null) {
-        const response = await SatApi.get(`api/sat/${satId}/comp/`, {
+export const fetchComponents = (satId) => async dispatch => {
+    console.log(satId);
+    if (satId) {
+        await SatApi.get(`api/sat/${satId}/comp/`, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
                 'Authorization': `Token ${authToken}`
             }
-        });
-            // .catch(function(error){console.log(error)});
-
-        dispatch({type: "FETCH_COMPS", payload: response});
+        })
+            .then(response => dispatch({type: "FETCH_COMPS", payload: response.data.Components}))
+            .catch(error => dispatch({type: "SIGNED_OUT", payload: error}))
     } else {
-        dispatch({type: "SIGNED_OUT", payload: "Please sign in to continue."})
+        dispatch({type: "NO_SAT_SELECTED", selected: false})
     }
 };
 
 // Get satellite objects from API
 export const fetchSatellites = () => async dispatch => {
-    console.log(authToken);
-
-    await axios(`${apiURL}api/sat/`, {
+    await SatApi.get('api/sat/', {
         headers: {
-            'Authorization': `Token 7dfc96bade2c9d35e79d3161414e3fc9d5f56598`
+            'Authorization': `Token ${authToken}`
         }
     })
-        .then(response => dispatch({type: "FETCH_SATS", payload: response.data.satellites}))
+        .then(response => dispatch({type: "FETCH_SATS", payload: response.data}))
         .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error}))
 };
 

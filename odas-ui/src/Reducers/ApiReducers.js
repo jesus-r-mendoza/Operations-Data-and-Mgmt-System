@@ -10,9 +10,11 @@ export const unitsReducer = (state = [], action) => {
 export const componentsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_COMPS':
-            return [...state, action.payload];
+            return action.payload;
         case 'SIGNED_OUT':
             return action.payload;
+        case 'NO_SAT_SELECTED':
+            return action.selected;
         default:
             return state;
     }
@@ -21,15 +23,10 @@ export const componentsReducer = (state = [], action) => {
 export const fetchSatellitesReducer = (state = [], action) => {
         switch (action.type) {
         case 'FETCH_SATS':
-            return action.payload;
+            return action.payload.satellites;
         case 'FETCH_SATS_FAIL':
             return action.error;
         default:
-            return [...state];
+            return state;
     }
 };
-
-// export const fileReducer = action => {
-//     console.log(action.payload);
-//     return action.payload
-// };
