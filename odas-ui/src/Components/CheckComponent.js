@@ -27,8 +27,9 @@ const CheckComponent = ({ labels, isLoading, isSelected, onCheckboxChange }) => 
                 <div className={"check-selections"} key={label.id}>
                     <label className={"checkbox-label"}>
                         <Checkbox
-                            type={"checkbox"}
+                            id={label.id}
                             name={label.name}
+                            type={"checkbox"}
                             checked={isSelected}
                             onChange={onCheckboxChange}
                         />

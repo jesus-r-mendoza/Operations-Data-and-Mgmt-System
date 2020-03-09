@@ -1,4 +1,4 @@
-export const unitsReducer = (state = [], action) => {
+export const fetchUnitsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_UNITS':
             return [...state, action.payload];

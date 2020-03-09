@@ -47,6 +47,7 @@ class Sidebar extends React.Component {
 
         // API call to get list of satellites associated with current logged in user
         this.props.fetchSatellites();
+        this.props.fetchUnits();
     }
 
     handleFormSubmit = formSubmitEvent => {
@@ -64,7 +65,7 @@ class Sidebar extends React.Component {
     };
 
     onCheckboxChange = e => {
-        console.log("event", e.target)
+        console.log("event", e.target.id)
     };
 
     createSatelliteObject = satelliteObject => {
@@ -133,7 +134,8 @@ class Sidebar extends React.Component {
 const mapStateToProps = state => {
     return {
         components: state.components,
-        satellites: state.fetchSatellites
+        satellites: state.fetchSatellites,
+        units: state.fetchUnits
     };
 };
 
