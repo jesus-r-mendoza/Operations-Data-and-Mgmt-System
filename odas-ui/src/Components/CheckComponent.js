@@ -9,7 +9,7 @@ import "../Layout/Utilities.css"
 
 initializeIcons("https://static2.sharepointonline.com/files/fabric/assets/icons/");
 
-const CheckComponent = ({ labels, isLoading, isSelected, onCheckboxChange }) => {
+const CheckComponent = ({ labels, isLoading, checked, onCheckboxChange }) => {
     if(isLoading) {
         return (
             <div className={"loading-spinner"}>
@@ -21,7 +21,7 @@ const CheckComponent = ({ labels, isLoading, isSelected, onCheckboxChange }) => 
             </div>
         )
     } else {
-        console.log("LABELS", labels);
+        console.log("Checked", checked);
         return labels.map((label) => {
             return (
                 <div className={"check-selections"} key={label.id}>
@@ -30,7 +30,7 @@ const CheckComponent = ({ labels, isLoading, isSelected, onCheckboxChange }) => 
                             id={label.id}
                             name={label.name}
                             type={"checkbox"}
-                            checked={isSelected}
+                            checked={checked.get(label.id)}
                             onChange={onCheckboxChange}
                         />
                         {label.name}

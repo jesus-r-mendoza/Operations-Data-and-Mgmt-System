@@ -16,12 +16,23 @@ class Sidebar extends React.Component {
 
         this.state = {
             isLoading: true,
-            isSelected: false,
-            currentPage: this.props.page,
+            checked: false,
             loadDropdown: true,
             selectedSatellite: null,
-            formSubmit: [],
+            checkedItems: new Map()
         };
+
+        this.onCheckboxChange = this.onCheckboxChange.bind(this)
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        });
+
+        // API call to get list of satellites associated with current logged in user
+        this.props.fetchSatellites();
+        this.props.fetchUnits();
     }
 
     selectAllCheckboxes = isSelected => {
@@ -40,16 +51,6 @@ class Sidebar extends React.Component {
     selectAll = () => this.selectAllCheckboxes(true);
     deselectAll = () => this.selectAllCheckboxes(false);
 
-    componentDidMount() {
-        this.setState({
-            isLoading: false
-        });
-
-        // API call to get list of satellites associated with current logged in user
-        this.props.fetchSatellites();
-        this.props.fetchUnits();
-    }
-
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
 
@@ -62,10 +63,22 @@ class Sidebar extends React.Component {
 
         console.log("value", e.value);
         this.props.fetchComponents(e.value);
+
+        if (!this.state.checked.isEmpty) {
+            console.log(this.state.checked);
+            this.state.checked.clear()
+        }
     };
 
     onCheckboxChange = e => {
-        console.log("event", e.target.id)
+        const item = e.target.id;
+        const isChecked = e.target.checked;
+
+        this.setState(prevState => ({
+            checkedItems: prevState.checkedItems.set(item, isChecked)
+        }));
+
+        console.log(this.state.checkedItems)
     };
 
     createSatelliteObject = satelliteObject => {
@@ -94,7 +107,7 @@ class Sidebar extends React.Component {
                 <CheckComponent
                     labels={this.props.components.data}
                     isLoading={this.props.components.isLoading}
-                    isSelected={this.state.isSelected}
+                    checked={this.state.checkedItems}
                     onCheckboxChange={this.onCheckboxChange}
                 />
             )
@@ -135,7 +148,8 @@ const mapStateToProps = state => {
     return {
         components: state.components,
         satellites: state.fetchSatellites,
-        units: state.fetchUnits
+        units: state.fetchUnits,
+        recent: state.selectRecent
     };
 };
 
