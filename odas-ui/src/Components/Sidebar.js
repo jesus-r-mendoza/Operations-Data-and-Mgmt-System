@@ -16,7 +16,6 @@ class Sidebar extends React.Component {
 
         this.state = {
             isLoading: true,
-            checked: false,
             loadDropdown: true,
             selectedSatellite: null,
             checkedItems: new Map()
@@ -32,24 +31,9 @@ class Sidebar extends React.Component {
 
         // API call to get list of satellites associated with current logged in user
         this.props.fetchSatellites();
+        // API call to get unit names
         this.props.fetchUnits();
     }
-
-    selectAllCheckboxes = isSelected => {
-        Object.keys(this.state.checkboxes).forEach(checkbox => {
-            this.setState(prevState => ({
-                checkboxes: {
-                    ...prevState.checkboxes,
-                    [checkbox]: isSelected
-                }
-            }));
-        });
-
-        console.log(this.state.checkboxes);
-    };
-
-    selectAll = () => this.selectAllCheckboxes(true);
-    deselectAll = () => this.selectAllCheckboxes(false);
 
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
@@ -58,16 +42,11 @@ class Sidebar extends React.Component {
 
     dropDownChange = e => {
         this.setState({
-            selectedSatellite: e
+            selectedSatellite: e,
+            checkedItems: new Map()
         });
 
-        console.log("value", e.value);
         this.props.fetchComponents(e.value);
-
-        if (!this.state.checked.isEmpty) {
-            console.log(this.state.checked);
-            this.state.checked.clear()
-        }
     };
 
     onCheckboxChange = e => {
