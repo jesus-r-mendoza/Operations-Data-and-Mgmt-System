@@ -20,7 +20,7 @@ export const componentsReducer = (state = [], action) => {
             return {data: [], isLoading: action.isLoading};
 
         default:
-            return {isLoading: null};
+            return {data: [], isLoading: action.isLoading};
     }
 };
 

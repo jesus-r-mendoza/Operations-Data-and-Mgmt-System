@@ -21,13 +21,17 @@ export const fileListReducer = (fileState = [], action) => {
             return {files: [], isLoading: action.isLoading};
 
         case "FILE_LIST":
-            return {files: action.payload.data.files, isLoading: action.isLoading};
+            return {files: action.payload, isLoading: action.isLoading};
 
         case "FILE_LIST_FAIL":
             return {files: [], errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
 
         default:
-            return {files: [], isLoading: action.isLoading};
+            if (typeof fileState === "object") {
+                console.log(fileState)
+            }
+
+            return {files: fileState.files || []}
     }
 };
 export const downloadFileReducer = (downloadState = [], action) => {

@@ -8,7 +8,12 @@ import Select from 'react-select';
 import CheckComponent from "./CheckComponent";
 // Redux
 import { connect } from 'react-redux';
-import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions";
+import {
+    fetchSatellites,
+    fetchComponents,
+    fetchUnits,
+    getRecentMeasurements
+} from "../Actions";
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -36,7 +41,7 @@ class Sidebar extends React.Component {
 
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
-
+        console.log(this.state.checkedItems);
     };
 
     dropDownChange = e => {
@@ -74,7 +79,7 @@ class Sidebar extends React.Component {
     };
 
     showCheckboxes = () => {
-        if (this.props.components.isLoading === null) {
+        if (this.props.components.data.length === 0) {
             return (
                 <div className={"placeholder-text-div"}>
                     <span className={"placeholder-text"}>Please select a satellite to continue</span>
@@ -127,7 +132,8 @@ const mapStateToProps = state => {
         components: state.components,
         satellites: state.fetchSatellites,
         units: state.fetchUnits,
-        recent: state.selectRecent
+        recent: state.selectRecent,
+        getRecent: state.getRecentMeasurements
     };
 };
 
@@ -135,4 +141,5 @@ export default connect(mapStateToProps, {
     fetchSatellites,
     fetchUnits,
     fetchComponents,
+    getRecentMeasurements
 })(Sidebar)

@@ -117,8 +117,6 @@ class UploadData extends React.Component {
     };
 
     renderFileInput() {
-        console.log(this.props.downFile);
-        console.log(this.props.delFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>

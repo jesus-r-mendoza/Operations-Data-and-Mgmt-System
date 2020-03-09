@@ -28,7 +28,7 @@
     "redux-form": "^8.2.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "latest",
+    "semantic-ui-react": "^0.88.2",
     "static-eval": "^2.0.3",
     "universal-cookie": "^4.0.3"
   },

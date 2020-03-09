@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 // Components
 import {Table, Button} from "semantic-ui-react";
 import {Spinner} from "react-bootstrap";
@@ -9,7 +10,7 @@ import "../Layout/Utilities.css"
 // Files is array of objects, map() iterates over for each {file} object
 const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
     console.log(files);
-    if (isLoading) {
+    if (isLoading && typeof files === "object") {
         return (
             <Spinner
                 as={"tr"}
@@ -22,7 +23,7 @@ const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
             return (
                 <Table.Row key={file.id}>
                     <Table.Cell>{file.name}</Table.Cell>
-                    <Table.Cell>{file.date}</Table.Cell>
+                    <Table.Cell>{moment(file.date).format("MMMM Do YYYY, hh:mm:ssA")}</Table.Cell>
                     <Table.Cell>{file.description}</Table.Cell>
                     <Table.Cell>
                         <Button

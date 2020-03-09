@@ -34,14 +34,16 @@ export const getFileList = () => async dispatch => {
             'Authorization': `Token ${authToken}`
         }
     })
-        .then(response => dispatch({type: "FILE_LIST", payload: response, isLoading: false}))
+        .then(response => dispatch({type: "FILE_LIST", payload: response.data.files, isLoading: false}))
         .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error, isLoading: false}))
 };
 
 // Download a file from the server
 export const downloadFile = (fileId, fileName) => async dispatch => {
     await axios.get(`${apiURL}files/download/${fileId}/`, {
-        headers: {'Authorization': `Token ${authToken}`}
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
     })
         .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
         .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
