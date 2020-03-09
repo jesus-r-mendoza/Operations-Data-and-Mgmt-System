@@ -12,7 +12,6 @@ import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
-// import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
@@ -35,20 +34,6 @@ class UploadData extends React.Component {
 
 
         this.props.getFileList();
-    }
-
-    createArray(type) {
-        if(type === "units") {
-            let values = this.state.MEASUREMENTS.map(function (units) {
-                return (units.units);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        } else if(type === "components") {
-            return this.state.COMPONENTS.map(function (components) {
-                return (components.name);
-            });
-        }
     }
 
     handleInputChange = e => {
@@ -122,6 +107,17 @@ class UploadData extends React.Component {
         this.props.deleteFile(id)
     };
 
+    showFileList = () => {
+        return (
+            <FilesList
+                files={this.props.fileList.files}
+                isLoading={this.props.fileList.isLoading}
+                downloadHandler={this.handleDownload}
+                deleteHandler={this.handleDelete}
+            />
+        );
+    };
+
     renderFileInput() {
         console.log(this.props.downFile);
         console.log(this.props.delFile);
@@ -187,12 +183,7 @@ class UploadData extends React.Component {
                                         <Table.HeaderCell>Description</Table.HeaderCell>
                                         <Table.HeaderCell>Options</Table.HeaderCell>
                                     </Table.Row>
-                                    <FilesList
-                                        files={this.props.fileList.files}
-                                        isLoading={this.props.fileList.isLoading}
-                                        downloadHandler={this.handleDownload}
-                                        deleteHandler={this.handleDelete}
-                                    />
+                                    {this.showFileList()}
                                 </Table.Header>
                             </Table>
                         </div>
@@ -212,13 +203,9 @@ class UploadData extends React.Component {
     }
 
     render() {
-        let components = this.createArray("components");
-
         return (
             <div className={"report-container"}>
-                <Sidebar
-                    components={components}
-                >
+                <Sidebar>
                     Upload a Dataset
                 </Sidebar>
                 <div className={"report-body"}>

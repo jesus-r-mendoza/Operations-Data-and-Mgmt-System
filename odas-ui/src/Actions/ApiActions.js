@@ -19,6 +19,8 @@ export const fetchUnits = () => async dispatch => {
 // TODO return to implement after create/join organization
 // Get all components connected to given satellite existing in the database
 export const fetchComponents = (satId) => async dispatch => {
+    dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
+
     console.log(satId);
     if (satId) {
         await SatApi.get(`api/sat/${satId}/comp/`, {
@@ -29,8 +31,8 @@ export const fetchComponents = (satId) => async dispatch => {
                 'Authorization': `Token ${authToken}`
             }
         })
-            .then(response => dispatch({type: "FETCH_COMPS", payload: response.data.Components}))
-            .catch(error => dispatch({type: "SIGNED_OUT", payload: error}))
+            .then(response => dispatch({type: "FETCH_COMPS", payload: response.data.Components, isLoading: false}))
+            .catch(error => dispatch({type: "SIGNED_OUT", payload: error, isLoading: false}))
     } else {
         dispatch({type: "NO_SAT_SELECTED", selected: false})
     }

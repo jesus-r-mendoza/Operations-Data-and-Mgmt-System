@@ -64,12 +64,11 @@ class Sidebar extends React.Component {
     };
 
     onCheckboxChange = e => {
-        console.log(e.target.label)
+        console.log("event", e.target)
     };
 
     createSatelliteObject = satelliteObject => {
         let satelliteOptions = [];
-        console.log(satelliteObject);
         for (let i = 0; i < satelliteObject.length; i++) {
             satelliteOptions.push(
                 Object.create(Object.prototype, {
@@ -78,46 +77,30 @@ class Sidebar extends React.Component {
                 })
             );
         }
-
-
+        
         return satelliteOptions;
     };
 
-    createCheckboxLabels = components => {
-        let labels = [];
-
-        for(let i in components) {
-            labels.push(components[i].name)
-        }
-
-        console.log("labels", labels);
-        return labels;
-    };
-
     showCheckboxes = () => {
-        console.log("In showCheckboxes", this.props.components);
-        if (this.props.components !== false) {
+        if (this.props.components.isLoading === null) {
+            return (
+                <div className={"placeholder-text-div"}>
+                    <span className={"placeholder-text"}>Please select a satellite to continue</span>
+                </div>
+            );
+        } else {
             return (
                 <CheckComponent
-                    labels={this.createCheckboxLabels(this.props.components)}
+                    labels={this.props.components.data}
+                    isLoading={this.props.components.isLoading}
                     isSelected={this.state.isSelected}
                     onCheckboxChange={this.onCheckboxChange}
                 />
-            )
-        } else {
-            return (
-                <span>Please select a satellite to continue</span>
             )
         }
     };
 
     render() {
-        // TODO new satellite API state
-        // console.log("This is it", this.props.satellites);
-        // console.log(this.props.components);
-        // console.log(this.state.selectedSatellite || "Nothing");
-        this.createCheckboxLabels(this.props.components[0]);
-
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>

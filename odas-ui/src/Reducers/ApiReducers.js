@@ -10,13 +10,16 @@ export const unitsReducer = (state = [], action) => {
 export const componentsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_COMPS':
-            return action.payload;
+            return {data: action.payload, isLoading: action.isLoading};
+
         case 'SIGNED_OUT':
-            return action.payload;
-        case 'NO_SAT_SELECTED':
-            return action.selected;
+            return {data: action.payload, isLoading: action.isLoading};
+
+        case 'FETCHING_COMPONENTS':
+            return {data: [], isLoading: action.isLoading};
+
         default:
-            return state;
+            return {isLoading: null};
     }
 };
 
