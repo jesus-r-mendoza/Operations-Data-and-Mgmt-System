@@ -9,7 +9,7 @@ import {
 
 // Queries
 import {
-    satComponentQueryReducer
+    getRecentMeasurementsReducer
 } from "./QueryReducers"
 
 // Selection reducers
@@ -41,7 +41,7 @@ export default combineReducers({
     fetchSatellites: fetchSatellitesReducer,
     fetchUnits: fetchUnitsReducer,
     components: componentsReducer,
-    satComponentQuery: satComponentQueryReducer,
+    getRecentMeasurements: getRecentMeasurementsReducer,
 
     // Selections
     selectedSat: selectedSatReducer,

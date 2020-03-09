@@ -15,7 +15,7 @@ import {
 
 // User queries
 import {
-    satCompQuery
+    getRecentMeasurements
 } from "./QueryActions";
 
 // Authentication
@@ -46,7 +46,6 @@ export {
     selectSatellite,
     selectRecent,
     selectEndDate,
-    satCompQuery,
 
     // Authentication
     register,
@@ -59,7 +58,10 @@ export {
     postFile,
     getFileList,
     downloadFile,
-    deleteFile
+    deleteFile,
+
+    // Queries
+    getRecentMeasurements
 };
 
 

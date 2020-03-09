@@ -56,8 +56,10 @@ export const createOrgReducer = (orgState = [], action) => {
     switch (action.type) {
         case "CREATE_ORG":
             return action.payload;
+
         case "ORG_FAIL":
             return action.payload;
+
         default:
             return [...orgState];
     }
@@ -67,8 +69,10 @@ export const joinOrgReducer = (orgState = [], action) => {
     switch (action.type) {
         case 'JOIN_ORG':
             return action.payload;
+
         case 'JOIN_ORG_FAIL':
             return action.payload;
+
         default:
             return orgState;
     }

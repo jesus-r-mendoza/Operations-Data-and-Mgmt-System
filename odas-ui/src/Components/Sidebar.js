@@ -8,12 +8,11 @@ import Select from 'react-select';
 import CheckComponent from "./CheckComponent";
 // Redux
 import { connect } from 'react-redux';
-import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../Actions";
+import { fetchSatellites, fetchComponents, fetchUnits } from "../Actions";
 
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             isLoading: true,
             loadDropdown: true,
@@ -136,5 +135,4 @@ export default connect(mapStateToProps, {
     fetchSatellites,
     fetchUnits,
     fetchComponents,
-    satCompQuery
 })(Sidebar)

@@ -31,8 +31,6 @@ class UploadData extends React.Component {
     }
 
     componentDidMount() {
-
-
         this.props.getFileList();
     }
 

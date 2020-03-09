@@ -1,6 +1,6 @@
 import SatApi from "../Definitions/SatApi"
-import {authToken} from "../Definitions/BrowserCookie";
-/*GET requests from API*/
+import { authToken } from "../Definitions/BrowserCookie";
+/* GET requests from API */
 
 // Get the unit values from API
 export const fetchUnits = () => async dispatch => {
@@ -16,7 +16,6 @@ export const fetchUnits = () => async dispatch => {
     dispatch({type: "FETCH_UNITS", payload: response.data});
 };
 
-// TODO return to implement after create/join organization
 // Get all components connected to given satellite existing in the database
 export const fetchComponents = (satId) => async dispatch => {
     dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
@@ -48,5 +47,3 @@ export const fetchSatellites = () => async dispatch => {
         .then(response => dispatch({type: "FETCH_SATS", payload: response.data}))
         .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error}))
 };
-
-// export const
