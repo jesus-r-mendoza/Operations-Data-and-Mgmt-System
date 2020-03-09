@@ -1,4 +1,4 @@
-export const unitsReducer = (state = [], action) => {
+export const fetchUnitsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_UNITS':
             return [...state, action.payload];
@@ -10,24 +10,26 @@ export const unitsReducer = (state = [], action) => {
 export const componentsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_COMPS':
-            return [...state, action.payload];
+            return {data: action.payload, isLoading: action.isLoading};
+
         case 'SIGNED_OUT':
-            return action.payload;
+            return {data: action.payload, isLoading: action.isLoading};
+
+        case 'FETCHING_COMPONENTS':
+            return {data: [], isLoading: action.isLoading};
+
         default:
-            return state;
+            return {isLoading: null};
     }
 };
 
-export const satelliteReducer = (state = [], action) => {
-    switch (action.type) {
+export const fetchSatellitesReducer = (state = [], action) => {
+        switch (action.type) {
         case 'FETCH_SATS':
-            return [...state, action.payload];
+            return action.payload.satellites;
+        case 'FETCH_SATS_FAIL':
+            return action.error;
         default:
             return state;
     }
 };
-
-// export const fileReducer = action => {
-//     console.log(action.payload);
-//     return action.payload
-// };

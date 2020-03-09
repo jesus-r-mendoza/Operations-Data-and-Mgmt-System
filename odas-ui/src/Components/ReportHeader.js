@@ -23,11 +23,6 @@ class ReportHeader extends React.Component {
         return (
             <div className={"report-header"}>
                 <div className={"report-header-btn"}>
-                    {/*<div>*/}
-                    {/*    <button>*/}
-                    {/*        <img className={"back-btn"} src={require('../Images/back1.png')} alt={""}/>*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                     <Select
                         className={"recent-selector"}
                         options={recentNumbersOptions}
@@ -61,4 +56,8 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { selectRecent, selectStartDate, selectEndDate })(ReportHeader);
+export default connect(mapStateToProps, {
+    selectRecent,
+    selectStartDate,
+    selectEndDate
+})(ReportHeader);

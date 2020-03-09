@@ -110,3 +110,13 @@ html, body {
     display: flex;
     flex-direction: row;
 }
+
+.placeholder-text-div {
+    width: 100%;
+    text-align: center;
+}
+
+.placeholder-text {
+    color: #606060;
+    font-size: medium;
+}

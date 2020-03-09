@@ -22,7 +22,7 @@ const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
             return (
                 <Table.Row key={file.id}>
                     <Table.Cell>{file.name}</Table.Cell>
-                    <Table.Cell>Today</Table.Cell>
+                    <Table.Cell>{file.date}</Table.Cell>
                     <Table.Cell>{file.description}</Table.Cell>
                     <Table.Cell>
                         <Button

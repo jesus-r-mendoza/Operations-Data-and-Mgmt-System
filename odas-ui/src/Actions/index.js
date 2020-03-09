@@ -36,21 +36,28 @@ import {
 } from "./FileActions";
 
 export {
+    // Fetch
     fetchSatellites,
     fetchComponents,
     fetchUnits,
+
+    // Selections
     selectStartDate,
     selectSatellite,
     selectRecent,
     selectEndDate,
     satCompQuery,
+
+    // Authentication
     register,
     login,
     logout,
-    postFile,
-    createOrg,
-    getFileList,
     joinOrg,
+    createOrg,
+
+    // Files
+    postFile,
+    getFileList,
     downloadFile,
     deleteFile
 };

@@ -1,11 +1,10 @@
 import React from 'react';
 // Stylesheets
 import '../Layout/Sidebar.css'
-import { Button } from "react-bootstrap";
+// import { Button } from "react-bootstrap";
 import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
-// import LoadSpinner from "./LoadSpinner";
 import CheckComponent from "./CheckComponent";
 // Redux
 import { connect } from 'react-redux';
@@ -14,22 +13,26 @@ import { fetchSatellites, fetchComponents, fetchUnits, satCompQuery } from "../A
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
-        let COMPONENTS = this.props.components;
 
         this.state = {
             isLoading: true,
-            currentPage: this.props.page,
+            checked: false,
             loadDropdown: true,
-            satPlaceHolder: "Satellite",
-            formSubmit: [],
-            checkboxes: COMPONENTS.reduce(
-                (options, option) => ({
-                    ...options,
-                    [option]: false
-                }),
-                {}
-            ),
+            selectedSatellite: null,
+            checkedItems: new Map()
         };
+
+        this.onCheckboxChange = this.onCheckboxChange.bind(this)
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: false
+        });
+
+        // API call to get list of satellites associated with current logged in user
+        this.props.fetchSatellites();
+        this.props.fetchUnits();
     }
 
     selectAllCheckboxes = isSelected => {
@@ -48,55 +51,70 @@ class Sidebar extends React.Component {
     selectAll = () => this.selectAllCheckboxes(true);
     deselectAll = () => this.selectAllCheckboxes(false);
 
-    handleCheckboxChange = changeEvent => {
-        const { name } = changeEvent.target;
-
-        this.setState(prevState => ({
-            checkboxes: {
-                ...prevState.checkboxes,
-                [name]: !prevState.checkboxes[name]
-            }
-        }));
-    };
-
-    createCheckbox = option => (
-        <CheckComponent
-            label={option}
-            isSelected={this.state.checkboxes[option]}
-            onCheckboxChange={this.handleCheckboxChange}
-            key={option}
-        />
-    );
-
-    createCheckboxes = com => com.map(this.createCheckbox);
-
-    componentDidMount() {
-        this.setState({
-            isLoading: false
-        });
-    }
-
     handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
 
-        Object.keys(this.state.checkboxes)
-            .filter(checkbox => this.state.checkboxes[checkbox])
-            .forEach(checkbox => {
-                this.state.formSubmit.push(checkbox);
-                console.log(this.state.formSubmit)
-            });
     };
 
     dropDownChange = e => {
         this.setState({
-            satPlaceHolder: e.label
-        })
+            selectedSatellite: e
+        });
+
+        console.log("value", e.value);
+        this.props.fetchComponents(e.value);
+
+        if (!this.state.checked.isEmpty) {
+            console.log(this.state.checked);
+            this.state.checked.clear()
+        }
+    };
+
+    onCheckboxChange = e => {
+        const item = e.target.id;
+        const isChecked = e.target.checked;
+
+        this.setState(prevState => ({
+            checkedItems: prevState.checkedItems.set(item, isChecked)
+        }));
+
+        console.log(this.state.checkedItems)
+    };
+
+    createSatelliteObject = satelliteObject => {
+        let satelliteOptions = [];
+        for (let i = 0; i < satelliteObject.length; i++) {
+            satelliteOptions.push(
+                Object.create(Object.prototype, {
+                    value: {value: satelliteObject[i].id},
+                    label: {value: satelliteObject[i].name}
+                })
+            );
+        }
+        
+        return satelliteOptions;
+    };
+
+    showCheckboxes = () => {
+        if (this.props.components.isLoading === null) {
+            return (
+                <div className={"placeholder-text-div"}>
+                    <span className={"placeholder-text"}>Please select a satellite to continue</span>
+                </div>
+            );
+        } else {
+            return (
+                <CheckComponent
+                    labels={this.props.components.data}
+                    isLoading={this.props.components.isLoading}
+                    checked={this.state.checkedItems}
+                    onCheckboxChange={this.onCheckboxChange}
+                />
+            )
+        }
     };
 
     render() {
-        let satellites = this.props.satellites;
-        let components = this.props.components;
-
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
@@ -108,43 +126,17 @@ class Sidebar extends React.Component {
                             <div className={"dropdown-style"}>
                                 <Select
                                     name="form-field-name"
-                                    value="one"
-                                    options={satellites}
+                                    value={this.state.selectedSatellite}
+                                    options={this.createSatelliteObject(this.props.satellites)}
                                     onChange={this.dropDownChange}
-                                    placeholder={this.state.satPlaceHolder}
                                 />
                             </div>
                             <div className={"checkbox-selection-btn"}>
                                 <Divider horizontal>Components</Divider>
-                                    {this.createCheckboxes(components)}
-                                    <div className={"selection-buttons"}>
-                                        {/*<Button*/}
-                                        {/*    variant={"outline-success"}*/}
-                                        {/*    onClick={this.selectAll}*/}
-                                        {/*    size={"sm"}*/}
-                                        {/*>*/}
-                                        {/*    Select All*/}
-                                        {/*</Button>*/}
-                                        <Button
-                                            variant={"outline-danger"}
-                                            onClick={this.deselectAll}
-                                            size={"sm"}
-                                        >
-                                            Deselect All
-                                        </Button>
-                                    </div>
-                                </div>
+                                {this.showCheckboxes()}
                             </div>
                         </div>
-                    {/*<div className={"gen-button-container"}>*/}
-                    {/*    <Button*/}
-                    {/*        type={"submit"}*/}
-                    {/*        variant={"info"}*/}
-                    {/*        className={"gen-button"}*/}
-                    {/*    >*/}
-                    {/*        Generate Report*/}
-                    {/*    </Button>*/}
-                    {/*</div>*/}
+                    </div>
                 </form>
             </div>
         );
@@ -154,8 +146,16 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        components: state.components
+        components: state.components,
+        satellites: state.fetchSatellites,
+        units: state.fetchUnits,
+        recent: state.selectRecent
     };
 };
 
-export default connect(mapStateToProps, { fetchSatellites, fetchUnits, fetchComponents, satCompQuery })(Sidebar)
+export default connect(mapStateToProps, {
+    fetchSatellites,
+    fetchUnits,
+    fetchComponents,
+    satCompQuery
+})(Sidebar)
