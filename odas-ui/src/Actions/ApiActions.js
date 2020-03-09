@@ -20,7 +20,6 @@ export const fetchUnits = () => async dispatch => {
 export const fetchComponents = (satId) => async dispatch => {
     dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
 
-    console.log(satId);
     if (satId) {
         await SatApi.get(`api/sat/${satId}/comp/`, {
             method: "GET",
@@ -44,6 +43,6 @@ export const fetchSatellites = () => async dispatch => {
             'Authorization': `Token ${authToken}`
         }
     })
-        .then(response => dispatch({type: "FETCH_SATS", payload: response.data}))
-        .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error}))
+        .then(response => dispatch({type: "FETCH_SATS", payload: response.data.satellites}))
+        .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error, message: "Please make sure you are signed in"}))
 };

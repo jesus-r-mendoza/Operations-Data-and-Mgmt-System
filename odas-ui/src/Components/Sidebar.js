@@ -14,6 +14,7 @@ import {
     fetchUnits,
     getRecentMeasurements
 } from "../Actions";
+import {authToken} from "../Definitions/BrowserCookie";
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -79,7 +80,13 @@ class Sidebar extends React.Component {
     };
 
     showCheckboxes = () => {
-        if (this.props.components.data.length === 0) {
+        if (!authToken && this.props.satellites.error === true) {
+            return (
+                <div className={"placeholder-text-div"}>
+                    <span className={"placeholder-text"}>{this.props.satellites.message}</span>
+                </div>
+            );
+        } else if (authToken && this.state.selectedSatellite === null) {
             return (
                 <div className={"placeholder-text-div"}>
                     <span className={"placeholder-text"}>Please select a satellite to continue</span>
