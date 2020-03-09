@@ -122,7 +122,7 @@ def save_new_file_lines():
             gen_feats.append(new_feats)
 
         for i in range(len(vals)):
-            line = f'{dates[i]},{vals[i]},'
+            line = f'{vals[i]},'
             for feat_set_list in gen_feats:
                 for feat in feat_set_list[i]:
                     line += f'{feat},'
@@ -135,7 +135,7 @@ def save_new_file_lines():
 
         path = f'{basedir}generated/engineered/{csv}'
         with open(path, 'w') as engineered_file:
-            header = 'Timestamp,Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
+            header = 'Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
             header += 'Avg5,Stdev5,Minimum5,Maximum5,Fluctuation5,'
             header += 'Avg7,Stdev7,Minimum7,Maximum7,Fluctuation7,'
             header += 'Hour,Minute,Second,Microsecond,\n'
