@@ -86,7 +86,7 @@ def read_values():
 
 all_csv_dates, all_csv_values = read_values()
 
-def generate_features(values, window):
+def generate_stats_features(values, window):
     predictions = []
     for i in range(window, len(values)):
         vals = values[i-window:i]
@@ -103,7 +103,11 @@ def generate_features(values, window):
     predictions = non_values + predictions
     return predictions
 
-def new_file_lines():
+def generate_time_features(formated_time_str):
+    dt = datetime.strptime(formated_time_str, '%Y-%m-%dT%H:%M:%S.%f')
+    return dt.hour, dt.minute, dt.second, dt.microsecond
+
+def save_new_file_lines():
     windows = 3, 5, 7
     for x in range(len(data_files)):
         lines = []
@@ -114,25 +118,30 @@ def new_file_lines():
 
         gen_feats = []
         for win in windows:
-            new_feats = generate_features(vals, win)
+            new_feats = generate_stats_features(vals, win)
             gen_feats.append(new_feats)
 
         for i in range(len(vals)):
-            line = f'{dates[i]},{vals[i]},'
+            line = f'{vals[i]},'
             for feat_set_list in gen_feats:
                 for feat in feat_set_list[i]:
                     line += f'{feat},'
+
+            for feat in generate_time_features(dates[i]):
+                line += f'{feat},'
+
             line += '\n'
             lines.append(line)
 
         path = f'{basedir}generated/engineered/{csv}'
         with open(path, 'w') as engineered_file:
-            header = ',Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
+            header = 'Value,Avg3,Stdev3,Minimum3,Maximum3,Fluctuation3,'
             header += 'Avg5,Stdev5,Minimum5,Maximum5,Fluctuation5,'
-            header += 'Avg7,Stdev7,Minimum7,Maximum7,Fluctuation7\n'
+            header += 'Avg7,Stdev7,Minimum7,Maximum7,Fluctuation7,'
+            header += 'Hour,Minute,Second,Microsecond,\n'
             engineered_file.write(header)
             engineered_file.writelines(lines)
             print(f'Wrote {len(lines)} lines to {path}')
     print()
 
-new_file_lines()
+save_new_file_lines()
