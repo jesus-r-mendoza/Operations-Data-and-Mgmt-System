@@ -40,9 +40,20 @@ class Sidebar extends React.Component {
         this.props.fetchUnits();
     }
 
-    handleFormSubmit = formSubmitEvent => {
-        formSubmitEvent.preventDefault();
-        console.log(this.state.checkedItems);
+    handleFormSubmit = e => {
+        e.preventDefault();
+        const satId = this.state.selectedSatellite;
+        let compIds;
+
+        if (this.state.checkedItems.length !== 0) {
+            this.state.checkedItems.forEach(item => {
+                compIds.push(item);
+            });
+
+            this.props.getRecentMeasurements(satId)
+        } else {
+            this.props.getRecentMeasurements(satId)
+        }
     };
 
     dropDownChange = e => {

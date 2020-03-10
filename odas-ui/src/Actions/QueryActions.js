@@ -2,13 +2,14 @@ import SatApi from "../Definitions/SatApi";
 import {authToken} from "../Definitions/BrowserCookie";
 
 // Get all recent measurements from components of a particular satellite
-export const getRecentMeasurements = (satId, quantity, compIds = []) => async dispatch => {
+// Method defaults to ALL measurements and ALL components
+export const getRecentMeasurements = (satId, compIds = [], quantity = 5000) => async dispatch => {
     dispatch({type: 'FETCHING_RECENTS', isLoading: true});
 
     let url;
     let compIdString = '';
 
-    // CompIds are an optional parameter
+    // Appends component IDs to a string which is then placed in the url
     if (compIds.length !== 0) {
         compIds.forEach((id, i) => {
             if (i === 0) {
