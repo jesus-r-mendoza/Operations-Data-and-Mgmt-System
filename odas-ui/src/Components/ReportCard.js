@@ -52,6 +52,9 @@ export default class ReportCard extends React.Component {
 				t: 50,
 				pad: 4
 			},
+			config: {
+				responsive: true,
+			}, 
 			width: 600,
 			paper_bgcolor: '#FFFFFF',
 			plot_bgcolor: '#000000',
@@ -131,7 +134,7 @@ export default class ReportCard extends React.Component {
 		}
 		console.log('Quantity: ', quantity);
 		console.log('Real Quantity: ', realQuantity);
-		console.log('Test 3: Quantities Match? : ', checkQuantities);
+		console.log('Test : Quantities Match? : ', checkQuantities);
 		if(quantity===realQuantity===0){
 			console.log('Error: No Data');
 		}
@@ -156,7 +159,6 @@ export default class ReportCard extends React.Component {
 	
 	checkData = (out, compSpecified) => {
 				var error;
-				console.log('Test 1: Full API:', out);
 				if(out.data===true){
 					this.titleSpecs(out);
 					compSpecified = false;
@@ -192,14 +194,12 @@ export default class ReportCard extends React.Component {
 						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
-					console.log('Test 4: Formatted Data Array: ', data);
 					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
 	
 	sortMeasurements = (outSort, realQuantity, compSpecified) => {
 				outSort.Measurements.sort(this.compare.bind(null, 'units'));
-				console.log('Test 5: Sorted Out: ', outSort.Measurements);
 				var allUnits = [];
 				var allNames = [];
 				var sortedMeasurements = [];
@@ -210,28 +210,21 @@ export default class ReportCard extends React.Component {
 							allNames.push(outSort.Measurements[a].component_name);//[0]);
 						}
 					}
-				console.log('Test SortedMeasurements JSON: ', sortedMeasurements);	
 				this.makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 	makeParameters = (allUnits, allNames, realQuantity, sortedMeasurements, compSpecified) => {
-				console.log('Test 6: Data Attributes: ');
 				var distinct = (value, index, self) => {
 					return self.indexOf(value) === index;
 				}
 				var distinctUnits = allUnits.filter(distinct);
-				console.log('Test Distinct Units: ', distinctUnits);
 				var numUniqueUnits = distinctUnits.length;
-				console.log('Test Num Unique Units: ', numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
-				console.log('Test Distinct Names: ', distinctNames);
 				var numUniqueNames = distinctNames.length;
-				console.log('Test Num Unique Names: ', numUniqueNames);
 				
 				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified === false){
 					totalNumGraphs = numUniqueUnits;
 				}
-				console.log('Total Num Graphs: ', totalNumGraphs);
 				this.makeGraphArray(totalNumGraphs, numUniqueNames, distinctNames, numUniqueUnits, distinctUnits, realQuantity, sortedMeasurements, compSpecified);
 			}
 			
@@ -242,7 +235,6 @@ export default class ReportCard extends React.Component {
 					var dummyGraph = [];
 					totalGraphsArray.push(dummyGraph);
 				}
-				console.log('Test Empty Total Graphs Array: ', totalGraphsArray);
 							
 				if(compSpecified === false){
 					numUniqueNames = 1;
@@ -259,8 +251,6 @@ export default class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log('Test 7: Total Graphs Array: ', totalGraphsArray);
-				console.log('Test Total Graphs Array Length', totalGraphsArray.length);
 				this.reorder(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
 			reorder = (totalGraphsArray, totalNumGraphs, compSpecified) => {
@@ -273,7 +263,6 @@ export default class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log('Test 8: Reordered Total Graphs Array: ', totalGraphsArray);
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
@@ -285,37 +274,29 @@ export default class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log('AltCurrentData:', altcurrentData);
 							
 				var testIndex;
 				var exampleGraphData = [];
 				if(compSpecified===true){
 					testIndex = 3; //example.
-					console.log('Example Specific Unit-Name(Specified): GHz-MainCPU1');
 					exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
 				}
 				else{
 					testIndex = 0;
-					console.log('Example Unspecified Unit-Name(Specified): ');
 					exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
 				}
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
 			plotGraph = (compSpecified, exampleGraphData) => {
-				console.log('Example Graph Data: ', exampleGraphData);
 				var exampleTime = [];
 				var exampleValue = [];
 				for(var a=0;a<exampleGraphData.length;a++){
 					exampleTime.push(exampleGraphData[a].time); //x
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
-				console.log('ExampleTime', exampleTime);
-				console.log('ExampleValue', exampleValue);
-
 				var table = document.getElementById("traces");
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
-				console.log('Test Initial Data Array', initialDataArray);
 				var tableKeys = [];
 				if(compSpecified===false){
 					//for(var a=0;a<initialDataArray[0].length;a++){
@@ -340,47 +321,26 @@ export default class ReportCard extends React.Component {
 				window.alreadyStopped = alreadyStopped;
 				window.exampleValue = exampleValue;
 				window.tableKeys = tableKeys;
-/*						if(paused === true){
-									document.getElementById("pause").innerHTML = "Paused";//Date();
-									clearInterval(interval);
-									console.log('Stopped!');
-								}	
-*/				console.log('finish');
 						}
-					
-					//function 
+
 					pause = () => {
-							console.log('Stop enabled.');
 							window.paused = true;
 							this.setState({paused: true});
 						}	
-						//pause.bind(this)()
 
 					increasePlot = () => {
-//					initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys) => {
 								var initialDataArray = window.initialDataArray;
 								var cnt = this.state.cnt;
-								//window.cnt;
 								var paused = this.state.paused; 
-								//window.paused;
 								var exampleTime = window.exampleTime;
-								//this.state.exampleTime;
 								var alreadyStopped = this.state.alreadyStopped;
-								//window.alreadyStopped;
 								var exampleValue = window.exampleValue;   
-								//this.state.exampleValue;
 								var tableKeys = window.tableKeys;
-								//this.state.tableKeys;
-//								document.getElementById("pause").addEventListener("click", this.pause());
-							console.log('increasePlot'+cnt+paused);	
-								//if(this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys)!==null&&this.getX(cnt, exampleTime, alreadyStopped, paused)!==null){
 								if(paused === true){
 									document.getElementById("pause").innerHTML = "PAUSED";//Date();
 									clearInterval(window.interval);
-									console.log('Paused by Click!');
 								}
 								if(cnt<initialDataArray.length){
-//								this.initialDataPoints(this.getY(cnt+1, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys),this.getX(cnt+1, exampleTime, alreadyStopped, paused));
 								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
 								var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
 								const { line1, layout } = this.state;
@@ -393,50 +353,36 @@ export default class ReportCard extends React.Component {
 								if(paused === true){
 									document.getElementById("pause").innerHTML = "PAUSED";//Date();
 									clearInterval(window.interval);
-									console.log('Paused by Click!');
 								}
-							console.log('full',initialDataArray, cnt, paused, exampleTime, alreadyStopped, exampleValue, tableKeys);
 								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
 								layout.datarevision = this.state.revision + 1;
 								}
 								else{
 									document.getElementById("pause").innerHTML = "STOPPED";//Date();
 									clearInterval(window.interval);
-									console.log('Stopped! Finished plotting data, no more values left.');
 								}
 							}
 
 							getX = (count, exampleTime, alreadyStopped, paused) => {
-							console.log('getX');
 								if(exampleTime[count]!==null){
-									console.log('getX if');
-									//console.log('X Plot: ',exampleTime[count]);
 									return exampleTime[count];
 								}
 								else{
-									console.log('getX else');
 									if(alreadyStopped===false){
-										console.log('End of Data.');
 										window.paused = true;
 										clearInterval(window.interval);
 										window.alreadyStopped=true;
 									}
 								}
 							}
-							//getX.bind(this)()
 							
 							getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
-				console.log('getY exampleValue', exampleValue);
 								if(exampleValue[count]!==null){
-				console.log('getY if ', count, initialDataArray);
 									this.getData(count, initialDataArray, tableKeys);
-									//console.log('Y Plot: ', exampleValue[count]);
 									return exampleValue[count];
 								}
 								else{
-						console.log('getY else');
 									if(alreadyStopped===false){
-										console.log('End of Data.');
 										window.paused = true;
 										clearInterval(window.interval);
 										window.alreadyStopped = true;
@@ -445,17 +391,14 @@ export default class ReportCard extends React.Component {
 							}
 							
 						getData = (cnt, initialDataArray, tableKeys) => {
-									var table = document.getElementById("traces");
-									var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-							console.log('getData');
+								var table = document.getElementById("traces");
+								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
 								if(initialDataArray[cnt]!==null){		
-							console.log('getData if');
-										tableKeys = Object.values(initialDataArray[cnt]);
-										for(var a=0;a<tableKeys.length;a++){
-									console.log('getData if for ');
-											var cellAdd = row.insertCell(a);
-											var toChart = tableKeys[a];
-											cellAdd.innerHTML = (toChart);
+									tableKeys = Object.values(initialDataArray[cnt]);
+									for(var a=0;a<tableKeys.length;a++){
+										var cellAdd = row.insertCell(a);
+										var toChart = tableKeys[a];
+										cellAdd.innerHTML = (toChart);
 										}
 								}
 							}  
