@@ -1,0 +1,50 @@
+{
+    "Satellite": {
+        "name": "Sample",
+        "mission_description": "Sample mission",
+        "year_launched": "2019-10-07T04:08:29.600910Z"
+    },
+    "Measurements": [
+        {
+            "component_name": [
+                "Comp 1"
+            ],
+            "component_model": [
+                "Sample"
+            ],
+            "component_category": [
+                "Sample"
+            ],
+            "component_description": [
+                "Sample"
+            ],
+            "units": "Sample",
+            "time": "2019-10-25T16:42:38.348Z",
+            "value": 1.0
+        },
+        {
+            "component_name": [
+                "Comp 2"
+            ],
+            "component_model": [
+                "Sample"
+            ],
+            "component_category": [
+                "Sample"
+            ],
+            "component_description": [
+                "Sample"
+            ],
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 2.0
+        }
+    ],
+    "Quantities": {
+        "Comp 1": 1,
+        "Comp 2": 1
+    },
+    "comp_specified": true,
+    "data": true,
+    "error": "None"
+}

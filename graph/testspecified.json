@@ -1,0 +1,35 @@
+{
+    "Satellite": {
+        "name": "Sample",
+        "mission_description": "Sample mission",
+        "year_launched": "2019-10-07T04:08:29.600910Z"
+    },
+    "Measurements": [
+        {
+            "units": "Sample",
+            "time": "2019-10-25T16:42:38.348Z",
+            "value": 1.0
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.1
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.2
+        },
+        {
+            "units": "Sample",
+            "time": "2019-10-24T16:42:38.348Z",
+            "value": 1.3
+        }
+    ],
+    "Quantities": {
+        "Comp 1": 1
+    },
+"comp_specified": false,
+    "data": true,
+    "error": "None"
+	}
