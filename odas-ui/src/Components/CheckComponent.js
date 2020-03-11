@@ -21,7 +21,6 @@ const CheckComponent = ({ labels, isLoading, checked, onCheckboxChange }) => {
             </div>
         )
     } else {
-        console.log("Checked", checked);
         return labels.map((label) => {
             return (
                 <div className={"check-selections"} key={label.id}>

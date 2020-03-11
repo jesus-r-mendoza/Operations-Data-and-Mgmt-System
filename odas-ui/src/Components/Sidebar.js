@@ -1,7 +1,7 @@
 import React from 'react';
 // Stylesheets
 import '../Layout/Sidebar.css'
-// import { Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
@@ -42,18 +42,22 @@ class Sidebar extends React.Component {
 
     handleFormSubmit = e => {
         e.preventDefault();
-        const satId = this.state.selectedSatellite;
-        let compIds;
+        const satId = this.state.selectedSatellite.value;
+        console.log(satId);
+        let compIds = [];
 
         if (this.state.checkedItems.length !== 0) {
             this.state.checkedItems.forEach(item => {
                 compIds.push(item);
             });
 
-            this.props.getRecentMeasurements(satId)
+            this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {
-            this.props.getRecentMeasurements(satId)
+            this.props.getRecentMeasurements(satId, compIds = [], this.props.recent)
         }
+
+        // Refresh the checkboxes or they will not appear after submit
+        this.props.fetchComponents(satId);
     };
 
     dropDownChange = e => {
@@ -70,7 +74,7 @@ class Sidebar extends React.Component {
         const isChecked = e.target.checked;
 
         this.setState(prevState => ({
-            checkedItems: prevState.checkedItems.set(item, isChecked)
+            checkedItems: prevState.checkedItems.set(isChecked, item)
         }));
 
         console.log(this.state.checkedItems)
@@ -116,6 +120,7 @@ class Sidebar extends React.Component {
     };
 
     render() {
+        console.log(this.props.components.data);
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
@@ -136,6 +141,14 @@ class Sidebar extends React.Component {
                                 <Divider horizontal>Components</Divider>
                                 {this.showCheckboxes()}
                             </div>
+                        </div>
+                        <div className={"gen-btn-container"}>
+                            <Button
+                                className={"gen-btn"}
+                                onClick={this.handleFormSubmit}
+                            >
+                                Generate Report
+                            </Button>
                         </div>
                     </div>
                 </form>

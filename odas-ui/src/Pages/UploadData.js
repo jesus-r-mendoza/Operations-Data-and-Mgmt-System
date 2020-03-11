@@ -69,6 +69,16 @@ class UploadData extends React.Component {
         const description = this.state.description;
 
         this.props.postFile(selectedFile, description);
+        this.props.getFileList();
+    };
+
+    handleDownload = (id, name) => {
+        this.props.downloadFile(id, name);
+    };
+
+    handleDelete = (id) => {
+        this.props.deleteFile(id);
+        this.props.getFileList()
     };
 
     showErrorMessage(loaded) {
@@ -95,14 +105,6 @@ class UploadData extends React.Component {
                 </Alert>
             );
         }
-    };
-
-    handleDownload = (id, name) => {
-        this.props.downloadFile(id, name);
-    };
-
-    handleDelete = (id) => {
-        this.props.deleteFile(id)
     };
 
     showFileList = () => {

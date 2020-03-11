@@ -27,10 +27,6 @@ export const fileListReducer = (fileState = [], action) => {
             return {files: [], errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
 
         default:
-            if (typeof fileState === "object") {
-                console.log(fileState)
-            }
-
             return {files: fileState.files || []}
     }
 };

@@ -6,7 +6,7 @@ export const selectedSatReducer = (selectedSat = null, action) => {
     return selectedSat;
 };
 
-export const selectedRecentReducer = (recent = 10, action) => {
+export const selectedRecentReducer = (recent = 5000, action) => {
     if (action.type === "RECENT_SELECTED") {
         return action.payload
     }
