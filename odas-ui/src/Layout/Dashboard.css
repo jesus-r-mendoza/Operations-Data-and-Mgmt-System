@@ -1,7 +1,0 @@
-.dash-container {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    overflow-y: scroll;
-    height: 100vh;
-}

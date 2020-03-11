@@ -15,16 +15,19 @@ html, body {
     position: absolute;
     width: 100vw;
     overflow-y: scroll;
+    height: 100vh;
     /*border: solid green 3px;*/
 }
 
 .report-body {
     display: flex;
     flex-direction: column;
+    width: 100vw;
     /*border: solid black 3px;*/
 	overflow: visible;
 }
 
+/*Header*/
 .report-header {
     width: 100vw;
     height: 60px;
@@ -46,7 +49,6 @@ html, body {
 .datetime-pickers {
     border-radius: 10px;
     height: 40px;
-    position: absolute;
     margin-right: 20px;
 }
 

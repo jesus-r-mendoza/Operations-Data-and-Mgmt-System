@@ -1,11 +1,11 @@
-import { apiURL } from "../Apis/SatApi";
 import axios from "axios";
-import Cookies from "universal-cookie/lib";
+import { apiURL } from "../Definitions/SatApi";
+import { authToken } from "../Definitions/BrowserCookie";
 
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
-    let errorMessage = ''
+    let errorMessage = '';
 
     registerData.append("username", username);
     registerData.append("email", email);
@@ -42,7 +42,6 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
 // Log the user in and obtain an Auth token
 export const login = (username, pass) => async dispatch => {
     const loginData = new FormData();
-    let errorMessage = '';
 
     loginData.append("username", username);
     loginData.append("pass", pass);
@@ -50,41 +49,73 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
-    const response = await axios({
+    // TODO refactor to look like file actions get request
+    await axios({
         method: 'POST',
         url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .catch((function (error) {
-            errorMessage = error
-        }));
-    
-    // If errorMessage remains empty, success is dispatched to the reducer
-    if (errorMessage === '') {
-        console.log(response);
-
-        dispatch({ type: "LOGIN_SUCCESS", payload: response.data })
-    } else {
-        console.log(errorMessage);
-
-        dispatch({ type: "LOGIN_FAIL", payload: errorMessage })
-    }
+        .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
+        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }))
 };
 
 // Log the user out using the Auth token
 export const logout = () => async dispatch => {
-    const cookie = new Cookies();
-    const authToken = cookie.get('auth');
+    console.log(authToken);
 
-    const response = await axios({
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Token ${authToken}`);
+
+    const requestOptions = {
         method: 'DELETE',
-        url: `${apiURL}logout/`,
-        header: { 'Authorization': `Token ${authToken}` },
-    })
-        .catch((function (error) {
-            console.log(error);
-        }));
+        headers: myHeaders,
+        redirect: 'follow'
+    };
 
-    dispatch({type: 'LOGOUT', payload: response})
+    fetch(`${apiURL}logout/`, requestOptions)
+        .then(result => result.json())
+        .then(response => dispatch({type: 'LOGOUT', payload: response}))
+        .catch(error => console.log('error', error));
+};
+
+export const createOrg = (orgName='testorg') => async dispatch => {
+    const headers = new Headers();
+    const orgForm = new FormData();
+
+    headers.append("Authorization", `Token ${authToken}`);
+
+    orgForm.append("org_name", orgName);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: orgForm,
+        redirect: 'follow'
+    };
+
+    await fetch(`${apiURL}create-org/`, requestOptions)
+        .then(res => res.json())
+        .then(response => dispatch({type: "CREATE_ORG", payload: response}))
+        .catch(error => dispatch({type: "ORG_FAIL", payload: error}))
+};
+
+export const joinOrg = inviteCode => async dispatch => {
+    const myHeaders = new Headers();
+    const orgData = new FormData();
+
+    myHeaders.append("Authorization", `Token ${authToken}`);
+    orgData.append("code", inviteCode);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: orgData,
+        redirect: 'follow'
+    };
+
+    fetch(`${apiURL}join/`, requestOptions)
+        .then(result => result.json())
+        .then(response => dispatch({type: 'JOIN_ORG', payload: response}))
+        .catch(error => dispatch({type: 'JOIN_ORG_FAIL', payload: error}));
 };

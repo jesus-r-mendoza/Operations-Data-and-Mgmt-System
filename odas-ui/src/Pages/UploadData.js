@@ -1,18 +1,25 @@
 import React from 'react';
+import axios from "axios";
 // Redux
-import { postFile } from "../Actions";
-import { connect } from "react-redux";
+import {
+    getFileList,
+    postFile,
+    downloadFile,
+    deleteFile
+} from "../Actions";
+import {connect} from "react-redux";
 //Components
-import LoadSpinner from "../Components/LoadSpinner";
+import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
-import { apiURL } from "../Apis/SatApi";
+import FilesList from "../Components/FilesList";
+import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
-import {Button, FormControl, Container} from "react-bootstrap";
-import axios from "axios";
+import {Alert, Button, Form} from "react-bootstrap";
+import {Table} from "semantic-ui-react";
 
-const acceptedExtensions = [".tlm", ".bin", ".txt"];
+const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
 
 const apis = {
     unit: `${apiURL}api/units/`,
@@ -24,11 +31,10 @@ class UploadData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
             currentPage: "upload",
-            selectedFile: "Select a file",
+            selectedFile: '',
+            description: '',
             loaded: 1,
-            fileSubmit: false,
             MEASUREMENTS: [],
             COMPONENTS: [],
         };
@@ -47,9 +53,7 @@ class UploadData extends React.Component {
                 console.log(err)
             });
 
-        this.setState({
-            isLoading: false
-        });
+        this.props.getFileList();
     }
 
     createArray(type) {
@@ -60,20 +64,19 @@ class UploadData extends React.Component {
             console.log("VALUES: ", values);
             return values;
         } else if(type === "components") {
-            let values = this.state.COMPONENTS.map(function (components) {
+            return this.state.COMPONENTS.map(function (components) {
                 return (components.name);
             });
-            console.log("VALUES: ", values);
-            return values;
         }
     }
 
-    // TODO Create new URL for this
-    goToReport() {
+    handleInputChange = e => {
         this.setState({
-            currentPage: "renderReport"
+            [e.target.name]: e.target.value
         });
-    }
+
+        console.log(e.target.name, "updated with: ", e.target.value)
+    };
 
     onFileChangeHandler = event => {
         let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
@@ -84,8 +87,7 @@ class UploadData extends React.Component {
         if (acceptedExtensions.includes(extension)) {
             this.setState({
                 selectedFile: event.target.files[0],
-                loaded: 1,
-                fileSubmit: true
+                loaded: 1
             });
         } else {
             this.setState({
@@ -100,10 +102,11 @@ class UploadData extends React.Component {
     handleFileSubmit = e => {
         e.preventDefault();
         const selectedFile = this.state.selectedFile;
+        const description = this.state.description;
 
-        this.props.postFile(selectedFile, "Test file")
+        this.props.postFile(selectedFile, description);
     };
-    
+
     showErrorMessage(loaded) {
         if(loaded === 0) {
             return(
@@ -112,7 +115,35 @@ class UploadData extends React.Component {
         }
     }
 
+    showResultMessage = () => {
+        // Returns false if file upload failed (See API)
+        let uploadData = this.props.uploadFile.data;
+        // Will be the error message upon upload failure
+        let uploadError = this.props.uploadFile.error;
+
+        if (uploadData === false) {
+            return (
+                <Alert
+                    dismissible={true}
+                    variant={'warning'}
+                >
+                    {uploadError}
+                </Alert>
+            );
+        }
+    };
+
+    handleDownload = (id, name) => {
+        this.props.downloadFile(id, name);
+    };
+
+    handleDelete = (id) => {
+        this.props.deleteFile(id)
+    };
+
     renderFileInput() {
+        console.log(this.props.downFile);
+        console.log(this.props.delFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -122,13 +153,12 @@ class UploadData extends React.Component {
                             {this.showErrorMessage(this.state.loaded)}
                         </div>
                         <div className={"input-container"}>
-                                <FormControl
-                                    disabled
-                                    type={"text"}
-                                    name={"data-file"}
-                                    placeholder={this.state.selectedFile.name}
-                                    className={"input-box"}
-                                />
+                            <Form.Control
+                                disabled
+                                type={"text"}
+                                placeholder={this.state.selectedFile.name}
+                                className={"input-box"}
+                            />
                             <div className={"upload-btn-wrapper"}>
                                 <Button
                                     variant={"info"}
@@ -146,62 +176,88 @@ class UploadData extends React.Component {
                                 />
                             </div>
                         </div>
+                        <div className={"warning-message"}>
+                            <Form.Control
+                                type={"text"}
+                                name={"description"}
+                                placeholder={"Please include a description"}
+                                value={this.state.description}
+                                onChange={this.handleInputChange}
+                                className={"input-box"}
+                            />
+                            {this.showResultMessage()}
+                        </div>
                     </div>
                     <Button
                         variant={"primary"}
                         className={"submit-btn"}
-                        disabled={!this.state.fileSubmit}
                         onClick={this.handleFileSubmit}
                     >
                         Submit
                     </Button>
+                    <div className={"files-table"}>
+                        <div>
+                            <span className={"file-table-text"}>Recent Files</span>
+                            <Table>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>File Name</Table.HeaderCell>
+                                        <Table.HeaderCell>Date</Table.HeaderCell>
+                                        <Table.HeaderCell>Description</Table.HeaderCell>
+                                        <Table.HeaderCell>Options</Table.HeaderCell>
+                                    </Table.Row>
+                                    <FilesList
+                                        files={this.props.fileList.files}
+                                        isLoading={this.props.fileList.isLoading}
+                                        downloadHandler={this.handleDownload}
+                                        deleteHandler={this.handleDelete}
+                                    />
+                                </Table.Header>
+                            </Table>
+                        </div>
+                    </div>
                 </div>
             );
         }
 
         else if (this.state.currentPage === "renderReport") {
-            let components = this.createArray("components");
-
-            return (
+            return  (
                 <div>
-                    <Sidebar
-                        page={this.state.currentPage}
-                        components={components}
-                    >
-                        Upload a Dataset
-                    </Sidebar>
-                    <Container>
-                        <ReportCard/>
-                    </Container>
+                    <ReportHeader />
+                    <ReportCard />
                 </div>
             );
         }
     }
 
     render() {
-        console.log(this.props.uploadFile);
+        let components = this.createArray("components");
 
-        if (this.state.isLoading) {
-            return(
-                <LoadSpinner />
-            );
-        }
-
-        if(!this.state.isLoading) {
-            return (
-                <div className={"report-container"}>
+        return (
+            <div className={"report-container"}>
+                <Sidebar components={components}>
+                    Upload a Dataset
+                </Sidebar>
+                <div className={"report-body"}>
                     {this.renderFileInput()}
                 </div>
-            );
-        }
+            </div>
+        );
     }
 }
 
-
-const mapStateToProps = uploadState => {
+const mapStateToProps = state => {
     return {
-        uploadFile: uploadState.postFile
+        uploadFile: state.postFile,
+        fileList: state.getFileList,
+        downFile: state.downloadFile,
+        delFile: state.deleteFile
     };
 };
 
-export default connect(mapStateToProps, { postFile })(UploadData);
+export default connect(mapStateToProps, {
+    postFile,
+    getFileList,
+    downloadFile,
+    deleteFile
+})(UploadData);

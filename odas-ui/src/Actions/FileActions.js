@@ -1,35 +1,54 @@
-import { apiURL } from "../Apis/SatApi";
+import SatApi, { apiURL } from "../Definitions/SatApi";
+import {authToken} from "../Definitions/BrowserCookie";
 import axios from 'axios';
 
-// TODO needs user auth now I think
-export const postFile = (file, desc = "None")=> async dispatch => {
-    let errorMessage = '';
-    let fileFd = new FormData();
+export const postFile = (file, desc = "None") => async dispatch => {
+    console.log("File", file.name);
+    const headers = new Headers();
+    const formData = new FormData();
 
-    fileFd.append("upfile", file);
-    fileFd.append("description", desc);
+    headers.append("Authorization", `Token ${authToken}`);
+    formData.append("upfile", file);
+    formData.append("description", desc);
 
-    console.log(fileFd.get("upfile"));
-    console.log(fileFd.get("description"));
-
-    // const response = dispatch({type: "REQUEST STARTED", isLoading: true});
-
-    const response = await axios({
+    const requestOptions = {
         method: 'POST',
-        url: `${apiURL}files/upload/`,
-        header: {'Content-type': 'multipart/from-data'},
-        data: fileFd
+        headers: headers,
+        body: formData,
+        redirect: 'follow'
+    };
+
+    fetch(`${apiURL}files/upload/`, requestOptions)
+        .then(response => response.json())
+        .then(result => dispatch({type: "FILE_ACCEPTED", payload: result}))
+        .catch(error => dispatch({type: "FILE_FAILED", payload: error}));
+};
+
+export const getFileList = () => async dispatch => {
+    dispatch({type: "FETCHING_FILES", isLoading: true});
+
+    await SatApi.get('filelist/', {
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
     })
-        .catch(function (error) {
-            errorMessage = error
-        });
+        .then(response => dispatch({type: "FILE_LIST", payload: response, isLoading: false}))
+        .catch(error => dispatch({type: "FILE_LIST_FAIL", payload: error, isLoading: false}))
+};
 
-    if (errorMessage === '') {
-        console.log(response);
-        dispatch({type: "FILE_ACCEPTED", payload: response, isLoading: false});
-    } else {
-        console.log(errorMessage);
-        dispatch({type: "FILE_FAILED", payload: errorMessage, isLoading: false})
-    }
+export const downloadFile = (fileId, fileName) => async dispatch => {
+    await axios.get(`${apiURL}files/download/${fileId}/`, {
+        headers: {'Authorization': `Token ${authToken}`}
+    })
+        .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
+        .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
+};
 
+export const deleteFile = (fileId) => async dispatch => {
+    await axios(`${apiURL}files/delete/${fileId}/`, {
+        method: 'POST',
+        headers: {'Authorization': `Token ${authToken}`}
+    })
+        .then(response => dispatch({type: "FILE_DELETE", payload: response}))
+        .catch(error => dispatch({type: "FILE_DELETE_FAIL", payload: error}))
 };

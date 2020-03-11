@@ -1,4 +1,4 @@
-import SatApi from "../Apis/SatApi";
+import SatApi from "../Definitions/SatApi";
 
 // Get all components that are related to the selected satellite
 export const satCompQuery = satID => async dispatch => {

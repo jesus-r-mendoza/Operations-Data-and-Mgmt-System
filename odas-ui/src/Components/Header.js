@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Cookie from 'universal-cookie';
 // Stylesheets
 import {
     Container,
@@ -16,8 +15,8 @@ import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
-
-let cookie = new Cookie();
+// Definitions
+import {cookie} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -25,21 +24,30 @@ class Header extends React.Component {
         this.state = {
             modalState: false,
             toastState: false,
-            loginBtnState: true,
+            signedIn: false,
             username: '',
             email: '',
             password: ''
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
-    }
+    };
+
+    componentDidMount() {
+        if (cookie.get('auth')) {
+            this.setState({
+                signedIn: true
+            })
+        }
+    };
 
     setElementStates(element, state) {
         this.setState({
             [element]: state
         })
-    }
+    };
 
+    // Set input states
     handleInputChange = e => {
         this.setState({
             [e.target.name]: e.target.value
@@ -50,22 +58,61 @@ class Header extends React.Component {
 
     handleLogin = e => {
         e.preventDefault();
-        this.setElementStates('loginBtnState', true);
         this.props.login(this.state.username, this.state.password);
+
         this.setElementStates('modalState', false);
+        this.setElementStates('signedIn', true);
         this.setElementStates('toastState', true);
     };
 
     handleLogout = e => {
         e.preventDefault();
         this.props.logout();
+
+        this.setElementStates('username', '');
+        this.setElementStates('password', '');
+        this.setElementStates('signedIn', false);
+        this.setElementStates('toastState', true);
     };
+
+    showLoginModal() {
+        if (this.props.userLogin) {
+            return (
+                <Toast
+                    onClose={() => this.setElementStates('toastState', false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className={"toast-title"}>Welcome!</strong>
+                    </Toast.Header>
+                    <Toast.Body className={"toast-body"}>You have successfully logged in.</Toast.Body>
+                </Toast>
+            );
+        } else if (this.props.userLogout) {
+            return (
+                <Toast
+                    onClose={() => this.setElementStates('toastState', false)}
+                    show={this.state.toastState}
+                    delay={3000} autohide
+                    className={"login-toast"}
+                >
+                    <Toast.Header>
+                        <strong className={"toast-title"}>See you next time!</strong>
+                    </Toast.Header>
+                    <Toast.Body className={"toast-body"}>You have successfully logged out.</Toast.Body>
+                </Toast>
+            );
+        }
+    }
 
     changeLoginButton () {
         if (!cookie.get('auth')) {
             return (
                 <Button
                     onClick={() => this.setElementStates('modalState', true)}
+                    variant={"info"}
                 >
                     Sign in
                 </Button>
@@ -74,6 +121,7 @@ class Header extends React.Component {
             return (
                 <Button
                     onClick={this.handleLogout}
+                    variant={"info"}
                 >
                     Sign out
                 </Button>
@@ -82,7 +130,8 @@ class Header extends React.Component {
     }
 
     render() {
-        console.log(this.props.userLogin);
+        console.log(this.props.userLogin.status);
+        console.log(this.props.userLogout.error);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -91,17 +140,17 @@ class Header extends React.Component {
                     </NavbarBrand>
                     <Container>
                         <div className={"nav-items"}>
-                            <DropdownButton id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
+                            <DropdownButton variant={"info"} id={'drop'} title={"Generate a Report"} className={"nav-drop"}>
                                 <NavDropdown.Item href={"/upload"}>Upload a Dataset</NavDropdown.Item>
                                 <NavDropdown.Item href={"/query"}>Query a Dataset</NavDropdown.Item>
                             </DropdownButton>
-                            <Link to={"/user-dashboard"}>
-                                <Button>
-                                    Dashboard
+                            <Link to={"/profile"}>
+                                <Button variant={"info"}>
+                                    Profile
                                 </Button>
                             </Link>
                             <span className={"link-text"}>{"\xa0\xa0"}|{"\xa0\xa0"}</span>
-                            {this.changeLoginButton(this.props.userLogin.pop())}
+                            {this.changeLoginButton()}
                         </div>
                     </Container>
                 </Navbar>
@@ -109,10 +158,9 @@ class Header extends React.Component {
                     size={"med"}
                     show={this.state.modalState}
                     onHide={() => this.setElementStates('modalState', false)}
-                    aria-labelledby={"example-modal-sizes-title-sm"}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title id={"example-modal-sizes-title-sm"}>
+                        <Modal.Title>
                             User Login
                         </Modal.Title>
                     </Modal.Header>
@@ -125,6 +173,7 @@ class Header extends React.Component {
                                     placeholder={"Username"}
                                     value={this.state.username}
                                     onChange={this.handleInputChange}
+
                                 />
                             </div>
                             <div>
@@ -157,17 +206,7 @@ class Header extends React.Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
-                <Toast
-                    onClose={() => this.setElementStates('toastState', false)}
-                    show={this.state.toastState}
-                    delay={3000} autohide
-                    className={"login-toast"}
-                >
-                    <Toast.Header>
-                        <strong className="mr-auto">Welcome!</strong>
-                    </Toast.Header>
-                    <Toast.Body>You have logged in successfully</Toast.Body>
-                </Toast>
+                {this.showLoginModal()}
             </div>
         )
     }

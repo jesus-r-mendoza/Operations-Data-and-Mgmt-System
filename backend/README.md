@@ -5,9 +5,7 @@
 ---
 Method | Endpoint | Description | JSON Response | Requires Authentication
 --- | --- | --- | --- | ---
-GET | api/sat/ | Get ***all*** of the satellites | [Serialized](#Serialized) | No
-GET | api/comp/ | Get ***all*** of the components | [Serialized](#Serialized) | No
-GET | api/meas/ | Get ***all*** of the measurements | [Serialized](#Serialized) | No
+GET | api/sat/ | Get ***all*** of the satellites that belong to the requesting user's organization | [Serialized](#Serialized) | Yes
 GET | api/units/ | Get ***all*** of the units | [Serialized](#Serialized) | No
 GET | api/sat/\<sat id>/comp/ | Get all of the components of the specified satellite | [Serialized](#Serialized) | Yes
 GET | api/sat/\<sat id>/recent/\<quantity>/ | Get (up to) the ***quantity*** most recent measurments pertaining to the specified satellite, regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
@@ -16,16 +14,19 @@ GET | api/sat/\<sat id>/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/recent/\<q
 GET | api/sat/\<sat id>/meas/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified satellite regardless of component | [Unspecified Components](#Unspecified-Components) | Yes
 GET | api/sat/\<sat id>/meas/comp/\<comp id>/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded during the specified datetime range, for the specified component of the specified satellite | [Specified Component](#Specified-Component) | Yes
 GET | api/sat/\<sat id>/meas/comp/\{\<comp id>+\<comp id>+\<comp id> ... }/from=\<datetime>/to=\<datetime>/ | Get ***all*** of the measurements recorded by the specified components within the specified datetime range | [Unspecified Components](#Unspecified-Components) | Yes
+POST | apit/sat/\<sat id>/file/\<file id>/units/\<units name>/ | Processes the selected file and inserts the CSV telemetry and inserts the data to the appropiate component, and satellite. Checks if file belongs to user, if user is in an org, and if satellite belongs to their org. No POST request parameters needed to pass as json | | Yes
 POST | email/ | Sends email to the specified email, from **ODAS**; Specify ***your_email***, ***subject***, ***message*** in the POST request | | Not yet
-POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Not yet
-POST | files/\<file id>/ | Deletes the specified file from our **ODAS** servers | | Not yet
+POST | writetest/ | Writes file directly to media folder  | | Not yet
+POST | files/upload/ | Uploads the specified file to our **ODAS** servers; Specify ***upfile*** in the POST request | | Yes
+POST | files/delete/\<file id>/ | Deletes the specified file from our **ODAS** server. Specify the id of the file | | Yes
+GET | filelist/ | Returns a JSONResponse that provides a list of objects containing the fields: id, description, and file name | | Yes
+GET | files/download/\<file id>/ | This endpoint allows the user to download a file from the files page without having to click a download button so long as the provide the file id, with proper authorization | | Yes
 POST | register/ | Allows a user to sign up to use ODAS, must provide **username**, **email**, and **pass** in POST request to sign up. Optionally, if **code** is provided, (this is the 12 char invite code), then a user can sign up and will automatically be added to the organization which provided that invite code | | No
 POST | create-org/ | Allows user to create and organization, will be returned an invite code for that organization if creation is successful. Must provide **org_name**, and **pass** in POST request. Password is required to prevent any user from creating an org, this would't be realistic. Password simulates purchasing a subcription to ODAS (or something similar) | |  Yes
 POST | login/ | Allows user to login, returns authentication token if login successful. Must provide **username** and **pass** in POST request | | No
 DELETE | logout/ | User must be logged in to log out, only need to pass authorization token in request header to logout. Then invalidates that token | | Yes
 POST | join/ | Allows users who have already registered with ODAS, but have *NOT* yet joined an organization to join an organization using its specific invite code (presumably provided by another member of that organization). Must provide **code** (the invite code for the organization the user will join) in POST request | | Yes
-POST | Downloads/(filename) | This endpoint allows the user to download a file from the files page without having to click a download button as long as the have the link and proper authorization | | Not yet
----
+
 
 ## Authentication
 
@@ -76,29 +77,6 @@ For these example links to work, be sure that the backend server is running on y
 > [`api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/`](http://127.0.0.1:8000/api/sat/4/meas/comp/10/from=2019-01-01T22:43:23/to=2019-11-19T00:00:00/)
 
 ---
-
-## Running ODAS with Docker
-
-### Step 1
-Install Docker. To learn how to install docker click [here](https://www.docker.com/products/docker-desktop). You'll see a button to install Docker Desktop; you'll need to create an account with Docker Hub if you don't already have one. Also make sure you have docker-compose installed with it.
-
-### Step 2
-If you don't have the ODAS repository, clone it using:
-
-> `$ git clone https://github.com/jesus-r-mendoza/Operations-Data-and-Mgmt-System.git`
-
-then, change directory into the repository's base directory using:
-
-> `$ cd Operations-Data-and-Mgmt-System`
-
-### Step 3
-Once your in the base directory, simply run:
-
-> `$ docker-compose up`
-
-This will run both the frontend and backend containers.
-
-For testing purposes, the backend container is accessible through your container's ip or localhost at port 8000; and the frontend container is accessible through your container's ip or localhost at port 3000.
 
 ## Running the Backend Server
 

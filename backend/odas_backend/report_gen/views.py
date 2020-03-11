@@ -10,7 +10,10 @@ from django.contrib.auth.models import User, Group
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authtoken.models import Token
+from django.forms.models import model_to_dict
 from .models import Upload
+
 from .errors import error
 import os
 
@@ -25,7 +28,7 @@ def index(request):
         all_sats = Satellite.objects.all()
         sat_name1= all_sats[0].name
         desc_1 = all_sats[0].mission_description
-        
+
         concant_msg = sat_name1 + desc_1
         form = SubscriberForm(request.POST)
         if form.is_valid():
@@ -47,20 +50,17 @@ def dbemail(request):
     return render(request, 'emailsender/db_test.html', {
         'all_sats': all_sats
     })
-  
+
 def dbwritefile(request):
     all_sats = Satellite.objects.all()
     sat_name1= all_sats[0].name
     desc_1 = all_sats[0].mission_description
     concant_msg = sat_name1 + desc_1
-    cpath = os.path.join(settings.MEDIA_ROOT,'files','uploads', 'new.txt')       
+    cpath = os.path.join(settings.MEDIA_ROOT,'files','uploads', 'new.txt')
 
     file1 = open(cpath, "w")
-
     toFile = concant_msg
-
     file1.write(toFile)
-
     file1.close()
     return HttpResponse('File was saved to your files.')
 
@@ -86,44 +86,80 @@ def file_view(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def upload_view(request):
-    if request.method == 'POST':        
-        upfile = request.FILES.get('upfile')
-        desc = request.POST.get('description')
-        
-        if upfile and desc:
-            Upload.objects.create(upfile=upfile, description=desc, user = request.user)
-        else:
-            return JsonResponse( { 'data': False, 'error': 'Must provide both: upfile and description' } )
+    upfile = request.FILES.get('upfile')
+    desc = request.POST.get('description')
 
-        return JsonResponse( { 'data': True, 'error': 'None' } )
-    else:
-        return JsonResponse( { 'data': False, 'error': 'only POST requests allowed' } )
+    if not upfile or not desc:
+        return error.MISSING_PARAMS
 
-@api_view(['POST'])
+    Upload.objects.create(upfile=upfile, description=desc, user=request.user)
+    return JsonResponse( { 'data': True, 'error': 'None' } )
+
+@api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_file(request, pk):
-    if request.method == 'POST':
+    try:
         user_file = Upload.objects.get(pk=pk)
-        user_file.delete()
-    return redirect('file_list')
+        if user_file.user != request.user:
+            return error.WRONG_USER
+        path = f'{settings.MEDIA_ROOT}/{user_file.upfile.name}'
+        if not os.path.exists(path):
+            return error.FILE_NOT_UPLOADED
+        # File will only be deleted from DB and system if it exists on the system currently running the server
+        # either localhost or ECST server
+        res = user_file.delete()
+        # return redirect('file_list')
+        return JsonResponse({ 'data': True, 'error': 'None' })
+    except Upload.DoesNotExist:
+        return error.FILE_DNE
 
 @api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def download_view(request, fid):
+def download_view(request, fid, token):
     try:
-        fUpload = Upload.objects.get(pk=fid)
-        url = settings.MEDIA_ROOT + '/' + fUpload.upfile.name 
+        user = Token.objects.filter(key=token)
+        if len(user) == 0:
+            return error.INVALID_TOKEN
+        user = user[0].user # filter returns a queryset. grabbing first result which will be the actual user object
+        user_file = Upload.objects.get(pk=fid)
+        print('\n\n',user, user_file.user,'\n\n')
+        if user_file.user != user:
+            return error.WRONG_USER
+        url = settings.MEDIA_ROOT + '/' + user_file.upfile.name
         print(url)
+        if not os.path.exists(url):
+            return error.FILE_NOT_UPLOADED
         response = FileResponse(open(url, 'rb'))
-        response['content_type'] = "application/octet-stream"
+        response['content_type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(url)
         return response
     except Upload.DoesNotExist:
-        return JsonResponse({'data': False, 'error': 'File with this ID does not exist'})
+        return error.FILE_DNE
     except Exception:
         raise Http404
+
+@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def file_point(request):
+    all_entries = Upload.objects.filter(user = request.user)
+    data = {}
+    files = []
+    for f in all_entries:
+        entry = {
+            'id': f.id,
+            'name': f.upfile.name[len('files/uploads/'):],
+            'description': f.description,
+            'date': f.date_uploaded
+        }
+        files.append(entry)
+
+    data['files'] = files
+    data['data'] = True
+    data['error'] = 'None'
+
+    return JsonResponse(data)
 
 # @api_view(['GET'])
 # @authentication_classes([TokenAuthentication])
