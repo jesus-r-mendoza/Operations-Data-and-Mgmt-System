@@ -1,5 +1,4 @@
 html, body {
-	position: relative;
     margin: 0;
     padding: 0;
     height: 100vh;
@@ -15,23 +14,25 @@ html, body {
     position: absolute;
     width: 100vw;
     overflow-y: scroll;
+    height: 100vh;
     /*border: solid green 3px;*/
 }
 
 .report-body {
     display: flex;
     flex-direction: column;
+    width: 100vw;
     /*border: solid black 3px;*/
-	overflow: visible;
 }
 
+/*Header*/
 .report-header {
     width: 100vw;
     height: 60px;
     position: sticky;
     background-color: #f4f3f1;
     box-shadow: 0 2px 3px 0 darkgray;
- }
+}
 
 .report-header-btn {
     display: flex;
@@ -46,7 +47,6 @@ html, body {
 .datetime-pickers {
     border-radius: 10px;
     height: 40px;
-    position: absolute;
     margin-right: 20px;
 }
 
@@ -70,36 +70,23 @@ html, body {
 
 /*Card formatting*/
 .card {
-    width: window.card-container.outerWidth;
-	/*1275px;*/
-    height: window.card-container.outerHeight;
-	/*480px;*/
+    width: 600px;
+    height: 350px;
     margin-top: 20px;
     margin-left: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
-	display: flex;
-	overflow-y: scroll;
-    overflow-x: scroll;
 }
 
 .card-container {
-    width: window.report-header.outerWidth;
-    height: 100%;
-	z-index: 1;
-	display: flex;
-	overflow-y: scroll;
-    overflow-x: scroll;
+    width: 100vw;
+    height: 100vh;
+    /*border: solid red 3px;*/
 }
 
 .graph-report {
-	width: window.card-container.outerWidth;
-	/*100%;*/
-	height: window.card-container.outerHeight;
-	/*100%;*/
-	z-index: 0;
-	overflow-y: scroll;
-    overflow-x: scroll;
+    position: relative;
+    overflow: hidden;
 }
 
 #toptitle{
