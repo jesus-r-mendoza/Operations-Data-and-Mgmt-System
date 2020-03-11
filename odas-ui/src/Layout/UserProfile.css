@@ -20,6 +20,7 @@
     display: flex;
     flex-direction: row;
     height: 25px;
+    margin-bottom: 10px;
 }
 
 /*Sections and user info*/

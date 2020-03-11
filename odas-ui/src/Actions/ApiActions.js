@@ -1,8 +1,6 @@
 import SatApi from "../Definitions/SatApi"
-import Cookies from "universal-cookie";
-/*GET requests from API*/
-
-const cookie = new Cookies();
+import { authToken } from "../Definitions/BrowserCookie";
+/* GET requests from API */
 
 // Get the unit values from API
 export const fetchUnits = () => async dispatch => {
@@ -18,38 +16,33 @@ export const fetchUnits = () => async dispatch => {
     dispatch({type: "FETCH_UNITS", payload: response.data});
 };
 
-// TODO return to implement after create/join organization
 // Get all components connected to given satellite existing in the database
-export const fetchComponents = (satId = 1) => async dispatch => {
-    // let errorMessage = '';
-    const authToken = cookie.get('auth');
+export const fetchComponents = (satId) => async dispatch => {
+    dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
 
-    if (authToken !== undefined && authToken !== null) {
-        const response = await SatApi.get(`api/sat/${satId}/comp/`, {
+    if (satId) {
+        await SatApi.get(`api/sat/${satId}/comp/`, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
                 'Authorization': `Token ${authToken}`
             }
-        });
-            // .catch(function(error){console.log(error)});
-
-        dispatch({type: "FETCH_COMPS", payload: response});
+        })
+            .then(response => dispatch({type: "FETCH_COMPS", payload: response.data.Components, isLoading: false}))
+            .catch(error => dispatch({type: "SIGNED_OUT", payload: error, isLoading: false}))
     } else {
-        dispatch({type: "SIGNED_OUT", payload: "Please sign in to continue."})
+        dispatch({type: "NO_SAT_SELECTED", selected: false})
     }
 };
 
 // Get satellite objects from API
 export const fetchSatellites = () => async dispatch => {
-    const response = await SatApi.get("api/sat/", {
-        method: "GET",
+    await SatApi.get('api/sat/', {
         headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
+            'Authorization': `Token ${authToken}`
         }
-    });
-
-    dispatch({type: "FETCH_SATS", payload: response.data});
+    })
+        .then(response => dispatch({type: "FETCH_SATS", payload: response.data.satellites}))
+        .catch(error => dispatch({type: "FETCH_SATS_FAIL", error: error, message: "Please make sure you are signed in"}))
 };

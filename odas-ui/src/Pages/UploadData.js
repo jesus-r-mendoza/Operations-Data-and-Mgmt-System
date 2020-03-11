@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from "axios";
 // Redux
 import {
     getFileList,
@@ -13,19 +12,12 @@ import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
 import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
-import {apiURL} from "../Definitions/SatApi";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
 import {Table} from "semantic-ui-react";
 
 const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
-
-const apis = {
-    unit: `${apiURL}api/units/`,
-    component: `${apiURL}api/comp/`,
-    satellites: `${apiURL}api/sat/`
-};
 
 class UploadData extends React.Component {
     constructor(props) {
@@ -35,39 +27,11 @@ class UploadData extends React.Component {
             selectedFile: '',
             description: '',
             loaded: 1,
-            MEASUREMENTS: [],
-            COMPONENTS: [],
         };
     }
 
     componentDidMount() {
-        axios.all([axios.get(apis.unit), axios.get(apis.component), axios.get(apis.satellites)])
-            .then(axios.spread((...responses) => {
-                this.setState({
-                    MEASUREMENTS: responses[0].data,
-                    COMPONENTS: responses[1].data,
-                    satObjects: responses[2].data
-                })
-            }))
-            .catch(err => {
-                console.log(err)
-            });
-
         this.props.getFileList();
-    }
-
-    createArray(type) {
-        if(type === "units") {
-            let values = this.state.MEASUREMENTS.map(function (units) {
-                return (units.units);
-            });
-            console.log("VALUES: ", values);
-            return values;
-        } else if(type === "components") {
-            return this.state.COMPONENTS.map(function (components) {
-                return (components.name);
-            });
-        }
     }
 
     handleInputChange = e => {
@@ -79,9 +43,9 @@ class UploadData extends React.Component {
     };
 
     onFileChangeHandler = event => {
-        let extractExtension = new RegExp(/(?:\.([^.]+))?$/);
-        let fileName = event.target.files[0].name;
-        let extension = extractExtension.exec(fileName)[0];
+        const extractExtension = new RegExp(/(?:\.([^.]+))?$/);
+        const fileName = event.target.files[0].name;
+        const extension = extractExtension.exec(fileName)[0];
 
         console.log(extension);
         if (acceptedExtensions.includes(extension)) {
@@ -105,6 +69,16 @@ class UploadData extends React.Component {
         const description = this.state.description;
 
         this.props.postFile(selectedFile, description);
+        this.props.getFileList();
+    };
+
+    handleDownload = (id, name) => {
+        this.props.downloadFile(id, name);
+    };
+
+    handleDelete = (id) => {
+        this.props.deleteFile(id);
+        this.props.getFileList()
     };
 
     showErrorMessage(loaded) {
@@ -117,9 +91,9 @@ class UploadData extends React.Component {
 
     showResultMessage = () => {
         // Returns false if file upload failed (See API)
-        let uploadData = this.props.uploadFile.data;
+        const uploadData = this.props.uploadFile.data;
         // Will be the error message upon upload failure
-        let uploadError = this.props.uploadFile.error;
+        const uploadError = this.props.uploadFile.error;
 
         if (uploadData === false) {
             return (
@@ -133,17 +107,18 @@ class UploadData extends React.Component {
         }
     };
 
-    handleDownload = (id, name) => {
-        this.props.downloadFile(id, name);
-    };
-
-    handleDelete = (id) => {
-        this.props.deleteFile(id)
+    showFileList = () => {
+        return (
+            <FilesList
+                files={this.props.fileList.files}
+                isLoading={this.props.fileList.isLoading}
+                downloadHandler={this.handleDownload}
+                deleteHandler={this.handleDelete}
+            />
+        );
     };
 
     renderFileInput() {
-        console.log(this.props.downFile);
-        console.log(this.props.delFile);
         if (this.state.currentPage === "upload") {
             return (
                 <div className={"file-container"}>
@@ -206,12 +181,7 @@ class UploadData extends React.Component {
                                         <Table.HeaderCell>Description</Table.HeaderCell>
                                         <Table.HeaderCell>Options</Table.HeaderCell>
                                     </Table.Row>
-                                    <FilesList
-                                        files={this.props.fileList.files}
-                                        isLoading={this.props.fileList.isLoading}
-                                        downloadHandler={this.handleDownload}
-                                        deleteHandler={this.handleDelete}
-                                    />
+                                    {this.showFileList()}
                                 </Table.Header>
                             </Table>
                         </div>
@@ -231,11 +201,9 @@ class UploadData extends React.Component {
     }
 
     render() {
-        let components = this.createArray("components");
-
         return (
             <div className={"report-container"}>
-                <Sidebar components={components}>
+                <Sidebar>
                     Upload a Dataset
                 </Sidebar>
                 <div className={"report-body"}>

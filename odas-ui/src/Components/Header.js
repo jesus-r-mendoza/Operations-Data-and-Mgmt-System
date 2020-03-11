@@ -16,7 +16,7 @@ import "../Layout/Main.css";
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
 // Definitions
-import {cookie} from "../Definitions/BrowserCookie";
+import { cookie } from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -130,8 +130,7 @@ class Header extends React.Component {
     }
 
     render() {
-        console.log(this.props.userLogin.status);
-        console.log(this.props.userLogout.error);
+        console.log();
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>

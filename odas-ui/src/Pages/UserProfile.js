@@ -3,7 +3,8 @@ import React from 'react';
 import { connect } from "react-redux"
 import {
     createOrg,
-    joinOrg
+    joinOrg,
+    fetchSatellites
 } from "../Actions";
 // Components
 import {Jumbotron, Modal, Tab, Tabs, Form} from "react-bootstrap";
@@ -11,12 +12,12 @@ import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react"
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Layout/UserProfile.css";
+import { orgName, userName, invCode } from "../Definitions/BrowserCookie";
 
 class UserProfile extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            isLoading: true,
             testing: null,
             orgName: '',
             inviteCode: '',
@@ -27,10 +28,7 @@ class UserProfile extends React.Component {
     }
 
     componentDidMount() {
-
-        this.setState({
-            isLoading: false
-        });
+        this.props.fetchSatellites();
     }
 
     setElementState = (element, state) => {
@@ -56,41 +54,50 @@ class UserProfile extends React.Component {
         });
     };
 
+    showSatList = satellites => {
+        return satellites.map(satellite => {
+            console.log(satellite.name);
+            return (
+                <ul key={satellite.id}>{satellite.name}</ul>
+            )
+        });
+    };
 
     render() {
         console.log(this.props.orgCreate);
         console.log(this.props.orgJoin);
+        console.log(this.props.satellites);
 
         return (
             <div className={"user-container"}>
                 <div className={"jumbo-container"}>
                     <Jumbotron>
-                        <h1>Hello, user</h1>
-                        <p>Welcome back</p>
+                        <h1>Hello, {userName}</h1>
+                        <h4>Welcome back</h4>
                     </Jumbotron>
                 </div>
                 <div className={"section-container"}>
                     <SegmentGroup className={"info-sections"}>
                         <Segment>
                             <div className={"jumbo-header"}>
-                                <Header>Organizations{"\xa0\xa0"}</Header>
+                                <Header size={"large"}>Organization{"\xa0\xa0"}</Header>
                                 <Button
                                     onClick={() => this.setElementState('modalState', true)}
                                     icon={"add"}
                                     size={"mini"}
                                 />
                             </div>
-                                <p>User's organizations can be listed here as they join them</p>
+                            {orgName} {invCode}
                                 <Divider section />
                             <div className={"jumbo-header"}>
-                                <Header>Satellites{"\xa0\xa0"}</Header>
+                                <Header size={"large"}>Satellites{"\xa0\xa0"}</Header>
                                 <Button
                                     onClick={() => console.log("Satellites")}
                                     icon={"add"}
                                     size={"mini"}
                                 />
                             </div>
-                                <p>User's associated satellites can be viewed here</p>
+                            {this.showSatList(this.props.satellites)}
                         </Segment>
                     </SegmentGroup>
                 </div>
@@ -161,7 +168,8 @@ class UserProfile extends React.Component {
 const mapStateToProps = state => {
     return {
         orgCreate: state.createOrg,
-        orgJoin: state.joinOrg
+        orgJoin: state.joinOrg,
+        satellites: state.fetchSatellites
     };
 };
 
@@ -169,5 +177,5 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
     createOrg,
     joinOrg,
-
+    fetchSatellites
 })(UserProfile)

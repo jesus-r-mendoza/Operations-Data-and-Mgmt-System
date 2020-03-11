@@ -2,14 +2,14 @@ import { combineReducers } from 'redux';
 
 // API calls
 import {
-    unitsReducer,
     componentsReducer,
-    satelliteReducer,
+    fetchSatellitesReducer,
+    fetchUnitsReducer
 } from "./ApiReducers";
 
 // Queries
 import {
-    satComponentQueryReducer
+    getRecentMeasurementsReducer
 } from "./QueryReducers"
 
 // Selection reducers
@@ -38,21 +38,27 @@ import {
 } from "./AuthReducers";
 
 export default combineReducers({
-    satObjects: satelliteReducer,
-    units: unitsReducer,
+    fetchSatellites: fetchSatellitesReducer,
+    fetchUnits: fetchUnitsReducer,
     components: componentsReducer,
+    getRecentMeasurements: getRecentMeasurementsReducer,
+
+    // Selections
     selectedSat: selectedSatReducer,
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
-    satComponentQuery: satComponentQueryReducer,
+
+    // Authentication
     login: loginReducer,
     register: registerReducer,
     logout: logoutReducer,
-    postFile: postFileReducer,
     createOrg: createOrgReducer,
-    getFileList: fileListReducer,
     joinOrg: joinOrgReducer,
+
+    // Files
+    postFile: postFileReducer,
+    getFileList: fileListReducer,
     downloadFile: downloadFileReducer,
-    deleteFile: deleteFileReducer
+    deleteFile: deleteFileReducer,
 });

@@ -21,6 +21,7 @@ export const selectStartDate = (date) => {
     };
 };
 
+// Store the selected end date for report header
 export const selectEndDate = (date) => {
     return {
         type: 'END_DATE_SELECTED',

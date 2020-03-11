@@ -14,10 +14,10 @@ html, body {
     width: 22em;
     background-color: #f4f3f1;
     box-shadow: 0 2px 2px 0 darkgray inset;
-    overflow-y: scroll;
+    overflow-y: auto;
     position: sticky;
     position: -webkit-sticky;
-    /*bottom: 0;*/
+    /*overflow: auto;*/
 }
 
 .sidebar-title {
@@ -39,45 +39,15 @@ html, body {
 }
 
 /*Buttons*/
-.gen-button {
-    display: flex;
-    justify-content: space-around;
-    width: 90%;
-    margin-top: 15px;
-    margin-bottom: 1em;
-    font-size: x-large;
-    position: sticky;
-}
-
-.gen-button-container {
+.gen-btn-container {
     display: flex;
     justify-content: center;
-    background-color: #f4f3f1;
-    box-shadow: 1px 1px 4px 0 lightgray;
-    bottom: 0;
-    padding-bottom: 10px;
     width: 100%;
 }
 
-.back-arrow-btn {
-    width: 50px;
-    height: 40px;
-    opacity: 0;
-    display: flex;
-    justify-content: center;
-}
+.get-btn {
+    width: 100%;
 
-.back-arrow {
-    width: 30px;
-    height: 30px;
-    padding-top: 3px;
-    margin-right: -60px;
-    margin-left: -35px;
-}
-
-.back-arrow-container {
-    display: flex;
-    justify-content: center;
 }
 
 /*Checkboxes*/
@@ -109,4 +79,14 @@ html, body {
 .checkbox-label {
     display: flex;
     flex-direction: row;
+}
+
+.placeholder-text-div {
+    width: 100%;
+    text-align: center;
+}
+
+.placeholder-text {
+    color: #606060;
+    font-size: medium;
 }
