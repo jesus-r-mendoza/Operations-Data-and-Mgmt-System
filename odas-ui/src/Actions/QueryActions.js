@@ -30,8 +30,6 @@ export const getRecentMeasurements = (satId, compIds = [], quantity) => async di
             'Authorization': `Token ${authToken}`
         }
     })
-        // .then(response => dispatch({type: 'FETCH_RECENTS', payload: response.data}))
-        // .catch(error => dispatch({type: 'FETCH_RECENTS_FAIL', payload: error}))
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
+        .then(response => dispatch({type: 'FETCH_RECENTS', payload: response.data}))
+        .catch(error => dispatch({type: 'FETCH_RECENTS_FAIL', payload: error}))
 };

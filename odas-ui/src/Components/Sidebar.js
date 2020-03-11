@@ -26,7 +26,8 @@ class Sidebar extends React.Component {
             checkedItems: new Map()
         };
 
-        this.onCheckboxChange = this.onCheckboxChange.bind(this)
+        this.onCheckboxChange = this.onCheckboxChange.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this)
     }
 
     componentDidMount() {
@@ -40,9 +41,14 @@ class Sidebar extends React.Component {
         this.props.fetchUnits();
     }
 
-    handleFormSubmit = e => {
+    async handleFormSubmit (e) {
         e.preventDefault();
-        const satId = this.state.selectedSatellite.value;
+        let satId;
+
+        if (this.state.selectedSatellite) {
+            satId = this.state.selectedSatellite.value;
+        }
+
         console.log(satId);
         let compIds = [];
 
@@ -51,9 +57,9 @@ class Sidebar extends React.Component {
                 compIds.push(item);
             });
 
-            this.props.getRecentMeasurements(satId, compIds, this.props.recent)
+            await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {
-            this.props.getRecentMeasurements(satId, compIds = [], this.props.recent)
+            await this.props.getRecentMeasurements(satId, compIds = [], this.props.recent)
         }
 
         // Refresh the checkboxes or they will not appear after submit
@@ -120,7 +126,7 @@ class Sidebar extends React.Component {
     };
 
     render() {
-        console.log(this.props.components.data);
+        console.log(this.props.recentMeasurements);
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
@@ -164,7 +170,7 @@ const mapStateToProps = state => {
         satellites: state.fetchSatellites,
         units: state.fetchUnits,
         recent: state.selectRecent,
-        getRecent: state.getRecentMeasurements
+        recentMeasurements: state.getRecentMeasurements
     };
 };
 
