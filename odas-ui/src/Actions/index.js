@@ -15,7 +15,8 @@ import {
 
 // User queries
 import {
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime
 } from "./QueryActions";
 
 // Authentication
@@ -61,7 +62,8 @@ export {
     deleteFile,
 
     // Queries
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime
 };
 
 

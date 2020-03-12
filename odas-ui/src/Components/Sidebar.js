@@ -12,7 +12,10 @@ import {
     fetchSatellites,
     fetchComponents,
     fetchUnits,
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime,
+    selectStartDate,
+    selectEndDate
 } from "../Actions";
 import {authToken} from "../Definitions/BrowserCookie";
 
@@ -44,22 +47,20 @@ class Sidebar extends React.Component {
     async handleFormSubmit (e) {
         e.preventDefault();
         let satId;
+        let compIds = [];
 
         if (this.state.selectedSatellite) {
             satId = this.state.selectedSatellite.value;
         }
 
-        console.log(satId);
-        let compIds = [];
-
-        if (this.state.checkedItems.length !== 0) {
+        if (!this.props.startDate || !this.props.endDate) {
             this.state.checkedItems.forEach(item => {
                 compIds.push(item);
             });
 
             await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {
-            await this.props.getRecentMeasurements(satId, compIds = [], this.props.recent)
+            await this.props.getMeasurementsByTime(satId, compIds, this.props.startDate, this.props.endDate)
         }
 
         // Refresh the checkboxes or they will not appear after submit
@@ -127,6 +128,7 @@ class Sidebar extends React.Component {
 
     render() {
         console.log(this.props.recentMeasurements);
+        console.log(this.props.startDate, this.props.endDate);
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
@@ -170,7 +172,10 @@ const mapStateToProps = state => {
         satellites: state.fetchSatellites,
         units: state.fetchUnits,
         recent: state.selectRecent,
-        recentMeasurements: state.getRecentMeasurements
+        recentMeasurements: state.getRecentMeasurements,
+        measurementsByTime: state.getMeasurementsByTime,
+        startDate: state.selectStartDate,
+        endDate: state.selectEndDate
     };
 };
 
@@ -178,5 +183,8 @@ export default connect(mapStateToProps, {
     fetchSatellites,
     fetchUnits,
     fetchComponents,
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime,
+    selectStartDate,
+    selectEndDate
 })(Sidebar)

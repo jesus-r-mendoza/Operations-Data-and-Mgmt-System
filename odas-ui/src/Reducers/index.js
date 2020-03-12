@@ -9,7 +9,8 @@ import {
 
 // Queries
 import {
-    getRecentMeasurementsReducer
+    getRecentMeasurementsReducer,
+    getMeasurementsByTimeReducer
 } from "./QueryReducers"
 
 // Selection reducers
@@ -41,7 +42,6 @@ export default combineReducers({
     fetchSatellites: fetchSatellitesReducer,
     fetchUnits: fetchUnitsReducer,
     components: componentsReducer,
-    getRecentMeasurements: getRecentMeasurementsReducer,
 
     // Selections
     selectedSat: selectedSatReducer,
@@ -61,4 +61,8 @@ export default combineReducers({
     getFileList: fileListReducer,
     downloadFile: downloadFileReducer,
     deleteFile: deleteFileReducer,
+
+    // Query
+    getRecentMeasurements: getRecentMeasurementsReducer,
+    getMeasurementsByTime: getMeasurementsByTimeReducer
 });
