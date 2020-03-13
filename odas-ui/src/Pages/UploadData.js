@@ -28,6 +28,8 @@ class UploadData extends React.Component {
             description: '',
             loaded: 1,
         };
+
+        this.handleFileSubmit = this.handleFileSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -63,12 +65,12 @@ class UploadData extends React.Component {
         console.log(fileName);
     };
 
-    handleFileSubmit = e => {
+    async handleFileSubmit(e) {
         e.preventDefault();
         const selectedFile = this.state.selectedFile;
         const description = this.state.description;
 
-        this.props.postFile(selectedFile, description);
+        await this.props.postFile(selectedFile, description);
         this.props.getFileList();
     };
 
@@ -89,6 +91,7 @@ class UploadData extends React.Component {
         }
     }
 
+    // TODO Message is being washed away by the file list update
     showResultMessage = () => {
         // Returns false if file upload failed (See API)
         const uploadData = this.props.uploadFile.data;

@@ -5,7 +5,6 @@ import { authToken } from "../Definitions/BrowserCookie";
 // Register a new user
 export const register = (username, email, pass, inviteCode = '') => async dispatch => {
     const registerData = new FormData();
-    let errorMessage = '';
 
     registerData.append("username", username);
     registerData.append("email", email);
@@ -21,26 +20,20 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
         console.log("Invite", registerData.get("code"));
     }
 
-    const response = await axios({
+    await axios({
         method: 'POST',
         url: `${apiURL}register/`,
         header: {'Content-type': 'application/json'},
         data: registerData
     })
-        .catch((function (error) {
-            errorMessage = error;
-        }));
-
-    if (response !== undefined && response !== null) {
-        console.log(response);
-        dispatch({ type: "REGISTER_SUCCESS", status: true, payload: response.data.username })
-    } else {
-        dispatch({ type: "REGISTER_FAIL", status: false, payload: errorMessage.response.data.error })
-    }
+        .then(response => dispatch({ type: "REGISTER_SUCCESS", payload: response.data.username }))
+        .catch(error => dispatch({ type: "REGISTER_FAIL", payload: error.response.data.error }))
 };
 
 // Log the user in and obtain an Auth token
 export const login = (username, pass) => async dispatch => {
+    dispatch({type: "LOGGING_IN", isLoading: true});
+
     const loginData = new FormData();
 
     loginData.append("username", username);
@@ -49,34 +42,32 @@ export const login = (username, pass) => async dispatch => {
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
 
-    // TODO refactor to look like file actions get request
     await axios({
         method: 'POST',
         url: `${apiURL}login/`,
         header: { 'Content-type': 'application/json' },
         data: loginData
     })
-        .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data }))
-        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error }))
+        .then(response => dispatch({ type: "LOGIN_SUCCESS", payload: response.data, isLoading: false }))
+        .catch(error => dispatch({ type: "LOGIN_FAIL", payload: error, isLoading: false }))
 };
 
 // Log the user out using the Auth token
 export const logout = () => async dispatch => {
-    console.log(authToken);
+    dispatch({type: "LOGGING_OUT", isLoading: true});
 
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Token ${authToken}`);
 
     const requestOptions = {
         method: 'DELETE',
-        headers: myHeaders,
-        redirect: 'follow'
+        headers: myHeaders
     };
 
     fetch(`${apiURL}logout/`, requestOptions)
         .then(result => result.json())
-        .then(response => dispatch({type: 'LOGOUT', payload: response}))
-        .catch(error => console.log('error', error));
+        .then(response => dispatch({type: 'LOGOUT', payload: response, isLoading: false}))
+        .catch(error => dispatch({type: 'LOGOUT_FAIL', payload: error, isLoading: false}));
 };
 
 export const createOrg = (orgName='testorg') => async dispatch => {

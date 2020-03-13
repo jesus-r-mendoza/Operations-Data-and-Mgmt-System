@@ -23,7 +23,6 @@ export default class QueryData extends React.Component {
     }
 
     render() {
-        console.log(this.props.recentMeasurements);
         if (this.state.isLoading) {
             return (
                 <LoadSpinner/>

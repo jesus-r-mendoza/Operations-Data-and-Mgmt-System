@@ -4,7 +4,7 @@ import moment from "moment";
 
 // Get all recent measurements from components of a particular satellite
 // Method defaults to ALL measurements and ALL components
-export const getRecentMeasurements = (satId, compIds = [], quantity) => async dispatch => {
+export const getRecentMeasurements = (satId, compIds = new Map(), quantity) => async dispatch => {
     dispatch({type: 'FETCHING_RECENTS', isLoading: true});
 
     let url;
@@ -12,14 +12,9 @@ export const getRecentMeasurements = (satId, compIds = [], quantity) => async di
 
     // Appends component IDs to a string which is then placed in the url
     if (compIds.length !== 0) {
-        compIds.forEach((id, index) => {
-            if (index === 0) {
-
-                compIdString = id
-            } else {
-
-                compIdString += `+${id}`
-            }
+        compIds.forEach((value, key, compId) =>{
+            console.log(value, key, compId.keys().next().value);
+            console.log(compIdString += key)
         });
 
         url = `/api/sat/${satId}/comp/${compIdString}/recent/${quantity}/`;
@@ -43,8 +38,6 @@ export const getMeasurementsByTime = (satId, compIds = [], rawStartDate, rawEndD
     let compIdString = '';
     const startDate = moment.utc(rawStartDate).format("YYYY-DD-MMThh:mm:ss");
     const endDate = moment.utc(rawEndDate).format("YYYY-DD-MMThh:mm:ss");
-    console.log(startDate);
-    console.log(endDate);
 
     if (compIds.length !== 0) {
         compIds.forEach(id => {
@@ -61,8 +54,6 @@ export const getMeasurementsByTime = (satId, compIds = [], rawStartDate, rawEndD
             'Authorization': `Token ${authToken}`
         }
     })
-        // .then(response => dispatch({type: 'FETCH_MEAS_WITH_TIME', payload: response}))
-        // .catch(error => dispatch({type: 'FETCH_MEAS_FAIL', payload: error}))
         .then(response => console.log(response))
         .catch(error => console.log(error))
 };

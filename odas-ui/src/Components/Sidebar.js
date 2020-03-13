@@ -30,7 +30,7 @@ class Sidebar extends React.Component {
         };
 
         this.onCheckboxChange = this.onCheckboxChange.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this)
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -81,7 +81,7 @@ class Sidebar extends React.Component {
         const isChecked = e.target.checked;
 
         this.setState(prevState => ({
-            checkedItems: prevState.checkedItems.set(isChecked, item)
+            checkedItems: prevState.checkedItems.set(item, isChecked)
         }));
 
         console.log(this.state.checkedItems)
@@ -127,8 +127,6 @@ class Sidebar extends React.Component {
     };
 
     render() {
-        console.log(this.props.recentMeasurements);
-        console.log(this.props.startDate, this.props.endDate);
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>

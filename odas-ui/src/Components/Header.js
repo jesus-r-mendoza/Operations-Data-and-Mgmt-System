@@ -9,14 +9,14 @@ import {
     Button,
     Modal,
     Form,
-    Toast, DropdownButton
+    Toast, DropdownButton, Alert
 } from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
 // Definitions
-import { cookie } from "../Definitions/BrowserCookie";
+import {authToken, cookie} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -34,7 +34,7 @@ class Header extends React.Component {
     };
 
     componentDidMount() {
-        if (cookie.get('auth')) {
+        if (authToken) {
             this.setState({
                 signedIn: true
             })
@@ -60,22 +60,33 @@ class Header extends React.Component {
         e.preventDefault();
         this.props.login(this.state.username, this.state.password);
 
-        this.setElementStates('modalState', false);
-        this.setElementStates('signedIn', true);
-        this.setElementStates('toastState', true);
     };
 
     handleLogout = e => {
         e.preventDefault();
         this.props.logout();
 
-        this.setElementStates('username', '');
-        this.setElementStates('password', '');
-        this.setElementStates('signedIn', false);
-        this.setElementStates('toastState', true);
     };
 
-    showLoginModal() {
+    setToastState = (result) => {
+        if (result === "userLogin") {
+            this.setElementStates('modalState', false);
+            this.setElementStates('signedIn', true);
+            this.setElementStates('toastState', true);
+
+        } else if (result === "userFail") {
+            this.setElementStates('username', '');
+            this.setElementStates('password', '');
+            this.setElementStates('signedIn', false);
+            this.setElementStates('toastState', true);
+
+        } else {
+            console.log("error");
+        }
+    };
+
+    showLoginToast = () => {
+        console.log(this.props.userLogin);
         if (this.props.userLogin) {
             return (
                 <Toast
@@ -105,10 +116,10 @@ class Header extends React.Component {
                 </Toast>
             );
         }
-    }
+    };
 
     changeLoginButton () {
-        if (!cookie.get('auth')) {
+        if (!authToken) {
             return (
                 <Button
                     onClick={() => this.setElementStates('modalState', true)}
@@ -128,6 +139,20 @@ class Header extends React.Component {
             );
         }
     }
+
+    showLoginFailAlert = () => {
+        if (this.props.userLogin.status === false ) {
+            return (
+                <Alert variant={"warning"}>
+                    {this.props.userLogin.message}
+                </Alert>
+            );
+        } else {
+            return (
+                <div>{""}</div>
+            );
+        }
+    };
 
     render() {
         console.log();
@@ -185,6 +210,7 @@ class Header extends React.Component {
                                 />
                             </div>
                             <Modal.Footer className={"modal-footer"}>
+                                {this.showLoginFailAlert()}
                                 <Button
                                     variant={"info"}
                                     onClick={this.handleLogin}
@@ -205,7 +231,7 @@ class Header extends React.Component {
                         </Form>
                     </Modal.Body>
                 </Modal>
-                {this.showLoginModal()}
+                {this.showLoginToast()}
             </div>
         )
     }
