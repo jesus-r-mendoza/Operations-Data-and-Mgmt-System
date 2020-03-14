@@ -1,5 +1,3 @@
-import {analyzeFile} from "../Actions/FileActions";
-
 export const postFileReducer = (fileState = [], action) => {
     switch (action.type) {
         case 'REQUEST_STARTED':

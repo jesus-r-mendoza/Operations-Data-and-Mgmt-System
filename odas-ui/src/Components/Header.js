@@ -16,7 +16,7 @@ import "../Layout/Main.css";
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
 // Definitions
-import {authToken, cookie} from "../Definitions/BrowserCookie";
+import {authToken} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){

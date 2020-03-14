@@ -150,9 +150,10 @@ class Sidebar extends React.Component {
                         <div className={"gen-btn-container"}>
                             <Button
                                 className={"gen-btn"}
+                                variant={"info"}
                                 onClick={this.handleFormSubmit}
                             >
-                                Generate Report
+                                <span className={"gen-btn-txt"}>Generate Report</span>
                             </Button>
                         </div>
                     </div>

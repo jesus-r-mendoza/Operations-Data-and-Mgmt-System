@@ -42,12 +42,22 @@ html, body {
 .gen-btn-container {
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: inherit;
+    bottom: 0;
+    margin-bottom: 2%;
+    position: fixed;
 }
 
-.get-btn {
+.gen-btn {
     width: 100%;
+    height: 50px;
+    margin-right: 15px;
+    margin-left: 15px;
+    border-radius: 10px;
+}
 
+.gen-btn-txt {
+    font-size: x-large;
 }
 
 /*Checkboxes*/
