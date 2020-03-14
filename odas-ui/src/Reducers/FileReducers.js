@@ -1,3 +1,5 @@
+import {analyzeFile} from "../Actions/FileActions";
+
 export const postFileReducer = (fileState = [], action) => {
     switch (action.type) {
         case 'REQUEST_STARTED':
@@ -46,6 +48,7 @@ export const downloadFileReducer = (downloadState = [], action) => {
     }
 };
 
+// TODO do something with these responses
 export const deleteFileReducer = (deleteState = [], action) => {
     switch (action.type) {
         case 'FILE_DELETE':
@@ -54,5 +57,16 @@ export const deleteFileReducer = (deleteState = [], action) => {
             return deleteState;
         default:
             return [...deleteState];
+    }
+};
+
+export const analyzeFileReducer = (analyzeState = [], action) => {
+    switch (action.type) {
+        case 'ANALYZE_FILE':
+            return action.payload;
+        case 'ANALYZE_FILE_FAIL':
+            return action.payload;
+        default:
+            return analyzeState;
     }
 };

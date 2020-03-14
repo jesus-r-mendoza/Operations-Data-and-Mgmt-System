@@ -4,7 +4,8 @@ import {
     getFileList,
     postFile,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile
 } from "../Actions";
 import {connect} from "react-redux";
 //Components
@@ -17,7 +18,7 @@ import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
 import {Table} from "semantic-ui-react";
 
-const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
+const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx", ".csv"];
 
 class UploadData extends React.Component {
     constructor(props) {
@@ -83,6 +84,12 @@ class UploadData extends React.Component {
         this.props.getFileList()
     };
 
+    // TODO needs a prompt for the user to pick the unit ID
+    handleAnalysisRequest = (fileId) => {
+        this.props.analyzeFile(this.props.selectedSatellite, fileId, this.props.unitId);
+        this.props.getFileList()
+    };
+
     showErrorMessage(loaded) {
         if(loaded === 0) {
             return(
@@ -117,6 +124,7 @@ class UploadData extends React.Component {
                 isLoading={this.props.fileList.isLoading}
                 downloadHandler={this.handleDownload}
                 deleteHandler={this.handleDelete}
+                analysisRequestHandler={this.handleAnalysisRequest}
             />
         );
     };
@@ -230,5 +238,6 @@ export default connect(mapStateToProps, {
     postFile,
     getFileList,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile
 })(UploadData);

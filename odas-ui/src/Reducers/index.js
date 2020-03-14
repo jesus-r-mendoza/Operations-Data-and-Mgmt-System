@@ -26,7 +26,8 @@ import {
     deleteFileReducer,
     downloadFileReducer,
     fileListReducer,
-    postFileReducer
+    postFileReducer,
+    analyzeFileReducer
 } from "./FileReducers"
 
 // Authentication
@@ -61,6 +62,7 @@ export default combineReducers({
     getFileList: fileListReducer,
     downloadFile: downloadFileReducer,
     deleteFile: deleteFileReducer,
+    analyzeFile: analyzeFileReducer,
 
     // Query
     getRecentMeasurements: getRecentMeasurementsReducer,

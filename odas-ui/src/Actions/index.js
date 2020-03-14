@@ -33,7 +33,8 @@ import {
     postFile,
     getFileList,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile
 } from "./FileActions";
 
 export {
@@ -60,6 +61,7 @@ export {
     getFileList,
     downloadFile,
     deleteFile,
+    analyzeFile,
 
     // Queries
     getRecentMeasurements,

@@ -13,7 +13,7 @@ html, body {
     flex-direction: row;
     position: absolute;
     width: 100vw;
-    overflow-y: scroll;
+    overflow-x: hidden;
     height: 100vh;
     /*border: solid green 3px;*/
 }
@@ -70,10 +70,11 @@ html, body {
 
 /*Card formatting*/
 .card {
-    width: 600px;
-    height: 350px;
+    width: 82vw;
+    height: 500px;
     margin-top: 20px;
-    margin-left: 20px;
+    margin-left: 30px;
+    margin-right: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
 }
@@ -81,6 +82,7 @@ html, body {
 .card-container {
     width: 100vw;
     height: 100vh;
+    overflow-y: scroll;
     /*border: solid red 3px;*/
 }
 

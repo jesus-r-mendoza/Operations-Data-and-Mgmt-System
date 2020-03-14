@@ -54,8 +54,8 @@ class Sidebar extends React.Component {
         }
 
         if (!this.props.startDate || !this.props.endDate) {
+            // Converts the returned MapIterator object into an array of the keys
             compIds = Array.from(this.state.checkedItems.keys());
-            console.log(compIds);
 
             await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {

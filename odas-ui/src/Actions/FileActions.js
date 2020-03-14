@@ -53,8 +53,20 @@ export const downloadFile = (fileId, fileName) => async dispatch => {
 export const deleteFile = (fileId) => async dispatch => {
     await axios(`${apiURL}files/delete/${fileId}/`, {
         method: 'DELETE',
-        headers: {'Authorization': `Token ${authToken}`}
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
     })
         .then(response => dispatch({type: "FILE_DELETE", payload: response}))
         .catch(error => dispatch({type: "FILE_DELETE_FAIL", payload: error}))
+};
+
+export const analyzeFile = (satId, fileId, unitId) => async dispatch => {
+    await SatApi.post(`/api/sat/${satId}/file/${fileId}/unit/${unitId}`, {
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
+    })
+        .then(response => dispatch({type: 'ANALYZE_FILE', payload: response}))
+        .catch(error => dispatch({type: 'ANALYZE_FILE_FAIL', payload: error}))
 };
