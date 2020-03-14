@@ -81,12 +81,16 @@ html, body {
 .card-container {
     width: 100vw;
     height: 100vh;
+	z-index: 1;
     /*border: solid red 3px;*/
 }
 
 .graph-report {
     position: relative;
     overflow: hidden;
+	z-index: 0;
+	overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 #toptitle{

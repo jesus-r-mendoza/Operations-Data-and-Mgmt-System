@@ -74,6 +74,7 @@ export default class ReportCard extends React.Component {
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 //	}		
 	componentDidMount() {
+	
 	this.pause = this.pause.bind(this);
 	window.cnt = this.state.cnt;
 	window.initialDataArray = this.state.initialDataArray;
@@ -86,9 +87,7 @@ export default class ReportCard extends React.Component {
 	console.log('start');
 	console.log(response);
 	this.initial(response);
-//	document.getElementById('pause').addEventListener('click', this.pause);
 	window.interval = setInterval(this.increasePlot,1000);
-	//window.initialDataArray, window.cnt, window.paused, window.exampleTime, window.alreadyStopped, window.exampleValue, window.tableKeys), 1000);//15);
 	} 
 	
 	initial = (response) => {
