@@ -12,11 +12,15 @@ export const getRecentMeasurements = (satId, compIds = new Map(), quantity) => a
 
     // Appends component IDs to a string which is then placed in the url
     if (compIds.length !== 0) {
-        compIds.forEach((value, key, compId) =>{
-            console.log(value, key, compId.keys().next().value);
-            console.log(compIdString += key)
-        });
+        for (let id in compIds) {
+            if (id === "0") {
+                compIdString += compIds[id]
+            } else {
+                compIdString += `+${compIds[id]}`
+            }
+        }
 
+        console.log(compIdString);
         url = `/api/sat/${satId}/comp/${compIdString}/recent/${quantity}/`;
     } else {
         url = `/api/sat/${satId}/recent/${quantity}/`;
@@ -40,9 +44,13 @@ export const getMeasurementsByTime = (satId, compIds = [], rawStartDate, rawEndD
     const endDate = moment.utc(rawEndDate).format("YYYY-DD-MMThh:mm:ss");
 
     if (compIds.length !== 0) {
-        compIds.forEach(id => {
-            compIdString += `+${id}`
-        });
+        for (let id in compIds) {
+            if (id === "0") {
+                compIdString += compIds[id]
+            } else {
+                compIdString += `+${compIds[id]}`
+            }
+        }
 
         url = `api/sat/${satId}/meas/comp/${compIdString}/from=${startDate}/to=${endDate}/`
     } else {
@@ -54,6 +62,6 @@ export const getMeasurementsByTime = (satId, compIds = [], rawStartDate, rawEndD
             'Authorization': `Token ${authToken}`
         }
     })
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
+        .then(response => dispatch({ type: 'FETCH_MEAS_WITH_TIME', payload: response}))
+        .catch(error => dispatch({ type: 'FETCH_MEAS_FAIL', payload: error}))
 };

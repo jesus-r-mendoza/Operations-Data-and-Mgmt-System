@@ -54,9 +54,8 @@ class Sidebar extends React.Component {
         }
 
         if (!this.props.startDate || !this.props.endDate) {
-            this.state.checkedItems.forEach(item => {
-                compIds.push(item);
-            });
+            compIds = Array.from(this.state.checkedItems.keys());
+            console.log(compIds);
 
             await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {
