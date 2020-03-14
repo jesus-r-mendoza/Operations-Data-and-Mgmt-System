@@ -42,6 +42,7 @@ html, body {
 .gen-btn-container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     width: inherit;
     bottom: 0;
     margin-bottom: 2%;
@@ -49,7 +50,7 @@ html, body {
 }
 
 .gen-btn {
-    width: 100%;
+    width: 90%;
     height: 50px;
     margin-right: 15px;
     margin-left: 15px;

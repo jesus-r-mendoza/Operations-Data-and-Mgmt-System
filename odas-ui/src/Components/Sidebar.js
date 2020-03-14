@@ -2,7 +2,7 @@ import React from 'react';
 // Stylesheets
 import '../Layout/Sidebar.css'
 import { Button } from "react-bootstrap";
-import { Divider } from "semantic-ui-react";
+import { Divider, Segment } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
 import CheckComponent from "./CheckComponent";
@@ -147,7 +147,8 @@ class Sidebar extends React.Component {
                                 {this.showCheckboxes()}
                             </div>
                         </div>
-                        <div className={"gen-btn-container"}>
+                        <div className={"gen-btn-container"} >
+                            <Divider />
                             <Button
                                 className={"gen-btn"}
                                 variant={"info"}

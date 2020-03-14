@@ -33,6 +33,15 @@
     width: 50%;
 }
 
+.list-items {
+    font-size: large;
+}
+
+.org-info {
+    display: flex;
+    flex-direction: row;
+}
+
 /*Org Modal*/
 .org-input {
     margin-bottom: 10px;

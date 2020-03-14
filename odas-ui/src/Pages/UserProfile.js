@@ -7,7 +7,7 @@ import {
     fetchSatellites
 } from "../Actions";
 // Components
-import {Jumbotron, Modal, Tab, Tabs, Form} from "react-bootstrap";
+import {Jumbotron, Modal, Tab, Tabs, Form, Badge} from "react-bootstrap";
 import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react";
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -58,7 +58,7 @@ class UserProfile extends React.Component {
         return satellites.map(satellite => {
             console.log(satellite.name);
             return (
-                <ul key={satellite.id}>{satellite.name}</ul>
+                <ul key={satellite.id} className={"list-items"}>{satellite.name}</ul>
             )
         });
     };
@@ -87,7 +87,14 @@ class UserProfile extends React.Component {
                                     size={"mini"}
                                 />
                             </div>
-                            {orgName} {invCode}
+                            <div className={"org-info"}>
+                                <ul className={"list-items"}>{orgName}</ul>
+                                <ul className={"list-items"}>
+                                    <Badge variant={"secondary"}>
+                                        {invCode}
+                                    </Badge>
+                                </ul>
+                            </div>
                                 <Divider section />
                             <div className={"jumbo-header"}>
                                 <Header size={"large"}>Satellites{"\xa0\xa0"}</Header>
