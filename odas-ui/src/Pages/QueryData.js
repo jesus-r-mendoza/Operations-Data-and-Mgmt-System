@@ -1,7 +1,7 @@
 import React from 'react';
 //Components
 import ReportHeader from "../Components/ReportHeader";
-import ReportCard from "../Components/ReportCard";
+// import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
@@ -38,7 +38,7 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        <ReportCard />
+                        {/*<ReportCard />*/}
                     </div>
                 </div>
             );

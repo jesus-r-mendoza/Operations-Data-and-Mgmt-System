@@ -5,13 +5,14 @@ import {
     postFile,
     downloadFile,
     deleteFile,
-    analyzeFile
+    analyzeFile,
+    fetchUnits
 } from "../Actions";
 import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
-import ReportCard from "../Components/ReportCard";
+// import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
 // Stylesheets
 import "../Layout/UploadData.css"
@@ -86,7 +87,7 @@ class UploadData extends React.Component {
 
     // TODO needs a prompt for the user to pick the unit ID
     handleAnalysisRequest = (fileId) => {
-        this.props.analyzeFile(this.props.selectedSatellite, fileId, this.props.unitId);
+        this.props.analyzeFile(this.props.selectedSatellite, fileId, this.props.units);
         this.props.getFileList()
     };
 
@@ -205,7 +206,7 @@ class UploadData extends React.Component {
             return  (
                 <div>
                     <ReportHeader />
-                    <ReportCard />
+                    {/*<ReportCard />*/}
                 </div>
             );
         }
@@ -230,7 +231,8 @@ const mapStateToProps = state => {
         uploadFile: state.postFile,
         fileList: state.getFileList,
         downFile: state.downloadFile,
-        delFile: state.deleteFile
+        delFile: state.deleteFile,
+        units: state.fetchUnits
     };
 };
 
@@ -239,5 +241,6 @@ export default connect(mapStateToProps, {
     getFileList,
     downloadFile,
     deleteFile,
-    analyzeFile
+    analyzeFile,
+    fetchUnits
 })(UploadData);

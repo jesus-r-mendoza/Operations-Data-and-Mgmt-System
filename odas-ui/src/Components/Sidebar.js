@@ -2,7 +2,7 @@ import React from 'react';
 // Stylesheets
 import '../Layout/Sidebar.css'
 import { Button } from "react-bootstrap";
-import { Divider, Segment } from "semantic-ui-react";
+import { Divider } from "semantic-ui-react";
 import Select from 'react-select';
 // Components
 import CheckComponent from "./CheckComponent";
@@ -55,7 +55,7 @@ class Sidebar extends React.Component {
 
         if (!this.props.startDate || !this.props.endDate) {
             // Converts the returned MapIterator object into an array of the keys
-            compIds = Array.from(this.state.checkedItems.keys());
+            compIds = [...this.state.checkedItems.keys()];
 
             await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
         } else {
@@ -100,7 +100,7 @@ class Sidebar extends React.Component {
         return satelliteOptions;
     };
 
-    showCheckboxes = () => {
+    showCheckboxPlaceholder = () => {
         if (!authToken && this.props.satellites.error === true) {
             return (
                 <div className={"placeholder-text-div"}>
@@ -113,6 +113,23 @@ class Sidebar extends React.Component {
                     <span className={"placeholder-text"}>Please select a satellite to continue</span>
                 </div>
             );
+        } else {
+            this.showCheckboxes()
+        }
+    };
+
+    showCheckboxes = () => {
+        console.log(window.location.pathname);
+        console.log(this.props.components);
+        if (window.location.pathname === "/upload") {
+            return (
+                <CheckComponent
+                    labels={this.props.units}
+                    isLoading={this.props.units.isLoading}
+                    checked={this.state.checkedItems}
+                    onCheckboxChange={this.onCheckboxChange}
+                />
+            )
         } else {
             return (
                 <CheckComponent
@@ -144,7 +161,7 @@ class Sidebar extends React.Component {
                             </div>
                             <div className={"checkbox-selection-btn"}>
                                 <Divider horizontal>Components</Divider>
-                                {this.showCheckboxes()}
+                                {this.showCheckboxPlaceholder()}
                             </div>
                         </div>
                         <div className={"gen-btn-container"} >

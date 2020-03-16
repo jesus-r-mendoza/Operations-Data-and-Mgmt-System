@@ -325,3 +325,16 @@ def _process_file(filefield):
         return False
     except UnicodeDecodeError:
         return False
+
+
+def units(request):
+    x = Units.objects.all()
+    res = []
+    for u in x:
+        e = {
+            'id': u.id,
+            'name': u.units
+        }
+        res.append(e)
+
+    return JsonResponse(res, safe = False)

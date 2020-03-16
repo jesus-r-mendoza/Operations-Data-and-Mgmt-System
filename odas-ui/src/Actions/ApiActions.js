@@ -4,16 +4,18 @@ import { authToken } from "../Definitions/BrowserCookie";
 
 // Get the unit values from API
 export const fetchUnits = () => async dispatch => {
+    dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
+
     // Needed exact URL including the slashes
-    const response = await SatApi.get(`api/units/`, {
-        method: "GET",
+    await SatApi.get(`api/units/`, {
+        method: 'GET',
         headers: {
             'Accept': 'application/json',
             'Content-type': 'application/json',
         }
-    });
-
-    dispatch({type: "FETCH_UNITS", payload: response.data});
+    })
+        .then(response => dispatch({type: "FETCH_UNITS", payload: response.data}))
+        .catch(error => dispatch({type: "FETCH_UNITS_FAIL", payload: error}))
 };
 
 // Get all components connected to given satellite existing in the database

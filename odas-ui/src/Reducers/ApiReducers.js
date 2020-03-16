@@ -3,6 +3,12 @@ export const fetchUnitsReducer = (state = [], action) => {
         case 'FETCH_UNITS':
             return [...state, action.payload];
 
+        case 'FETCH_UNITS_FAIL':
+            return action.payload;
+
+        case 'FETCHING_COMPONENTS':
+            return action.isLoading;
+
         default:
             return state;
     }
