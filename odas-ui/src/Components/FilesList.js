@@ -17,6 +17,7 @@ const FilesList = ({ files, isLoading, downloadHandler, deleteHandler, analysisR
             />
         );
     } else {
+        console.log(files);
         return files.map((file) => {
             return (
                 <Table.Row key={file.id}>

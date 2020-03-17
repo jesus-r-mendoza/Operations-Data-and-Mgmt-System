@@ -24,7 +24,8 @@ export const componentsReducer = (state = [], action) => {
 
         default:
             // TODO checkbox array being cleared
-            return {data: [], isLoading: action.isLoading};
+            console.log(state);
+            return {data: state.data || []};
     }
 };
 
