@@ -1,13 +1,10 @@
 export const fetchUnitsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_UNITS':
-            return [...state, action.payload];
+            return action.payload;
 
         case 'FETCH_UNITS_FAIL':
             return action.payload;
-
-        case 'FETCHING_COMPONENTS':
-            return action.isLoading;
 
         default:
             return state;

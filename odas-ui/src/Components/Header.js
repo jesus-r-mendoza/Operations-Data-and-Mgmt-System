@@ -86,7 +86,6 @@ class Header extends React.Component {
     };
 
     showLoginToast = () => {
-        console.log(this.props.userLogin);
         if (this.props.userLogin) {
             return (
                 <Toast

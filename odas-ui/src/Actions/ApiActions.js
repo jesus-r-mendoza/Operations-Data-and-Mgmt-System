@@ -4,8 +4,6 @@ import { authToken } from "../Definitions/BrowserCookie";
 
 // Get the unit values from API
 export const fetchUnits = () => async dispatch => {
-    dispatch({type: "FETCHING_COMPONENTS", isLoading: true});
-
     // Needed exact URL including the slashes
     await SatApi.get(`api/units/`, {
         method: 'GET',
@@ -15,6 +13,7 @@ export const fetchUnits = () => async dispatch => {
         }
     })
         .then(response => dispatch({type: "FETCH_UNITS", payload: response.data}))
+        // .then(response => console.log(response))
         .catch(error => dispatch({type: "FETCH_UNITS_FAIL", payload: error}))
 };
 

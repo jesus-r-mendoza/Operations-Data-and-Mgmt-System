@@ -8,7 +8,6 @@ import "../Layout/Utilities.css"
 // Explicit declaration of props require {}
 // Files is array of objects, map() iterates over for each {file} object
 const FilesList = ({ files, isLoading, downloadHandler, deleteHandler, analysisRequestHandler }) => {
-    console.log(files);
     if (isLoading && typeof files === "object") {
         return (
             <Spinner

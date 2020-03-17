@@ -114,34 +114,33 @@ class Sidebar extends React.Component {
                 </div>
             );
         } else {
-            this.showCheckboxes()
+            if (window.location.pathname === '/upload') {
+                return (
+                    <div>
+                        <Divider horizontal>Units</Divider>
+                        <CheckComponent
+                            labels={this.props.units}
+                            isLoading={this.props.units.isLoading}
+                            checked={this.state.checkedItems}
+                            onCheckboxChange={this.onCheckboxChange}
+                        />
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <Divider horizontal>Components</Divider>
+                        <CheckComponent
+                            labels={this.props.components.data}
+                            isLoading={this.props.components.isLoading}
+                            checked={this.state.checkedItems}
+                            onCheckboxChange={this.onCheckboxChange}
+                        />
+                    </div>
+                );
+            }
         }
     };
-
-    showCheckboxes = () => {
-        console.log(window.location.pathname);
-        console.log(this.props.components);
-        if (window.location.pathname === "/upload") {
-            return (
-                <CheckComponent
-                    labels={this.props.units}
-                    isLoading={this.props.units.isLoading}
-                    checked={this.state.checkedItems}
-                    onCheckboxChange={this.onCheckboxChange}
-                />
-            )
-        } else {
-            return (
-                <CheckComponent
-                    labels={this.props.components.data}
-                    isLoading={this.props.components.isLoading}
-                    checked={this.state.checkedItems}
-                    onCheckboxChange={this.onCheckboxChange}
-                />
-            )
-        }
-    };
-
     render() {
         return (
             <div className={"sidebar-container"}>
@@ -160,7 +159,6 @@ class Sidebar extends React.Component {
                                 />
                             </div>
                             <div className={"checkbox-selection-btn"}>
-                                <Divider horizontal>Components</Divider>
                                 {this.showCheckboxPlaceholder()}
                             </div>
                         </div>
