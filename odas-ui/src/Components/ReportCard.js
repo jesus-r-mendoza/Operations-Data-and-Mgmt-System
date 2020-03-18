@@ -4,13 +4,25 @@ import Plot from 'react-plotly.js';
 import "../Layout/Reports.css";
 import TitleBar from './TitleBar.js';
 import BottomGraph from './BottomGraph.js';
+// Redux
+import { connect } from 'react-redux';
+import {
+    fetchSatellites,
+    fetchComponents,
+    fetchUnits,
+    getRecentMeasurements
+} from "../Actions";
+import {authToken} from "../Definitions/BrowserCookie";
 // TODO Bootstrap modals for the logs
-export default class ReportCard extends React.Component {
-//	constructor(){
-//		super();
+class ReportCard extends React.Component {
+	constructor(props){
+		super(props);
 //		this.onClick = this.handleClick.bind(this);
-//	}*/
-	state = {
+       this.state = {
+ //           isLoading: true,
+  //      };	
+//	}
+//	state = {
 		line1:{
 			x: [], 
 			y: [], 
@@ -70,11 +82,30 @@ export default class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
+		plotData: [{"data": false}],
+		update: false,
+		out: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
-//	}		
+	}		
+	componentDidUpdate(nextProps) {
+		console.log('Test Update: ', nextProps.recentMeasurements);
+		if(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements){
+		this.setState({ 
+			plotData: nextProps.recentMeasurements 
+		});  
+		}
+	}
 	componentDidMount() {
-	
+/*		if(this.update===false){
+			this.setState({update: true});
+		}
+		else if(this.update===true){
+			this.setState({update: false});
+		}*/
+	console.log('Test', this.props.recentMeasurements);
+	console.log('Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
+	console.log('Test Graph Measurements', this.props.recentMeasurements.Measurements);
 	this.pause = this.pause.bind(this);
 	window.cnt = this.state.cnt;
 	window.initialDataArray = this.state.initialDataArray;
@@ -83,7 +114,13 @@ export default class ReportCard extends React.Component {
 	window.alreadyStopped = this.state.alreadyStopped;
 	window.exampleValue = this.state.exampleValue;
 	window.tableKeys = this.state.tableKeys;
+	if(this.update===false){
 	var response = require('./testapi.json');
+	}
+	else{
+	var response = this.plotData;//this.props.recentMeasurements;
+	}
+	this.setState({update: false, out:[{"data": false}]});
 	console.log('start');
 	console.log(response);
 	this.initial(response);
@@ -91,9 +128,9 @@ export default class ReportCard extends React.Component {
 	} 
 	
 	initial = (response) => {
-		var out = response;
+	this.setState({out: response});
 		var compSpecified = false;
-		this.checkData(out, compSpecified);
+		this.checkData(compSpecified);
 	}
 
 	compare = (key,a,b) => {
@@ -105,23 +142,23 @@ export default class ReportCard extends React.Component {
 		}
 		return 0;
 	}			
-	titleSpecs = (out)  => {
+	titleSpecs = ()  => {
 			var mydiv = document.getElementById("toptitle");
 			var newcontent = document.createElement('div');
-			newcontent.innerHTML = out.Satellite.name;
+			newcontent.innerHTML = this.state.out.Satellite.name;
 			var mydiv2 = document.getElementById("toptitle2");
 			var newcontent2 = document.createElement('div');
-			newcontent2.innerHTML = ": Launched "+out.Satellite.year_launched;
+			newcontent2.innerHTML = ": Launched "+this.state.out.Satellite.year_launched;
 			var newcontent3 = document.createElement('div');
-			newcontent3.innerHTML = ""+out.Satellite.mission_description;
+			newcontent3.innerHTML = ""+this.state.out.Satellite.mission_description;
 			while (newcontent.firstChild) {
 				mydiv.appendChild(newcontent.firstChild);
 				mydiv.appendChild(newcontent2.firstChild);
 				mydiv2.appendChild(newcontent3.firstChild);
 			}
 	}
-	checkCompSpecified = (out, compSpecified) => {
-		compSpecified = out.comp_specified;
+	checkCompSpecified = (compSpecified) => {
+		compSpecified = this.state.out.comp_specified;
 		console.log('Test 2: Component Specified?: ', compSpecified);
 		return compSpecified;
 	}
@@ -156,21 +193,21 @@ export default class ReportCard extends React.Component {
 			document.getElementById("tablechart").appendChild(node2);
 		}
 	
-	checkData = (out, compSpecified) => {
+	checkData = (compSpecified) => {
 				var error;
-				if(out.data===true){
-					this.titleSpecs(out);
+				if(this.state.out.data===true){//this.plotData.data===true){
+					this.titleSpecs(this.state.out);
 					compSpecified = false;
-					compSpecified = this.checkCompSpecified(out, compSpecified);
-					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
+					compSpecified = this.checkCompSpecified(compSpecified);
+					var quantity = this.state.out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
-					realQuantity = out.Measurements.length;
+					realQuantity = this.state.out.Measurements.length;
 					var checkQuantities = false;
 					this.checkQuantitiesMatch(quantity, realQuantity, checkQuantities);
-					this.createDataUnit(out, realQuantity, compSpecified);
+					this.createDataUnit(realQuantity, compSpecified);
 				}
-				else if(out.data===false){
-					error = out.error;
+				else if(this.state.out.data===false){//||this.plotData.data===true){
+					error = this.state.out.error;
 					this.errorOutput(error);
 				}
 				else{
@@ -178,22 +215,22 @@ export default class ReportCard extends React.Component {
 					this.errorOutput(error);
 				}		
 	}
-	createDataUnit = (out, realQuantity, compSpecified) => {
+	createDataUnit = (realQuantity, compSpecified) => {
 				for(var c=0;c<realQuantity;c++){
 					var dataUnit = [];
 					var data = [];
 					if(compSpecified === true){
-						dataUnit.push(out.Component.category);
-						dataUnit.push(out.Component.description);
-						dataUnit.push(out.Component.model);
-						dataUnit.push(out.Component.name);
+						dataUnit.push(this.state.out.Component.category);
+						dataUnit.push(this.state.out.Component.description);
+						dataUnit.push(this.state.out.Component.model);
+						dataUnit.push(this.state.out.Component.name);
 					}
-						dataUnit.push(out.Measurements[c].time);
-						dataUnit.push(out.Measurements[c].units);
-						dataUnit.push(out.Measurements[c].value);
+						dataUnit.push(this.state.out.Measurements[c].time);
+						dataUnit.push(this.state.out.Measurements[c].units);
+						dataUnit.push(this.state.out.Measurements[c].value);
 						data.push(dataUnit);
 				}
-					var outSort = out;
+					var outSort = this.state.out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
 	
@@ -421,3 +458,19 @@ export default class ReportCard extends React.Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        components: state.components,
+        satellites: state.fetchSatellites,
+        units: state.fetchUnits,
+        recent: state.selectRecent,
+        recentMeasurements: state.getRecentMeasurements
+    };
+};
+
+export default connect(mapStateToProps, {
+    fetchSatellites,
+    fetchUnits,
+    fetchComponents,
+    getRecentMeasurements
+})(ReportCard)
