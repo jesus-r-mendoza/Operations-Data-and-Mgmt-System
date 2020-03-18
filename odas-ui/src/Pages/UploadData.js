@@ -7,7 +7,7 @@ import {
     deleteFile,
     analyzeFile,
     fetchUnits,
-    selectSatellite
+    selectSatellite,
 } from "../Actions";
 import {connect} from "react-redux";
 //Components
@@ -87,8 +87,23 @@ class UploadData extends React.Component {
     };
 
     handleAnalysisRequest = (fileId) => {
-        this.props.analyzeFile(this.props.selectedSatellite.value, fileId, this.state.checkedItems);
-        this.props.getFileList()
+        console.log([...this.props.checkedItems]);
+        let checkedItemsArray = [...this.props.checkedItems];
+        let filteredItems = [];
+
+        checkedItemsArray.forEach(item =>  {
+            if (item[1] === true) {
+                filteredItems.push(item[0])
+            }
+        });
+
+        if (this.props.selectedSatellite) {
+            this.props.analyzeFile(this.props.selectedSatellite.value, fileId, filteredItems);
+            this.props.getFileList()
+
+        } else {
+            console.log("Select a satellite")
+        }
     };
 
     showErrorMessage(loaded) {
@@ -234,7 +249,8 @@ const mapStateToProps = state => {
         downFile: state.downloadFile,
         delFile: state.deleteFile,
         units: state.fetchUnits,
-        selectedSatellite: state.selectSatellite
+        selectedSatellite: state.selectSatellite,
+        checkedItems: state.selectCheckboxItems
     };
 };
 
@@ -245,5 +261,5 @@ export default connect(mapStateToProps, {
     deleteFile,
     analyzeFile,
     fetchUnits,
-    selectSatellite
+    selectSatellite,
 })(UploadData);

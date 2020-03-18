@@ -8,7 +8,7 @@ export const selectSatellite = (satellite) => {
 // Store the amount of recent reports to show on report pages
 export const selectRecent = (recent) => {
     return {
-        type: "RECENT_SELECTED",
+        type: 'RECENT_SELECTED',
         payload: recent
     };
 };
@@ -29,8 +29,9 @@ export const selectEndDate = (date) => {
     };
 };
 
-export const selectCheckboxItems = (checkedItems = new Map()) => {
+export const selectCheckboxItems = (checkedItems) => {
     return {
-
-    }
+        type: 'CHECKED_ITEMS',
+        payload: checkedItems
+    };
 };

@@ -18,7 +18,8 @@ import {
     selectedRecentReducer,
     selectedSatReducer,
     selectEndDateReducer,
-    selectStartDateReducer
+    selectStartDateReducer,
+    selectCheckboxItemsReducer
 } from "./SelectionReducers";
 
 // Files
@@ -49,6 +50,7 @@ export default combineReducers({
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
+    selectCheckboxItems: selectCheckboxItemsReducer,
 
     // Authentication
     login: loginReducer,

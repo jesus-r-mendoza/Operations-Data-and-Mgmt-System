@@ -20,7 +20,6 @@ export const getRecentMeasurements = (satId, compIds = new Map(), quantity) => a
             }
         }
 
-        console.log(compIdString);
         url = `/api/sat/${satId}/comp/${compIdString}/recent/${quantity}/`;
     } else {
         url = `/api/sat/${satId}/recent/${quantity}/`;

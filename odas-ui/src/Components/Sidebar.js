@@ -14,9 +14,8 @@ import {
     fetchUnits,
     getRecentMeasurements,
     getMeasurementsByTime,
-    selectStartDate,
-    selectEndDate,
-    selectSatellite
+    selectSatellite,
+    selectCheckboxItems
 } from "../Actions";
 import {authToken} from "../Definitions/BrowserCookie";
 
@@ -24,7 +23,6 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // selectedSatellite: null,
             checkedItems: new Map()
         };
 
@@ -54,9 +52,17 @@ class Sidebar extends React.Component {
 
         if (!this.props.startDate || !this.props.endDate) {
             // Converts the returned MapIterator object into an array of the keys
-            compIds = [...this.state.checkedItems.keys()];
+            let checkedItemsArray = [...this.props.checkedItems];
+            let filteredItems = [];
 
-            await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
+            checkedItemsArray.forEach(item =>  {
+                if (item[1] === true) {
+                    filteredItems.push(item[0])
+                }
+            });
+
+            await this.props.getRecentMeasurements(satId, filteredItems, this.props.recent)
+
         } else {
             await this.props.getMeasurementsByTime(satId, compIds, this.props.startDate, this.props.endDate)
         }
@@ -83,7 +89,8 @@ class Sidebar extends React.Component {
             checkedItems: prevState.checkedItems.set(compId, isChecked)
         }));
 
-        console.log(this.state.checkedItems)
+        // Putting the state into the Redux store so it can be accessed by other components
+        this.props.selectCheckboxItems(this.state.checkedItems);
     };
 
     createSatelliteObject = satelliteObject => {
@@ -191,7 +198,8 @@ const mapStateToProps = state => {
         measurementsByTime: state.getMeasurementsByTime,
         startDate: state.selectStartDate,
         endDate: state.selectEndDate,
-        selectedSatellite: state.selectSatellite
+        selectedSatellite: state.selectSatellite,
+        checkedItems: state.selectCheckboxItems
     };
 };
 
@@ -201,7 +209,6 @@ export default connect(mapStateToProps, {
     fetchComponents,
     getRecentMeasurements,
     getMeasurementsByTime,
-    selectStartDate,
-    selectEndDate,
-    selectSatellite
+    selectSatellite,
+    selectCheckboxItems
 })(Sidebar)

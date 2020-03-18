@@ -10,7 +10,8 @@ import {
     selectStartDate,
     selectEndDate,
     selectRecent,
-    selectSatellite
+    selectSatellite,
+    selectCheckboxItems
 } from "./SelectionActions";
 
 // User queries
@@ -48,6 +49,7 @@ export {
     selectSatellite,
     selectRecent,
     selectEndDate,
+    selectCheckboxItems,
 
     // Authentication
     register,

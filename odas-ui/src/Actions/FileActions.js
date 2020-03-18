@@ -57,8 +57,19 @@ export const deleteFile = (fileId) => async dispatch => {
         .catch(error => dispatch({type: "FILE_DELETE_FAIL", payload: error}))
 };
 
-export const analyzeFile = (satId, fileId, unitId) => async dispatch => {
-    await SatApi.post(`/api/sat/${satId}/file/${fileId}/unit/${unitId}`, {
+export const analyzeFile = (satId, fileId, unitIds) => async dispatch => {
+    let unitIdString = '';
+
+    for (let id in unitIds) {
+        if (id === "0") {
+            unitIdString += unitIds[id]
+        } else {
+            unitIdString += `+${unitIds[id]}`
+        }
+    }
+
+    console.log(unitIdString);
+    await SatApi.post(`/api/sat/${satId}/file/${fileId}/units/${unitIdString}/`, {
         headers: {
             'Authorization': `Token ${authToken}`
         }
