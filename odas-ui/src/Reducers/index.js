@@ -45,7 +45,7 @@ export default combineReducers({
     components: componentsReducer,
 
     // Selections
-    selectedSat: selectedSatReducer,
+    selectSatellite: selectedSatReducer,
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,

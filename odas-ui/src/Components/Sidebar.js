@@ -15,7 +15,8 @@ import {
     getRecentMeasurements,
     getMeasurementsByTime,
     selectStartDate,
-    selectEndDate
+    selectEndDate,
+    selectSatellite
 } from "../Actions";
 import {authToken} from "../Definitions/BrowserCookie";
 
@@ -23,9 +24,7 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            loadDropdown: true,
-            selectedSatellite: null,
+            // selectedSatellite: null,
             checkedItems: new Map()
         };
 
@@ -72,15 +71,16 @@ class Sidebar extends React.Component {
             checkedItems: new Map()
         });
 
+        this.props.selectSatellite(e);
         this.props.fetchComponents(e.value);
     };
 
     onCheckboxChange = e => {
-        const item = e.target.id;
+        const compId = e.target.id;
         const isChecked = e.target.checked;
 
         this.setState(prevState => ({
-            checkedItems: prevState.checkedItems.set(item, isChecked)
+            checkedItems: prevState.checkedItems.set(compId, isChecked)
         }));
 
         console.log(this.state.checkedItems)
@@ -107,7 +107,7 @@ class Sidebar extends React.Component {
                     <span className={"placeholder-text"}>{this.props.satellites.message}</span>
                 </div>
             );
-        } else if (authToken && this.state.selectedSatellite === null) {
+        } else if (authToken && this.props.selectedSatellite === null) {
             return (
                 <div className={"placeholder-text-div"}>
                     <span className={"placeholder-text"}>Please select a satellite to continue</span>
@@ -190,7 +190,8 @@ const mapStateToProps = state => {
         recentMeasurements: state.getRecentMeasurements,
         measurementsByTime: state.getMeasurementsByTime,
         startDate: state.selectStartDate,
-        endDate: state.selectEndDate
+        endDate: state.selectEndDate,
+        selectedSatellite: state.selectSatellite
     };
 };
 
@@ -201,5 +202,6 @@ export default connect(mapStateToProps, {
     getRecentMeasurements,
     getMeasurementsByTime,
     selectStartDate,
-    selectEndDate
+    selectEndDate,
+    selectSatellite
 })(Sidebar)

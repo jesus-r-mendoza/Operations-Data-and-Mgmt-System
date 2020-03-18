@@ -6,7 +6,8 @@ import {
     downloadFile,
     deleteFile,
     analyzeFile,
-    fetchUnits
+    fetchUnits,
+    selectSatellite
 } from "../Actions";
 import {connect} from "react-redux";
 //Components
@@ -28,7 +29,7 @@ class UploadData extends React.Component {
             currentPage: "upload",
             selectedFile: '',
             description: '',
-            loaded: 1,
+            loaded: 1
         };
 
         this.handleFileSubmit = this.handleFileSubmit.bind(this);
@@ -85,13 +86,13 @@ class UploadData extends React.Component {
         this.props.getFileList()
     };
 
-    // TODO needs a prompt for the user to pick the unit ID
     handleAnalysisRequest = (fileId) => {
-        this.props.analyzeFile(this.props.selectedSatellite, fileId, this.props.units);
+        this.props.analyzeFile(this.props.selectedSatellite.value, fileId, this.state.checkedItems);
         this.props.getFileList()
     };
 
     showErrorMessage(loaded) {
+        console.log();
         if(loaded === 0) {
             return(
               <span className={"error-message"}>Please choose a valid file.</span>
@@ -232,7 +233,8 @@ const mapStateToProps = state => {
         fileList: state.getFileList,
         downFile: state.downloadFile,
         delFile: state.deleteFile,
-        units: state.fetchUnits
+        units: state.fetchUnits,
+        selectedSatellite: state.selectSatellite
     };
 };
 
@@ -242,5 +244,6 @@ export default connect(mapStateToProps, {
     downloadFile,
     deleteFile,
     analyzeFile,
-    fetchUnits
+    fetchUnits,
+    selectSatellite
 })(UploadData);

@@ -28,3 +28,9 @@ export const selectEndDate = (date) => {
         payload: date
     };
 };
+
+export const selectCheckboxItems = (checkedItems = new Map()) => {
+    return {
+
+    }
+};

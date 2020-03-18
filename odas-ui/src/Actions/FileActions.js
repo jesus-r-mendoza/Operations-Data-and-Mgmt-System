@@ -40,11 +40,7 @@ export const getFileList = () => async dispatch => {
 
 // Download a file from the server
 export const downloadFile = (fileId, fileName) => async dispatch => {
-    await axios.get(`${apiURL}files/download/${fileId}/`, {
-        headers: {
-            'Authorization': `Token ${authToken}`
-        }
-    })
+    await axios.get(`${apiURL}files/download/${fileId}/${authToken}/`)
         .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
         .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
 };
