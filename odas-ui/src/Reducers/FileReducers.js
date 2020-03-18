@@ -46,13 +46,29 @@ export const downloadFileReducer = (downloadState = [], action) => {
     }
 };
 
+// TODO do something with these responses
 export const deleteFileReducer = (deleteState = [], action) => {
     switch (action.type) {
         case 'FILE_DELETE':
             return deleteState;
+
         case 'FILE_DELETE_FAIL':
             return deleteState;
+
         default:
             return [...deleteState];
+    }
+};
+
+export const analyzeFileReducer = (analyzeState = [], action) => {
+    switch (action.type) {
+        case 'ANALYZE_FILE':
+            return action.payload;
+
+        case 'ANALYZE_FILE_FAIL':
+            return action.payload;
+
+        default:
+            return analyzeState;
     }
 };

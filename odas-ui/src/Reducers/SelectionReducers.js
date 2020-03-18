@@ -29,3 +29,11 @@ export const selectEndDateReducer = (date = null, action) => {
 
     return date;
 };
+
+export const selectCheckboxItemsReducer = (checkedItems = new Map(), action) => {
+    if (action.type === "CHECKED_ITEMS") {
+        return action.payload;
+    }
+
+    return checkedItems;
+};

@@ -9,7 +9,8 @@ import {
 
 // Queries
 import {
-    getRecentMeasurementsReducer
+    getRecentMeasurementsReducer,
+    getMeasurementsByTimeReducer
 } from "./QueryReducers"
 
 // Selection reducers
@@ -17,7 +18,8 @@ import {
     selectedRecentReducer,
     selectedSatReducer,
     selectEndDateReducer,
-    selectStartDateReducer
+    selectStartDateReducer,
+    selectCheckboxItemsReducer
 } from "./SelectionReducers";
 
 // Files
@@ -25,7 +27,8 @@ import {
     deleteFileReducer,
     downloadFileReducer,
     fileListReducer,
-    postFileReducer
+    postFileReducer,
+    analyzeFileReducer
 } from "./FileReducers"
 
 // Authentication
@@ -41,13 +44,13 @@ export default combineReducers({
     fetchSatellites: fetchSatellitesReducer,
     fetchUnits: fetchUnitsReducer,
     components: componentsReducer,
-    getRecentMeasurements: getRecentMeasurementsReducer,
 
     // Selections
-    selectedSat: selectedSatReducer,
+    selectSatellite: selectedSatReducer,
     selectRecent: selectedRecentReducer,
     selectStartDate: selectStartDateReducer,
     selectEndDate: selectEndDateReducer,
+    selectCheckboxItems: selectCheckboxItemsReducer,
 
     // Authentication
     login: loginReducer,
@@ -61,4 +64,9 @@ export default combineReducers({
     getFileList: fileListReducer,
     downloadFile: downloadFileReducer,
     deleteFile: deleteFileReducer,
+    analyzeFile: analyzeFileReducer,
+
+    // Query
+    getRecentMeasurements: getRecentMeasurementsReducer,
+    getMeasurementsByTime: getMeasurementsByTimeReducer
 });

@@ -1,7 +1,10 @@
 export const fetchUnitsReducer = (state = [], action) => {
     switch (action.type) {
         case 'FETCH_UNITS':
-            return [...state, action.payload];
+            return action.payload;
+
+        case 'FETCH_UNITS_FAIL':
+            return action.payload;
 
         default:
             return state;
@@ -21,7 +24,7 @@ export const componentsReducer = (state = [], action) => {
 
         default:
             // TODO checkbox array being cleared
-            return {data: [], isLoading: action.isLoading};
+            return {data: state.data || []};
     }
 };
 

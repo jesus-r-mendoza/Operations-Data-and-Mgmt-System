@@ -5,11 +5,9 @@ import {Table, Button} from "semantic-ui-react";
 import {Spinner} from "react-bootstrap";
 // Stylesheets
 import "../Layout/Utilities.css"
-
 // Explicit declaration of props require {}
 // Files is array of objects, map() iterates over for each {file} object
-const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
-    console.log(files);
+const FilesList = ({ files, isLoading, downloadHandler, deleteHandler, analysisRequestHandler }) => {
     if (isLoading && typeof files === "object") {
         return (
             <Spinner
@@ -19,6 +17,7 @@ const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
             />
         );
     } else {
+        console.log(files);
         return files.map((file) => {
             return (
                 <Table.Row key={file.id}>
@@ -26,6 +25,11 @@ const FilesList = ({ files, isLoading, downloadHandler, deleteHandler }) => {
                     <Table.Cell>{moment(file.date).format("MMMM Do YYYY, hh:mm:ssA")}</Table.Cell>
                     <Table.Cell>{file.description}</Table.Cell>
                     <Table.Cell>
+                        <Button
+                            size={"tiny"}
+                            icon={"line graph"}
+                            onClick={() => analysisRequestHandler(file.id)}
+                        />
                         <Button
                             size={"tiny"}
                             icon={"download"}
