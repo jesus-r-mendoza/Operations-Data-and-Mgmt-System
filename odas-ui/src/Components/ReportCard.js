@@ -74,7 +74,6 @@ class ReportCard extends React.Component {
 			datarevision: 0,
 		},
 		revision: 0,
-		url: 'http://127.0.0.1:8080/api/sat/6/comp/14/recent/10/',
 		cnt : 0,
 		initialDataArray: [],
 		paused: false, 
@@ -90,10 +89,35 @@ class ReportCard extends React.Component {
 	}		
 	componentDidUpdate(nextProps) {
 		console.log('Test Update: ', nextProps.recentMeasurements);
+		console.log('Check if Same: ',this.props.recentMeasurements.Measurements);
 		if(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements){
+		console.log('State change!');
 		this.setState({ 
 			plotData: nextProps.recentMeasurements 
 		});  
+			console.log('Update Test', this.props.recentMeasurements);
+			console.log('Update Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
+			console.log('Update Test Graph Measurements', this.props.recentMeasurements.Measurements);
+			this.pause = this.pause.bind(this);
+			window.cnt = this.state.cnt;
+			window.initialDataArray = this.state.initialDataArray;
+			window.paused = this.state.paused;
+			window.exampleTime = this.state.exampleTime;
+			window.alreadyStopped = this.state.alreadyStopped;
+			window.exampleValue = this.state.exampleValue;
+			window.tableKeys = this.state.tableKeys;
+/*	if(this.update===false){
+	var response = require('./testapi.json');
+	}
+	else{*/
+			var response = this.props.recentMeasurements;
+//	}
+			this.setState({update: true, out:response});
+			console.log('update start');
+			console.log(response);
+			this.initial(response);
+			window.interval = setInterval(this.increasePlot,1000);
+			console.log('update finish');
 		}
 	}
 	componentDidMount() {
@@ -103,7 +127,7 @@ class ReportCard extends React.Component {
 		else if(this.update===true){
 			this.setState({update: false});
 		}*/
-	console.log('Test', this.props.recentMeasurements);
+/*	console.log('Test', this.props.recentMeasurements);
 	console.log('Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
 	console.log('Test Graph Measurements', this.props.recentMeasurements.Measurements);
 	this.pause = this.pause.bind(this);
@@ -114,20 +138,21 @@ class ReportCard extends React.Component {
 	window.alreadyStopped = this.state.alreadyStopped;
 	window.exampleValue = this.state.exampleValue;
 	window.tableKeys = this.state.tableKeys;
-	if(this.update===false){
+/*	if(this.update===false){
 	var response = require('./testapi.json');
 	}
-	else{
-	var response = this.plotData;//this.props.recentMeasurements;
-	}
-	this.setState({update: false, out:[{"data": false}]});
+	else{*/
+/*	var response = this.state.plotData;//this.props.recentMeasurements;
+//	}
+	this.setState({update: true, out:[{"data": false}]});
 	console.log('start');
 	console.log(response);
 	this.initial(response);
 	window.interval = setInterval(this.increasePlot,1000);
-	} 
+*/	} 
 	
 	initial = (response) => {
+		console.log('Test Initial');
 	this.setState({out: response});
 		var compSpecified = false;
 		this.checkData(compSpecified);
