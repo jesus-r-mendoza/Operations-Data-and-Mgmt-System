@@ -91,10 +91,11 @@ class ReportCard extends React.Component {
 		console.log('Test Update: ', nextProps.recentMeasurements);
 		console.log('Check if Same: ',this.props.recentMeasurements.Measurements);
 		if(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements){
+		//if(this.state.update === false){
 		console.log('State change!');
-		this.setState({ 
-			plotData: nextProps.recentMeasurements 
-		});  
+	//	this.setState({ 
+	//		plotData: nextProps.recentMeasurements 
+	//	});  
 			console.log('Update Test', this.props.recentMeasurements);
 			console.log('Update Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
 			console.log('Update Test Graph Measurements', this.props.recentMeasurements.Measurements);
@@ -112,7 +113,7 @@ class ReportCard extends React.Component {
 	else{*/
 			var response = this.props.recentMeasurements;
 //	}
-			this.setState({update: true, out:response});
+//			this.setState((props)=> ({out: response}));
 			console.log('update start');
 			console.log(response);
 			this.initial(response);
@@ -121,6 +122,7 @@ class ReportCard extends React.Component {
 		}
 	}
 	componentDidMount() {
+		console.log('Component did Mount');
 /*		if(this.update===false){
 			this.setState({update: true});
 		}
@@ -152,10 +154,12 @@ class ReportCard extends React.Component {
 */	} 
 	
 	initial = (response) => {
-		console.log('Test Initial');
-	this.setState({out: response});
+		console.log('Test Initial', response);
+//	this.setState({out: response});
+//	console.log('testa', this.state.out);
 		var compSpecified = false;
-		this.checkData(compSpecified);
+		var out = response;
+		this.checkData(out, compSpecified);
 	}
 
 	compare = (key,a,b) => {
@@ -167,23 +171,23 @@ class ReportCard extends React.Component {
 		}
 		return 0;
 	}			
-	titleSpecs = ()  => {
+	titleSpecs = (out)  => {
 			var mydiv = document.getElementById("toptitle");
 			var newcontent = document.createElement('div');
-			newcontent.innerHTML = this.state.out.Satellite.name;
+			newcontent.innerHTML = out.Satellite.name;
 			var mydiv2 = document.getElementById("toptitle2");
 			var newcontent2 = document.createElement('div');
-			newcontent2.innerHTML = ": Launched "+this.state.out.Satellite.year_launched;
+			newcontent2.innerHTML = ": Launched "+out.Satellite.year_launched;
 			var newcontent3 = document.createElement('div');
-			newcontent3.innerHTML = ""+this.state.out.Satellite.mission_description;
+			newcontent3.innerHTML = ""+out.Satellite.mission_description;
 			while (newcontent.firstChild) {
 				mydiv.appendChild(newcontent.firstChild);
 				mydiv.appendChild(newcontent2.firstChild);
 				mydiv2.appendChild(newcontent3.firstChild);
 			}
 	}
-	checkCompSpecified = (compSpecified) => {
-		compSpecified = this.state.out.comp_specified;
+	checkCompSpecified = (out, compSpecified) => {
+		compSpecified = out.comp_specified;
 		console.log('Test 2: Component Specified?: ', compSpecified);
 		return compSpecified;
 	}
@@ -218,21 +222,22 @@ class ReportCard extends React.Component {
 			document.getElementById("tablechart").appendChild(node2);
 		}
 	
-	checkData = (compSpecified) => {
+	checkData = (out, compSpecified) => {
+		console.log('testb', out);
 				var error;
-				if(this.state.out.data===true){//this.plotData.data===true){
-					this.titleSpecs(this.state.out);
+				if(out.data===true){//this.plotData.data===true){
+					this.titleSpecs(out);
 					compSpecified = false;
-					compSpecified = this.checkCompSpecified(compSpecified);
-					var quantity = this.state.out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
+					compSpecified = this.checkCompSpecified(out, compSpecified);
+					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
-					realQuantity = this.state.out.Measurements.length;
+					realQuantity = out.Measurements.length;
 					var checkQuantities = false;
 					this.checkQuantitiesMatch(quantity, realQuantity, checkQuantities);
-					this.createDataUnit(realQuantity, compSpecified);
+					this.createDataUnit(out, realQuantity, compSpecified);
 				}
-				else if(this.state.out.data===false){//||this.plotData.data===true){
-					error = this.state.out.error;
+				else if(out.data===false){//||this.plotData.data===true){
+					error = out.error;
 					this.errorOutput(error);
 				}
 				else{
@@ -240,22 +245,22 @@ class ReportCard extends React.Component {
 					this.errorOutput(error);
 				}		
 	}
-	createDataUnit = (realQuantity, compSpecified) => {
+	createDataUnit = (out, realQuantity, compSpecified) => {
 				for(var c=0;c<realQuantity;c++){
 					var dataUnit = [];
 					var data = [];
 					if(compSpecified === true){
-						dataUnit.push(this.state.out.Component.category);
-						dataUnit.push(this.state.out.Component.description);
-						dataUnit.push(this.state.out.Component.model);
-						dataUnit.push(this.state.out.Component.name);
+						dataUnit.push(out.Component.category);
+						dataUnit.push(out.Component.description);
+						dataUnit.push(out.Component.model);
+						dataUnit.push(out.Component.name);
 					}
-						dataUnit.push(this.state.out.Measurements[c].time);
-						dataUnit.push(this.state.out.Measurements[c].units);
-						dataUnit.push(this.state.out.Measurements[c].value);
+						dataUnit.push(out.Measurements[c].time);
+						dataUnit.push(out.Measurements[c].units);
+						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
-					var outSort = this.state.out;
+					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
 	
