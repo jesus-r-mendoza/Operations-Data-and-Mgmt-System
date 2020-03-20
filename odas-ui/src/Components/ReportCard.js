@@ -19,10 +19,6 @@ class ReportCard extends React.Component {
 		super(props);
 //		this.onClick = this.handleClick.bind(this);
        this.state = {
- //           isLoading: true,
-  //      };	
-//	}
-//	state = {
 		line1:{
 			x: [], 
 			y: [], 
@@ -81,9 +77,9 @@ class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
-		plotData: [{"data": false}],
+		//plotData: [{"data": false}],
 		update: false,
-		out: [],
+		//out: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
@@ -105,7 +101,7 @@ class ReportCard extends React.Component {
 			//	var response = require('./testapi.json');
 			var response = this.props.recentMeasurements;
 			console.log('update start');
-			console.log(response);
+			console.log('response:', response);
 			this.initial(response);
 			window.interval = setInterval(this.increasePlot,1000);
 			console.log('update finish');
@@ -156,6 +152,21 @@ class ReportCard extends React.Component {
 		}
 //		Plot.deleteTraces(document.getElementById("graph"), 0);
 	//	purge(document.getElementById("graph"));
+		this.setState({
+			line1:{
+			x: [], 
+			y: [], 
+			name: 'Line 1',
+			line: {color: 'red' , width: 3},
+		},
+		revision: 0,
+		cnt : 0,
+		initialDataArray: [],
+		paused: false, 
+		exampleTime: [], 
+		alreadyStopped: false,
+		exampleValue: [],
+		tableKeys: [],});
 	}	
 	
 	componentDidMount() {
