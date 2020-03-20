@@ -9,10 +9,12 @@ export default class BottomGraph extends React.Component{
 					<p id="tablechart">Table Chart</p>
 					<button id="pause" onClick={this.props.pause}>Stop Graph</button>
 					<table style={{width:'100%'}} id = "traces">
+						<tbody id = "tracesbody">
 						<tr id = "fieldnames">
 						</tr>
 						<tr id = "data">
 						</tr>
+						</tbody>
 						</table>
 					</div>
 				);

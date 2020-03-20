@@ -89,16 +89,11 @@ class ReportCard extends React.Component {
 	}		
 	componentDidUpdate(nextProps) {
 		console.log('Test Update: ', nextProps.recentMeasurements);
-		console.log('Check if Same: ',this.props.recentMeasurements.Measurements);
-		if(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements){
-		//if(this.state.update === false){
-		console.log('State change!');
-	//	this.setState({ 
-	//		plotData: nextProps.recentMeasurements 
-	//	});  
-			console.log('Update Test', this.props.recentMeasurements);
-			console.log('Update Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
-			console.log('Update Test Graph Measurements', this.props.recentMeasurements.Measurements);
+		console.log('nextProps', nextProps);
+		if(this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite){
+			//if this is a different query
+			console.log('State change!');
+			this.clearTitleSpecs();
 			this.pause = this.pause.bind(this);
 			window.cnt = this.state.cnt;
 			window.initialDataArray = this.state.initialDataArray;
@@ -107,13 +102,8 @@ class ReportCard extends React.Component {
 			window.alreadyStopped = this.state.alreadyStopped;
 			window.exampleValue = this.state.exampleValue;
 			window.tableKeys = this.state.tableKeys;
-/*	if(this.update===false){
-	var response = require('./testapi.json');
-	}
-	else{*/
+			//	var response = require('./testapi.json');
 			var response = this.props.recentMeasurements;
-//	}
-//			this.setState((props)=> ({out: response}));
 			console.log('update start');
 			console.log(response);
 			this.initial(response);
@@ -121,7 +111,7 @@ class ReportCard extends React.Component {
 			console.log('update finish');
 		}
 		else{
-			this.checkUpdate();
+//			this.checkUpdate();
 		}
 	}
 	
@@ -136,20 +126,36 @@ class ReportCard extends React.Component {
 	}
 	
 	clearTitleSpecs = ()  => {
+		console.log('Clear Title Specs');
 		var mydiv = document.getElementById("toptitle");
 		var mydiv2 = document.getElementById("toptitle2");
-		mydiv.removeChild(mydiv.childNodes[0]);
-		//mydiv.removeChild(mydiv.childNodes[0]);
-		mydiv2.removeChild(mydiv2.childNodes[0]);
+		var tableChartDiv = document.getElementById("tablechart");
+		if(mydiv.childNodes[1]){
+			mydiv.removeChild(mydiv.childNodes[2]);
+			mydiv.removeChild(mydiv.childNodes[1]);
+		}
+		if(mydiv2.childNodes[0]){ 
+			mydiv2.removeChild(mydiv2.childNodes[0]);
+		}
+		while(tableChartDiv.lastElementChild){
+			tableChartDiv.removeChild(tableChartDiv.lastElementChild);
+		}
 		document.getElementById("pause").innerHTML = "Stop Graph";
-		var fieldNamesDiv = document.getElementById("fieldnames");
-		var dataDiv = document.getElementById("div");
-		while(fieldNamesDiv.lastElementChild){
+		//var fieldNamesDiv = document.getElementById("fieldnames");
+		//var dataDiv = document.getElementById("data");
+		var tracesDiv = document.getElementById("tracesbody");
+		/*while(fieldNamesDiv.lastElementChild){
 			fieldNamesDiv.removeChild(fieldNamesDiv.lastElementChild);
 		}
 		while(dataDiv.lastElementChild){
 			dataDiv.removeChild(dataDiv.lastElementChild);
+		}*/
+		var tracesDivCount = 0;
+		while(tracesDiv.childNodes[1]){
+			tracesDiv.removeChild(tracesDiv.childNodes[1]);
 		}
+//		Plot.deleteTraces(document.getElementById("graph"), 0);
+	//	purge(document.getElementById("graph"));
 	}	
 	
 	componentDidMount() {
@@ -160,6 +166,7 @@ class ReportCard extends React.Component {
 		console.log('Test Initial', response);
 //	this.setState({out: response});
 //	console.log('testa', this.state.out);
+//		this.clearTitleSpecs();
 		var compSpecified = false;
 		var out = response;
 		this.checkData(out, compSpecified);
@@ -363,7 +370,7 @@ class ReportCard extends React.Component {
 					exampleTime.push(exampleGraphData[a].time); //x
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
-				var table = document.getElementById("traces");
+				var table = document.getElementById("tracesbody");
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
 				var tableKeys = [];
@@ -460,7 +467,7 @@ class ReportCard extends React.Component {
 							}
 							
 						getData = (cnt, initialDataArray, tableKeys) => {
-								var table = document.getElementById("traces");
+								var table = document.getElementById("tracesbody");
 								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
 								if(initialDataArray[cnt]!==null){		
 									tableKeys = Object.values(initialDataArray[cnt]);
@@ -477,7 +484,7 @@ class ReportCard extends React.Component {
         <div {...this.props} className={"card-container"}>{this.props.children}
             <div {...this.props} className={"card"}>{this.props.children}
                 <div className={"graph-report"}>{this.props.children}
-				          <TitleBar/>
+				          <TitleBar></TitleBar>
 					         <Plot 
 					          data={[this.state.line1]}
 					          layout = {this.state.layout}
