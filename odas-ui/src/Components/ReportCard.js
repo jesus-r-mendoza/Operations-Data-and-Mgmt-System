@@ -12,7 +12,7 @@ import {
     fetchUnits,
     getRecentMeasurements
 } from "../Actions";
-import {authToken} from "../Definitions/BrowserCookie";
+//import {authToken} from "../Definitions/BrowserCookie";
 // TODO Bootstrap modals for the logs
 class ReportCard extends React.Component {
 	constructor(props){
@@ -77,16 +77,15 @@ class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
-		//plotData: [{"data": false}],
 		update: false,
-		//out: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
-	componentDidUpdate(nextProps) {
+	componentDidUpdate(nextProps, nextState) {
 		console.log('Test Update: ', nextProps.recentMeasurements);
+		console.log('thisProps', this.props);
 		console.log('nextProps', nextProps);
-		if(this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite){
+		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)){
 			//if this is a different query
 			console.log('State change!');
 			this.clearTitleSpecs();
@@ -106,23 +105,11 @@ class ReportCard extends React.Component {
 			window.interval = setInterval(this.increasePlot,1000);
 			console.log('update finish');
 		}
-		else{
-//			this.checkUpdate();
-		}
-	}
-	
-	checkUpdate(){
-		if(this.state.update===true){
-	//		this.setState({update: true});
-			this.clearTitleSpecs();
-		}
-		else{
-	
-		}
 	}
 	
 	clearTitleSpecs = ()  => {
 		console.log('Clear Title Specs');
+		clearInterval(window.interval);
 		var mydiv = document.getElementById("toptitle");
 		var mydiv2 = document.getElementById("toptitle2");
 		var tableChartDiv = document.getElementById("tablechart");
@@ -137,21 +124,11 @@ class ReportCard extends React.Component {
 			tableChartDiv.removeChild(tableChartDiv.lastElementChild);
 		}
 		document.getElementById("pause").innerHTML = "Stop Graph";
-		//var fieldNamesDiv = document.getElementById("fieldnames");
-		//var dataDiv = document.getElementById("data");
 		var tracesDiv = document.getElementById("tracesbody");
-		/*while(fieldNamesDiv.lastElementChild){
-			fieldNamesDiv.removeChild(fieldNamesDiv.lastElementChild);
-		}
-		while(dataDiv.lastElementChild){
-			dataDiv.removeChild(dataDiv.lastElementChild);
-		}*/
 		var tracesDivCount = 0;
 		while(tracesDiv.childNodes[1]){
-			tracesDiv.removeChild(tracesDiv.childNodes[1]);
+			tracesDiv.removeChild(tracesDiv.childNodes[0]);
 		}
-//		Plot.deleteTraces(document.getElementById("graph"), 0);
-	//	purge(document.getElementById("graph"));
 		this.setState({
 			line1:{
 			x: [], 
@@ -166,7 +143,8 @@ class ReportCard extends React.Component {
 		exampleTime: [], 
 		alreadyStopped: false,
 		exampleValue: [],
-		tableKeys: [],});
+		tableKeys: [],
+		});
 	}	
 	
 	componentDidMount() {
@@ -174,10 +152,6 @@ class ReportCard extends React.Component {
 	} 
 	
 	initial = (response) => {
-		console.log('Test Initial', response);
-//	this.setState({out: response});
-//	console.log('testa', this.state.out);
-//		this.clearTitleSpecs();
 		var compSpecified = false;
 		var out = response;
 		this.checkData(out, compSpecified);
