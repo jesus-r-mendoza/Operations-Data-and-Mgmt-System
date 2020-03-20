@@ -120,38 +120,41 @@ class ReportCard extends React.Component {
 			window.interval = setInterval(this.increasePlot,1000);
 			console.log('update finish');
 		}
+		else{
+			this.checkUpdate();
+		}
 	}
+	
+	checkUpdate(){
+		if(this.state.update===true){
+	//		this.setState({update: true});
+			this.clearTitleSpecs();
+		}
+		else{
+	
+		}
+	}
+	
+	clearTitleSpecs = ()  => {
+		var mydiv = document.getElementById("toptitle");
+		var mydiv2 = document.getElementById("toptitle2");
+		mydiv.removeChild(mydiv.childNodes[0]);
+		//mydiv.removeChild(mydiv.childNodes[0]);
+		mydiv2.removeChild(mydiv2.childNodes[0]);
+		document.getElementById("pause").innerHTML = "Stop Graph";
+		var fieldNamesDiv = document.getElementById("fieldnames");
+		var dataDiv = document.getElementById("div");
+		while(fieldNamesDiv.lastElementChild){
+			fieldNamesDiv.removeChild(fieldNamesDiv.lastElementChild);
+		}
+		while(dataDiv.lastElementChild){
+			dataDiv.removeChild(dataDiv.lastElementChild);
+		}
+	}	
+	
 	componentDidMount() {
 		console.log('Component did Mount');
-/*		if(this.update===false){
-			this.setState({update: true});
-		}
-		else if(this.update===true){
-			this.setState({update: false});
-		}*/
-/*	console.log('Test', this.props.recentMeasurements);
-	console.log('Test Graph Satellites: ', this.props.recentMeasurements.Satellite);
-	console.log('Test Graph Measurements', this.props.recentMeasurements.Measurements);
-	this.pause = this.pause.bind(this);
-	window.cnt = this.state.cnt;
-	window.initialDataArray = this.state.initialDataArray;
-	window.paused = this.state.paused;
-	window.exampleTime = this.state.exampleTime;
-	window.alreadyStopped = this.state.alreadyStopped;
-	window.exampleValue = this.state.exampleValue;
-	window.tableKeys = this.state.tableKeys;
-/*	if(this.update===false){
-	var response = require('./testapi.json');
-	}
-	else{*/
-/*	var response = this.state.plotData;//this.props.recentMeasurements;
-//	}
-	this.setState({update: true, out:[{"data": false}]});
-	console.log('start');
-	console.log(response);
-	this.initial(response);
-	window.interval = setInterval(this.increasePlot,1000);
-*/	} 
+	} 
 	
 	initial = (response) => {
 		console.log('Test Initial', response);

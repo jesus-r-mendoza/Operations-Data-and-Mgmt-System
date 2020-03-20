@@ -70,8 +70,8 @@ html, body {
 
 /*Card formatting*/
 .card {
-    width: 600px;
-    height: 350px;
+    width: 800px;
+    height: 450px;
     margin-top: 20px;
     margin-left: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
