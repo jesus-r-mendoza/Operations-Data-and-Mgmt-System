@@ -12,6 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Layout/Main.css";
 import Dashboard from "./Pages/UserProfile";
 
+/*<Route path={"/upload/analysis"} component={UploadAnalysis}} />*/
 export default class App extends React.Component {
     render() {
         return (

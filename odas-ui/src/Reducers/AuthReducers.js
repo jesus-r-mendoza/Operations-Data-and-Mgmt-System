@@ -4,18 +4,12 @@ export const loginReducer = (loginState = [], action) => {
     switch (action.type) {
         // On success the user's auth token will be stored in cookies with max age of 15 minutes
         case 'LOGIN_SUCCESS':
-            cookie.addChangeListener(
-                function() {
-                    console.log("COOKIE CHANGE");
-                }
-            );
-
             cookie.set("auth", action.payload.token);
             cookie.set('username', action.payload.username);
             cookie.set('org', action.payload.organization);
             cookie.set('invCode', action.payload.code);
          // Message is user info object on success; Status is true
-         return {message: action.payload, status: action.payload.data};
+         return {message: action.payload, isLoading: action.isLoading};
 
         case 'LOGIN_FAIL':
             // Message is the error message on failure; Status is false
@@ -23,11 +17,31 @@ export const loginReducer = (loginState = [], action) => {
                 return {message: action.payload.response.data.error, status: action.payload.response.data.data};
             } else {
                 // Prevents the front end from crashing if there is no backend server
-                return {message: "Something went wrong", status: false}
+                return {message: "Something went wrong", loginStatus: null}
             }
 
+        case 'LOGGING_IN':
+            return {message: "Loading", isLoading: action.isLoading};
+
         default:
-            return [...loginState]
+            return loginState;
+    }
+};
+
+export const logoutReducer = (logoutState = [], action) => {
+    switch (action.type) {
+        case "LOGOUT":
+            cookie.remove('auth');
+            cookie.remove('username');
+            cookie.remove('org');
+            cookie.remove('invCode');
+            return {message: action.payload, isLoading: action.isLoading};
+
+        case "LOGOUT_FAIL":
+            return {message: action.payload.response, isLoading: action.isLoading};
+
+        default:
+            return logoutState
     }
 };
 
@@ -37,19 +51,6 @@ export const registerReducer = (registerState = [], action) => {
     }
 
     return registerState;
-};
-
-export const logoutReducer = (logoutState = [], action) => {
-    if (action.type === "LOGOUT") {
-        cookie.remove('auth');
-        cookie.remove('username');
-        cookie.remove('org');
-        cookie.remove('invCode');
-
-        return action.payload;
-    }
-
-    return logoutState;
 };
 
 export const createOrgReducer = (orgState = [], action) => {

@@ -262,14 +262,14 @@ def _build_comp_response(comp_query_set):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def insert_file_data(request, satellite_id, file_id, units):
+def insert_file_data(request, satellite_id, file_id, units_id):
     try:
         sat = Satellite.objects.get(pk=satellite_id)
         if not request.user.groups.filter(name=sat.organization.name).exists():
             return error.SAT_PERM_DEN
 
         upload = Upload.objects.get(pk=file_id)
-        print(request.user, upload.user)
+
         if request.user != upload.user:
             return WRONG_USER
 
@@ -282,12 +282,7 @@ def insert_file_data(request, satellite_id, file_id, units):
             comp = Component.objects.create(satellite=sat, name=comp_name)
             print(f'Created component: {comp_name}: ', comp)
 
-        unit = Units.objects.filter(units=units)
-        if len(unit) > 0:
-            unit = unit[0]
-        else:
-            unit = Units.objects.create(units=units)
-            print(f'Created units: {units}: ', unit)
+        unit = Units.objects.get(pk=units_id)
 
         for value, timestamp in data:
             m = Measurement.objects.create(satellite=sat, component=comp, units=unit, value=value, time_measured=timestamp)
@@ -300,6 +295,8 @@ def insert_file_data(request, satellite_id, file_id, units):
         return error.SAT_NOT_OF_ORG
     except Upload.DoesNotExist:
         return FILE_DNE
+    except Units.DoesNotExist:
+        return error.UNITS_DNE
     except TypeError:
         # Can't unpack boolean (because _process_file returned False, due to error)
         return error.INVALID_FILE_FORMAT
@@ -325,3 +322,16 @@ def _process_file(filefield):
         return False
     except UnicodeDecodeError:
         return False
+
+
+def units(request):
+    x = Units.objects.all()
+    res = []
+    for u in x:
+        e = {
+            'id': u.id,
+            'name': u.units
+        }
+        res.append(e)
+
+    return JsonResponse(res, safe = False)

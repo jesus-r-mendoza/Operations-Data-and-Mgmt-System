@@ -12,7 +12,10 @@ import {
     fetchSatellites,
     fetchComponents,
     fetchUnits,
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime,
+    selectSatellite,
+    selectCheckboxItems
 } from "../Actions";
 import {authToken} from "../Definitions/BrowserCookie";
 
@@ -20,14 +23,11 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            loadDropdown: true,
-            selectedSatellite: null,
             checkedItems: new Map()
         };
 
         this.onCheckboxChange = this.onCheckboxChange.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this)
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -44,22 +44,27 @@ class Sidebar extends React.Component {
     async handleFormSubmit (e) {
         e.preventDefault();
         let satId;
+        let compIds = [];
 
         if (this.state.selectedSatellite) {
             satId = this.state.selectedSatellite.value;
         }
 
-        console.log(satId);
-        let compIds = [];
+        if (!this.props.startDate || !this.props.endDate) {
+            // Converts the returned MapIterator object into an array of the keys
+            let checkedItemsArray = [...this.props.checkedItems];
+            let filteredItems = [];
 
-        if (this.state.checkedItems.length !== 0) {
-            this.state.checkedItems.forEach(item => {
-                compIds.push(item);
+            checkedItemsArray.forEach(item =>  {
+                if (item[1] === true) {
+                    filteredItems.push(item[0])
+                }
             });
 
-            await this.props.getRecentMeasurements(satId, compIds, this.props.recent)
+            await this.props.getRecentMeasurements(satId, filteredItems, this.props.recent)
+
         } else {
-            await this.props.getRecentMeasurements(satId, compIds = [], this.props.recent)
+            await this.props.getMeasurementsByTime(satId, compIds, this.props.startDate, this.props.endDate)
         }
 
         // Refresh the checkboxes or they will not appear after submit
@@ -72,18 +77,20 @@ class Sidebar extends React.Component {
             checkedItems: new Map()
         });
 
+        this.props.selectSatellite(e);
         this.props.fetchComponents(e.value);
     };
 
     onCheckboxChange = e => {
-        const item = e.target.id;
+        const compId = e.target.id;
         const isChecked = e.target.checked;
 
         this.setState(prevState => ({
-            checkedItems: prevState.checkedItems.set(isChecked, item)
+            checkedItems: prevState.checkedItems.set(compId, isChecked)
         }));
 
-        console.log(this.state.checkedItems)
+        // Putting the state into the Redux store so it can be accessed by other components
+        this.props.selectCheckboxItems(this.state.checkedItems);
     };
 
     createSatelliteObject = satelliteObject => {
@@ -100,33 +107,49 @@ class Sidebar extends React.Component {
         return satelliteOptions;
     };
 
-    showCheckboxes = () => {
+    showCheckboxPlaceholder = () => {
         if (!authToken && this.props.satellites.error === true) {
             return (
                 <div className={"placeholder-text-div"}>
                     <span className={"placeholder-text"}>{this.props.satellites.message}</span>
                 </div>
             );
-        } else if (authToken && this.state.selectedSatellite === null) {
+        } else if (authToken && this.props.selectedSatellite === null) {
             return (
                 <div className={"placeholder-text-div"}>
                     <span className={"placeholder-text"}>Please select a satellite to continue</span>
                 </div>
             );
         } else {
-            return (
-                <CheckComponent
-                    labels={this.props.components.data}
-                    isLoading={this.props.components.isLoading}
-                    checked={this.state.checkedItems}
-                    onCheckboxChange={this.onCheckboxChange}
-                />
-            )
+            if (window.location.pathname === '/upload') {
+                return (
+                    <div>
+                        <Divider horizontal>Units</Divider>
+                        <CheckComponent
+                            labels={this.props.units}
+                            isLoading={this.props.units.isLoading}
+                            checked={this.state.checkedItems}
+                            onCheckboxChange={this.onCheckboxChange}
+                        />
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <Divider horizontal>Components</Divider>
+                        <CheckComponent
+                            labels={this.props.components.data}
+                            isLoading={this.props.components.isLoading}
+                            checked={this.state.checkedItems}
+                            onCheckboxChange={this.onCheckboxChange}
+                        />
+                    </div>
+                );
+            }
         }
     };
 
     render() {
-        console.log(this.props.recentMeasurements);
         return (
             <div className={"sidebar-container"}>
                 <form onSubmit={this.handleFormSubmit}>
@@ -144,16 +167,17 @@ class Sidebar extends React.Component {
                                 />
                             </div>
                             <div className={"checkbox-selection-btn"}>
-                                <Divider horizontal>Components</Divider>
-                                {this.showCheckboxes()}
+                                {this.showCheckboxPlaceholder()}
                             </div>
                         </div>
-                        <div className={"gen-btn-container"}>
+                        <div className={"gen-btn-container"} >
+                            <Divider />
                             <Button
                                 className={"gen-btn"}
+                                variant={"info"}
                                 onClick={this.handleFormSubmit}
                             >
-                                Generate Report
+                                <span className={"gen-btn-txt"}>Generate Report</span>
                             </Button>
                         </div>
                     </div>
@@ -170,7 +194,12 @@ const mapStateToProps = state => {
         satellites: state.fetchSatellites,
         units: state.fetchUnits,
         recent: state.selectRecent,
-        recentMeasurements: state.getRecentMeasurements
+        recentMeasurements: state.getRecentMeasurements,
+        measurementsByTime: state.getMeasurementsByTime,
+        startDate: state.selectStartDate,
+        endDate: state.selectEndDate,
+        selectedSatellite: state.selectSatellite,
+        checkedItems: state.selectCheckboxItems
     };
 };
 
@@ -178,5 +207,8 @@ export default connect(mapStateToProps, {
     fetchSatellites,
     fetchUnits,
     fetchComponents,
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime,
+    selectSatellite,
+    selectCheckboxItems
 })(Sidebar)

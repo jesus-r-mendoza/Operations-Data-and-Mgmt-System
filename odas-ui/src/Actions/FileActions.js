@@ -40,11 +40,7 @@ export const getFileList = () => async dispatch => {
 
 // Download a file from the server
 export const downloadFile = (fileId, fileName) => async dispatch => {
-    await axios.get(`${apiURL}files/download/${fileId}/`, {
-        headers: {
-            'Authorization': `Token ${authToken}`
-        }
-    })
+    await axios.get(`${apiURL}files/download/${fileId}/${authToken}/`)
         .then(response => dispatch({type: "FILE_DOWN", payload: response, fileName: fileName}))
         .catch(error => dispatch({type: "FILE_DOWN_FAIL", payload: error}))
 };
@@ -53,8 +49,31 @@ export const downloadFile = (fileId, fileName) => async dispatch => {
 export const deleteFile = (fileId) => async dispatch => {
     await axios(`${apiURL}files/delete/${fileId}/`, {
         method: 'DELETE',
-        headers: {'Authorization': `Token ${authToken}`}
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
     })
         .then(response => dispatch({type: "FILE_DELETE", payload: response}))
         .catch(error => dispatch({type: "FILE_DELETE_FAIL", payload: error}))
+};
+
+export const analyzeFile = (satId, fileId, unitIds) => async dispatch => {
+    let unitIdString = '';
+
+    for (let id in unitIds) {
+        if (id === "0") {
+            unitIdString += unitIds[id]
+        } else {
+            unitIdString += `+${unitIds[id]}`
+        }
+    }
+
+    console.log(unitIdString);
+    await SatApi.post(`/api/sat/${satId}/file/${fileId}/units/${unitIdString}/`, {
+        headers: {
+            'Authorization': `Token ${authToken}`
+        }
+    })
+        .then(response => dispatch({type: 'ANALYZE_FILE', payload: response}))
+        .catch(error => dispatch({type: 'ANALYZE_FILE_FAIL', payload: error}))
 };

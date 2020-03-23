@@ -10,12 +10,14 @@ import {
     selectStartDate,
     selectEndDate,
     selectRecent,
-    selectSatellite
+    selectSatellite,
+    selectCheckboxItems
 } from "./SelectionActions";
 
 // User queries
 import {
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime
 } from "./QueryActions";
 
 // Authentication
@@ -32,7 +34,8 @@ import {
     postFile,
     getFileList,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile
 } from "./FileActions";
 
 export {
@@ -46,6 +49,7 @@ export {
     selectSatellite,
     selectRecent,
     selectEndDate,
+    selectCheckboxItems,
 
     // Authentication
     register,
@@ -59,9 +63,11 @@ export {
     getFileList,
     downloadFile,
     deleteFile,
+    analyzeFile,
 
     // Queries
-    getRecentMeasurements
+    getRecentMeasurements,
+    getMeasurementsByTime
 };
 
 

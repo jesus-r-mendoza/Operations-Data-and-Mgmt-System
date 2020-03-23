@@ -1,4 +1,4 @@
-export const getRecentMeasurementsReducer = (state = [], action) => {
+export const getRecentMeasurementsReducer = (recentMeasState = [], action) => {
     switch (action.type) {
         case 'FETCH_RECENTS':
             return action.payload;
@@ -10,6 +10,22 @@ export const getRecentMeasurementsReducer = (state = [], action) => {
             return action.isLoading;
 
         default:
-            return state;
+            return recentMeasState;
+    }
+};
+
+export const getMeasurementsByTimeReducer = (measTimeState = [], action) => {
+    switch (action.type) {
+        case 'FETCH_MEAS_WITH_TIME':
+            return action.payload;
+
+        case 'FETCH_MEAS_FAIL':
+            return action.payload;
+
+        case 'FETCHING_MEASUREMENTS':
+            return action.payload;
+
+        default:
+            return measTimeState;
     }
 };
