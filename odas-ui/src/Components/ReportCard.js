@@ -364,10 +364,7 @@ class ReportCard extends React.Component {
 				console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
 				testIndex = document.getElementById("chooseUnit").value;
-//				var testIndex2;
-//				testIndex2 = document.getElementById("chooseUnit2").value;
 				console.log("Test TestIndex: ", testIndex);
-//				console.log("Test TestIndex2: ", testIndex2);
 				var exampleGraphData = [];
 				if(compSpecified===true){
 					//testIndex = 0; //example.
