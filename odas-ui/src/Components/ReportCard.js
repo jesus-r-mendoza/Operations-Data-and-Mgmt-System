@@ -117,6 +117,9 @@ class ReportCard extends React.Component {
 		var mydiv = document.getElementById("toptitle");
 		var mydiv2 = document.getElementById("toptitle2");
 		var tableChartDiv = document.getElementById("tablechart");
+		for(var k = document.getElementById("validIndices").length-1;k>=0; k--){
+			document.getElementById("validIndices").remove(k);//currentValidIndices
+		}
 		if(mydiv.childNodes[1]){
 			mydiv.removeChild(mydiv.childNodes[2]);
 			mydiv.removeChild(mydiv.childNodes[1]);
@@ -349,6 +352,21 @@ class ReportCard extends React.Component {
 					}
 				}
 				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
+				var newOption;
+				for(var b=0;b<totalGraphsArray.length;b++){
+					if(totalGraphsArray[b].length!==0){
+						if(compSpecified===false){
+							newOption = document.createElement("option");
+							newOption.text = b+": "+totalGraphsArray[b][0].units;
+							document.getElementById("validIndices").add(newOption);//currentValidIndices
+						}
+						else if(compSpecified===true){
+							newOption = document.createElement("option");
+							newOption.text = b+": "+totalGraphsArray[b][0].component_name+" - "+totalGraphsArray[b][0].units;
+							document.getElementById("validIndices").add(newOption);//currentValidIndices
+						}
+					}
+				}
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
