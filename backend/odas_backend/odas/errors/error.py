@@ -28,3 +28,5 @@ METHOD_INVALID = Response( { 'data': False, 'error': 'Method type not allowed.' 
 USR_NOT_IN_ORG = Response( { 'data': False, 'error': "You are not in an organization yet, so you do not have access to any Satellites" }, status=status.HTTP_204_NO_CONTENT )
 ORG_HAS_NO_SATS = Response( { 'data': False, 'error': 'Get to work! Your organization does not have any satellites' }, status=status.HTTP_204_NO_CONTENT )
 INVALID_FILE_FORMAT = Response( { 'data': False, 'error': 'The file you are trying to use is not if the correct format to insert to your record' }, status=status.HTTP_400_BAD_REQUEST )
+
+UNITS_DNE = Response( { 'data': False, 'error': 'The Units with that ID does not exist' }, status=status.HTTP_400_BAD_REQUEST )

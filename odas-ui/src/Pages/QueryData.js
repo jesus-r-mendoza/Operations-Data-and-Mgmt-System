@@ -1,6 +1,7 @@
 import React from 'react';
 //Components
 import ReportHeader from "../Components/ReportHeader";
+// import ReportCard from "../Components/ReportCard";
 // Stylesheets
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
@@ -24,7 +25,6 @@ export default class QueryData extends React.Component {
     }
 
     render() {
-        console.log(this.props.recentMeasurements);
         if (this.state.isLoading) {
             return (
                 <LoadSpinner/>

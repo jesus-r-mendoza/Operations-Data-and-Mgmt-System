@@ -4,20 +4,23 @@ import {
     getFileList,
     postFile,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile,
+    fetchUnits,
+    selectSatellite,
 } from "../Actions";
 import {connect} from "react-redux";
 //Components
 import ReportHeader from "../Components/ReportHeader";
 import Sidebar from "../Components/Sidebar";
-import ReportCard from "../Components/ReportCard";
+// import ReportCard from "../Components/ReportCard";
 import FilesList from "../Components/FilesList";
 // Stylesheets
 import "../Layout/UploadData.css"
 import {Alert, Button, Form} from "react-bootstrap";
 import {Table} from "semantic-ui-react";
 
-const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx"];
+const acceptedExtensions = [".tlm", ".bin", ".txt", ".docx", ".csv"];
 
 class UploadData extends React.Component {
     constructor(props) {
@@ -26,8 +29,10 @@ class UploadData extends React.Component {
             currentPage: "upload",
             selectedFile: '',
             description: '',
-            loaded: 1,
+            loaded: 1
         };
+
+        this.handleFileSubmit = this.handleFileSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -63,12 +68,12 @@ class UploadData extends React.Component {
         console.log(fileName);
     };
 
-    handleFileSubmit = e => {
+    async handleFileSubmit(e) {
         e.preventDefault();
         const selectedFile = this.state.selectedFile;
         const description = this.state.description;
 
-        this.props.postFile(selectedFile, description);
+        await this.props.postFile(selectedFile, description);
         this.props.getFileList();
     };
 
@@ -81,7 +86,28 @@ class UploadData extends React.Component {
         this.props.getFileList()
     };
 
+    handleAnalysisRequest = (fileId) => {
+        console.log([...this.props.checkedItems]);
+        let checkedItemsArray = [...this.props.checkedItems];
+        let filteredItems = [];
+
+        checkedItemsArray.forEach(item =>  {
+            if (item[1] === true) {
+                filteredItems.push(item[0])
+            }
+        });
+
+        if (this.props.selectedSatellite) {
+            this.props.analyzeFile(this.props.selectedSatellite.value, fileId, filteredItems);
+            this.props.getFileList()
+
+        } else {
+            console.log("Select a satellite")
+        }
+    };
+
     showErrorMessage(loaded) {
+        console.log();
         if(loaded === 0) {
             return(
               <span className={"error-message"}>Please choose a valid file.</span>
@@ -89,6 +115,7 @@ class UploadData extends React.Component {
         }
     }
 
+    // TODO Message is being washed away by the file list update
     showResultMessage = () => {
         // Returns false if file upload failed (See API)
         const uploadData = this.props.uploadFile.data;
@@ -114,6 +141,7 @@ class UploadData extends React.Component {
                 isLoading={this.props.fileList.isLoading}
                 downloadHandler={this.handleDownload}
                 deleteHandler={this.handleDelete}
+                analysisRequestHandler={this.handleAnalysisRequest}
             />
         );
     };
@@ -194,7 +222,7 @@ class UploadData extends React.Component {
             return  (
                 <div>
                     <ReportHeader />
-                    <ReportCard />
+                    {/*<ReportCard />*/}
                 </div>
             );
         }
@@ -219,7 +247,10 @@ const mapStateToProps = state => {
         uploadFile: state.postFile,
         fileList: state.getFileList,
         downFile: state.downloadFile,
-        delFile: state.deleteFile
+        delFile: state.deleteFile,
+        units: state.fetchUnits,
+        selectedSatellite: state.selectSatellite,
+        checkedItems: state.selectCheckboxItems
     };
 };
 
@@ -227,5 +258,8 @@ export default connect(mapStateToProps, {
     postFile,
     getFileList,
     downloadFile,
-    deleteFile
+    deleteFile,
+    analyzeFile,
+    fetchUnits,
+    selectSatellite,
 })(UploadData);
