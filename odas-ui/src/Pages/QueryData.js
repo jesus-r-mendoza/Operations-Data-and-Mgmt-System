@@ -6,6 +6,7 @@ import ReportHeader from "../Components/ReportHeader";
 import '../Layout/Reports.css'
 import LoadSpinner from "../Components/LoadSpinner";
 import Sidebar from "../Components/Sidebar";
+import ReportCard from "../Components/ReportCard";
 
 export default class QueryData extends React.Component {
     constructor(props) {
@@ -38,7 +39,9 @@ export default class QueryData extends React.Component {
                     </Sidebar>
                     <div className={"report-body"}>
                         <ReportHeader />
-                        {/*<ReportCard />*/}
+                        {/**/
+						<ReportCard />
+						/**/}
                     </div>
                 </div>
             );

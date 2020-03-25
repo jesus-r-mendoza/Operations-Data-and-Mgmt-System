@@ -32,6 +32,7 @@ html, body {
     position: sticky;
     background-color: #f4f3f1;
     box-shadow: 0 2px 3px 0 darkgray;
+	z-index: 2;
 }
 
 .report-header-btn {
@@ -70,8 +71,10 @@ html, body {
 
 /*Card formatting*/
 .card {
-    width: 82vw;
-    height: 500px;
+    width: 800px;
+    height: 450px;
+	/*width: 82vw;
+	height: 500px;*/
     margin-top: 20px;
     margin-left: 30px;
     margin-right: 20px;
@@ -82,13 +85,18 @@ html, body {
 .card-container {
     width: 100vw;
     height: 100vh;
-    overflow-y: scroll;
+	z-index: 1;
+	/*overflow-v: scroll;
+    overflow-y: scroll;*/
     /*border: solid red 3px;*/
 }
 
 .graph-report {
     position: relative;
     overflow: hidden;
+	z-index: 0;
+	overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 #toptitle{
@@ -139,7 +147,7 @@ html, body {
 	box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #000000;
 	border: 1px solid black;
-	margin-top: 15px;	
+	margin-top: 15px;	 
 }
 
 #data{

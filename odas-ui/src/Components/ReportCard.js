@@ -4,13 +4,21 @@ import Plot from 'react-plotly.js';
 import "../Layout/Reports.css";
 import TitleBar from './TitleBar.js';
 import BottomGraph from './BottomGraph.js';
+// Redux
+import { connect } from 'react-redux';
+import {
+    fetchSatellites,
+    fetchComponents,
+    fetchUnits,
+    getRecentMeasurements
+} from "../Actions";
+//import {authToken} from "../Definitions/BrowserCookie";
 // TODO Bootstrap modals for the logs
-export default class ReportCard extends React.Component {
-//	constructor(){
-//		super();
+class ReportCard extends React.Component {
+	constructor(props){
+		super(props);
 //		this.onClick = this.handleClick.bind(this);
-//	}*/
-	state = {
+       this.state = {
 		line1:{
 			x: [], 
 			y: [], 
@@ -62,7 +70,6 @@ export default class ReportCard extends React.Component {
 			datarevision: 0,
 		},
 		revision: 0,
-		url: 'http://127.0.0.1:8080/api/sat/6/comp/14/recent/10/',
 		cnt : 0,
 		initialDataArray: [],
 		paused: false, 
@@ -70,30 +77,90 @@ export default class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
+		update: false,
+		//changeUnit: [],
+		//testIndex: 0,
+		//distinctUnits: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
-//	}		
+	}		
+	componentDidUpdate(nextProps, nextState) {
+		console.log('Test Update: ', nextProps.recentMeasurements);
+		console.log('thisProps', this.props);
+		console.log('nextProps', nextProps);
+		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)||(nextProps.recentMeasurements.comp_specified===true&&(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite))||(nextProps.recentMeasurements.comp_specified===true&&(this.props.components.data!==nextProps.components.data))){
+			//more effective if given a value to differentiate between report 
+			//if this is a different query
+			console.log('State change!');
+			this.clearTitleSpecs();
+			this.pause = this.pause.bind(this);
+			window.cnt = this.state.cnt;
+			window.initialDataArray = this.state.initialDataArray;
+			window.paused = this.state.paused;
+			window.exampleTime = this.state.exampleTime;
+			window.alreadyStopped = this.state.alreadyStopped;
+			window.exampleValue = this.state.exampleValue;
+			window.tableKeys = this.state.tableKeys;
+			//	var response = require('./testapi.json');
+			var response = this.props.recentMeasurements;
+			console.log('update start');
+			console.log('response:', response);
+			this.initial(response);
+			window.interval = setInterval(this.increasePlot,1000);
+			console.log('update finish');
+		}
+	}
+	
+	clearTitleSpecs = ()  => {
+		console.log('Clear Title Specs');
+		clearInterval(window.interval);
+		var mydiv = document.getElementById("toptitle");
+		var mydiv2 = document.getElementById("toptitle2");
+		var tableChartDiv = document.getElementById("tablechart");
+		for(var k = document.getElementById("validIndices").length-1;k>=0; k--){
+			document.getElementById("validIndices").remove(k);//currentValidIndices
+		}
+		if(mydiv.childNodes[1]){
+			mydiv.removeChild(mydiv.childNodes[2]);
+			mydiv.removeChild(mydiv.childNodes[1]);
+		}
+		if(mydiv2.childNodes[0]){ 
+			mydiv2.removeChild(mydiv2.childNodes[0]);
+		}
+		while(tableChartDiv.lastElementChild){
+			tableChartDiv.removeChild(tableChartDiv.lastElementChild);
+		}
+		document.getElementById("pause").innerHTML = "Stop Graph";
+		var tracesDiv = document.getElementById("tracesbody");
+		var tracesDivCount = 0;
+		while(tracesDiv.childNodes[1]){
+			tracesDiv.removeChild(tracesDiv.childNodes[0]);
+		}
+		this.setState({
+			line1:{
+			x: [], 
+			y: [], 
+			name: 'Line 1',
+			line: {color: 'red' , width: 3},
+		},
+		revision: 0,
+		cnt : 0,
+		initialDataArray: [],
+		paused: false, 
+		exampleTime: [], 
+		alreadyStopped: false,
+		exampleValue: [],
+		tableKeys: [],
+		});
+	}	
+	
 	componentDidMount() {
-	this.pause = this.pause.bind(this);
-	window.cnt = this.state.cnt;
-	window.initialDataArray = this.state.initialDataArray;
-	window.paused = this.state.paused;
-	window.exampleTime = this.state.exampleTime;
-	window.alreadyStopped = this.state.alreadyStopped;
-	window.exampleValue = this.state.exampleValue;
-	window.tableKeys = this.state.tableKeys;
-	var response = require('./testapi.json');
-	console.log('start');
-	console.log(response);
-	this.initial(response);
-//	document.getElementById('pause').addEventListener('click', this.pause);
-	window.interval = setInterval(this.increasePlot,1000);
-	//window.initialDataArray, window.cnt, window.paused, window.exampleTime, window.alreadyStopped, window.exampleValue, window.tableKeys), 1000);//15);
+		console.log('Component did Mount');
 	} 
 	
 	initial = (response) => {
-		var out = response;
 		var compSpecified = false;
+		var out = response;
 		this.checkData(out, compSpecified);
 	}
 
@@ -158,11 +225,13 @@ export default class ReportCard extends React.Component {
 		}
 	
 	checkData = (out, compSpecified) => {
+		console.log('Test CheckData: ', out);
 				var error;
-				if(out.data===true){
+				if(out.data===true){//this.plotData.data===true){
 					this.titleSpecs(out);
-					compSpecified = false;
+					//compSpecified = false;
 					compSpecified = this.checkCompSpecified(out, compSpecified);
+					console.log('Test CompSpecified: ', compSpecified);
 					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
 					realQuantity = out.Measurements.length;
@@ -170,7 +239,7 @@ export default class ReportCard extends React.Component {
 					this.checkQuantitiesMatch(quantity, realQuantity, checkQuantities);
 					this.createDataUnit(out, realQuantity, compSpecified);
 				}
-				else if(out.data===false){
+				else if(out.data===false){//||this.plotData.data===true){
 					error = out.error;
 					this.errorOutput(error);
 				}
@@ -184,16 +253,17 @@ export default class ReportCard extends React.Component {
 					var dataUnit = [];
 					var data = [];
 					if(compSpecified === true){
-						dataUnit.push(out.Component.category);
-						dataUnit.push(out.Component.description);
-						dataUnit.push(out.Component.model);
-						dataUnit.push(out.Component.name);
+						dataUnit.push(out.Measurements[c].component_category);//Component.category);
+						dataUnit.push(out.Measurements[c].component_description);//Component.description);
+						dataUnit.push(out.Measurements[c].component_model);//Component.model);
+						dataUnit.push(out.Measurements[c].component_name);//Component.name);
 					}
 						dataUnit.push(out.Measurements[c].time);
 						dataUnit.push(out.Measurements[c].units);
 						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
+					console.log('Test DataUnit: ',dataUnit);
 					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
@@ -207,9 +277,10 @@ export default class ReportCard extends React.Component {
 						sortedMeasurements.push(outSort.Measurements[a]);
 						allUnits.push(outSort.Measurements[a].units);
 						if(compSpecified===true){
-							allNames.push(outSort.Measurements[a].component_name);//[0]);
+							allNames.push(outSort.Measurements[a].component_name[0]);
 						}
 					}
+				console.log('Test SortedMeasurements: ',sortedMeasurements);
 				this.makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 	makeParameters = (allUnits, allNames, realQuantity, sortedMeasurements, compSpecified) => {
@@ -217,9 +288,16 @@ export default class ReportCard extends React.Component {
 					return self.indexOf(value) === index;
 				}
 				var distinctUnits = allUnits.filter(distinct);
+				console.log('Test DistinctUnits: ',distinctUnits);
 				var numUniqueUnits = distinctUnits.length;
+				console.log('Test NumUniqueUnits: ',numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
+				console.log('Test DistinctNames: ',distinctNames);
+				//this.setState({distinctUnits: [...this.state.distinctUnits, distinctUnits]});
+				//console.log('Test State DistinctUnits: ', this.state.distinctUnits);
+				//document.getElementById("unitdescription").innerHTML=this.state.distinctUnits[document.getElementById("chooseUnit").innerHTML];
 				var numUniqueNames = distinctNames.length;
+				console.log('Test NumUniqueNames: ',numUniqueNames);
 				
 				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified === false){
@@ -235,6 +313,7 @@ export default class ReportCard extends React.Component {
 					var dummyGraph = [];
 					totalGraphsArray.push(dummyGraph);
 				}
+				console.log('Test TotalGraphsArray: ',totalGraphsArray);			
 							
 				if(compSpecified === false){
 					numUniqueNames = 1;
@@ -243,9 +322,18 @@ export default class ReportCard extends React.Component {
 				for(var a=0;a<realQuantity;a++){
 					for(var b=0;b<numUniqueUnits;b++){
 						for(var c=0;c<numUniqueNames;c++){
-							if(sortedMeasurements[a].units===distinctUnits[b]){
-								if(sortedMeasurements[a].component_name===distinctNames[c]){
-									totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+							if(compSpecified===false){
+								if(sortedMeasurements[a].units===distinctUnits[b]){
+									if(sortedMeasurements[a].component_name===distinctNames[c]){
+										totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+									}
+								}
+							}
+							else if(compSpecified===true){
+								if(sortedMeasurements[a].units===distinctUnits[b]){
+									if(sortedMeasurements[a].component_name[0]===distinctNames[c]){
+										totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+									}
 								}
 							}
 						}
@@ -263,6 +351,22 @@ export default class ReportCard extends React.Component {
 						}
 					}
 				}
+				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
+				var newOption;
+				for(var b=0;b<totalGraphsArray.length;b++){
+					if(totalGraphsArray[b].length!==0){
+						if(compSpecified===false){
+							newOption = document.createElement("option");
+							newOption.text = b+": "+totalGraphsArray[b][0].units;
+							document.getElementById("validIndices").add(newOption);//currentValidIndices
+						}
+						else if(compSpecified===true){
+							newOption = document.createElement("option");
+							newOption.text = b+": "+totalGraphsArray[b][0].component_name+" - "+totalGraphsArray[b][0].units;
+							document.getElementById("validIndices").add(newOption);//currentValidIndices
+						}
+					}
+				}
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
@@ -274,17 +378,21 @@ export default class ReportCard extends React.Component {
 						}
 					}
 				}
-							
+						
+				console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
+				testIndex = document.getElementById("chooseUnit").value;
+				console.log("Test TestIndex: ", testIndex);
 				var exampleGraphData = [];
 				if(compSpecified===true){
-					testIndex = 3; //example.
-					exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
+					//testIndex = 0; //example.
+					exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
 				}
 				else{
-					testIndex = 0;
-					exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
+					//testIndex = 0;
+					exampleGraphData = totalGraphsArray[testIndex];//[testIndex]; //example. 3 
 				}
+				console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
 			plotGraph = (compSpecified, exampleGraphData) => {
@@ -294,7 +402,7 @@ export default class ReportCard extends React.Component {
 					exampleTime.push(exampleGraphData[a].time); //x
 								exampleValue.push(exampleGraphData[a].value); //y
 							}
-				var table = document.getElementById("traces");
+				var table = document.getElementById("tracesbody");
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
 				var tableKeys = [];
@@ -305,7 +413,7 @@ export default class ReportCard extends React.Component {
 					tableKeys = keysHold;
 				}
 				else{
-					tableKeys = Object.keys(initialDataArray);
+					tableKeys = Object.keys(initialDataArray[0]);
 				}
 				for(var b=0;b<tableKeys.length;b++){
 					var cellAdd = row.insertCell(b);
@@ -391,7 +499,7 @@ export default class ReportCard extends React.Component {
 							}
 							
 						getData = (cnt, initialDataArray, tableKeys) => {
-								var table = document.getElementById("traces");
+								var table = document.getElementById("tracesbody");
 								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
 								if(initialDataArray[cnt]!==null){		
 									tableKeys = Object.values(initialDataArray[cnt]);
@@ -403,12 +511,24 @@ export default class ReportCard extends React.Component {
 								}
 							}  
 
+	/*changeUnit(){
+			console.log("changeUnit");
+			var unitArraySize = this.state.distinctUnits.length;
+			console.log("unitArraySize", unitArraySize);
+			var newunit = this.state.testIndex + 1;
+			if(newunit>=unitArraySize){
+				newunit = 0;
+			}
+			document.getElementById("chooseUnit").innerHTML = newunit;
+			window.testIndex = newunit;
+			this.setState({testIndex: newunit});
+	}*/
   render() {
         return (
         <div {...this.props} className={"card-container"}>{this.props.children}
             <div {...this.props} className={"card"}>{this.props.children}
                 <div className={"graph-report"}>{this.props.children}
-				          <TitleBar/>
+				          <TitleBar></TitleBar>
 					         <Plot 
 					          data={[this.state.line1]}
 					          layout = {this.state.layout}
@@ -422,3 +542,19 @@ export default class ReportCard extends React.Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        components: state.components,
+        satellites: state.fetchSatellites,
+        units: state.fetchUnits,
+        recent: state.selectRecent,
+        recentMeasurements: state.getRecentMeasurements
+    };
+};
+
+export default connect(mapStateToProps, {
+    fetchSatellites,
+    fetchUnits,
+    fetchComponents,
+    getRecentMeasurements
+})(ReportCard)
