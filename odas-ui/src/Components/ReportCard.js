@@ -78,6 +78,9 @@ class ReportCard extends React.Component {
 		exampleValue: [],
 		tableKeys: [],
 		update: false,
+		//changeUnit: [],
+		//testIndex: 0,
+		//distinctUnits: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
@@ -85,7 +88,8 @@ class ReportCard extends React.Component {
 		console.log('Test Update: ', nextProps.recentMeasurements);
 		console.log('thisProps', this.props);
 		console.log('nextProps', nextProps);
-		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)){
+		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)||(nextProps.recentMeasurements.comp_specified===true&&(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite))||(nextProps.recentMeasurements.comp_specified===true&&(this.props.components.data!==nextProps.components.data))){
+			//more effective if given a value to differentiate between report 
 			//if this is a different query
 			console.log('State change!');
 			this.clearTitleSpecs();
@@ -218,12 +222,13 @@ class ReportCard extends React.Component {
 		}
 	
 	checkData = (out, compSpecified) => {
-		console.log('testb', out);
+		console.log('Test CheckData: ', out);
 				var error;
 				if(out.data===true){//this.plotData.data===true){
 					this.titleSpecs(out);
-					compSpecified = false;
+					//compSpecified = false;
 					compSpecified = this.checkCompSpecified(out, compSpecified);
+					console.log('Test CompSpecified: ', compSpecified);
 					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
 					realQuantity = out.Measurements.length;
@@ -245,16 +250,17 @@ class ReportCard extends React.Component {
 					var dataUnit = [];
 					var data = [];
 					if(compSpecified === true){
-						dataUnit.push(out.Component.category);
-						dataUnit.push(out.Component.description);
-						dataUnit.push(out.Component.model);
-						dataUnit.push(out.Component.name);
+						dataUnit.push(out.Measurements[c].component_category);//Component.category);
+						dataUnit.push(out.Measurements[c].component_description);//Component.description);
+						dataUnit.push(out.Measurements[c].component_model);//Component.model);
+						dataUnit.push(out.Measurements[c].component_name);//Component.name);
 					}
 						dataUnit.push(out.Measurements[c].time);
 						dataUnit.push(out.Measurements[c].units);
 						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
+					console.log('Test DataUnit: ',dataUnit);
 					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
@@ -268,9 +274,10 @@ class ReportCard extends React.Component {
 						sortedMeasurements.push(outSort.Measurements[a]);
 						allUnits.push(outSort.Measurements[a].units);
 						if(compSpecified===true){
-							allNames.push(outSort.Measurements[a].component_name);//[0]);
+							allNames.push(outSort.Measurements[a].component_name[0]);
 						}
 					}
+				console.log('Test SortedMeasurements: ',sortedMeasurements);
 				this.makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 	makeParameters = (allUnits, allNames, realQuantity, sortedMeasurements, compSpecified) => {
@@ -278,9 +285,16 @@ class ReportCard extends React.Component {
 					return self.indexOf(value) === index;
 				}
 				var distinctUnits = allUnits.filter(distinct);
+				console.log('Test DistinctUnits: ',distinctUnits);
 				var numUniqueUnits = distinctUnits.length;
+				console.log('Test NumUniqueUnits: ',numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
+				console.log('Test DistinctNames: ',distinctNames);
+				//this.setState({distinctUnits: [...this.state.distinctUnits, distinctUnits]});
+				//console.log('Test State DistinctUnits: ', this.state.distinctUnits);
+				//document.getElementById("unitdescription").innerHTML=this.state.distinctUnits[document.getElementById("chooseUnit").innerHTML];
 				var numUniqueNames = distinctNames.length;
+				console.log('Test NumUniqueNames: ',numUniqueNames);
 				
 				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified === false){
@@ -296,6 +310,7 @@ class ReportCard extends React.Component {
 					var dummyGraph = [];
 					totalGraphsArray.push(dummyGraph);
 				}
+				console.log('Test TotalGraphsArray: ',totalGraphsArray);			
 							
 				if(compSpecified === false){
 					numUniqueNames = 1;
@@ -304,9 +319,18 @@ class ReportCard extends React.Component {
 				for(var a=0;a<realQuantity;a++){
 					for(var b=0;b<numUniqueUnits;b++){
 						for(var c=0;c<numUniqueNames;c++){
-							if(sortedMeasurements[a].units===distinctUnits[b]){
-								if(sortedMeasurements[a].component_name===distinctNames[c]){
-									totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+							if(compSpecified===false){
+								if(sortedMeasurements[a].units===distinctUnits[b]){
+									if(sortedMeasurements[a].component_name===distinctNames[c]){
+										totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+									}
+								}
+							}
+							else if(compSpecified===true){
+								if(sortedMeasurements[a].units===distinctUnits[b]){
+									if(sortedMeasurements[a].component_name[0]===distinctNames[c]){
+										totalGraphsArray[b*numUniqueNames+c].push(sortedMeasurements[a]);
+									}
 								}
 							}
 						}
@@ -324,6 +348,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
+				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
@@ -336,16 +361,23 @@ class ReportCard extends React.Component {
 					}
 				}
 							
+				console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
+				testIndex = document.getElementById("chooseUnit").value;
+//				var testIndex2;
+//				testIndex2 = document.getElementById("chooseUnit2").value;
+				console.log("Test TestIndex: ", testIndex);
+//				console.log("Test TestIndex2: ", testIndex2);
 				var exampleGraphData = [];
 				if(compSpecified===true){
-					testIndex = 3; //example.
-					exampleGraphData = totalGraphsArray[0][testIndex]; //example. 3 
+					//testIndex = 0; //example.
+					exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
 				}
 				else{
-					testIndex = 0;
-					exampleGraphData = totalGraphsArray[0];//[testIndex]; //example. 3 
+					//testIndex = 0;
+					exampleGraphData = totalGraphsArray[testIndex];//[testIndex]; //example. 3 
 				}
+				console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
 			plotGraph = (compSpecified, exampleGraphData) => {
@@ -366,7 +398,7 @@ class ReportCard extends React.Component {
 					tableKeys = keysHold;
 				}
 				else{
-					tableKeys = Object.keys(initialDataArray);
+					tableKeys = Object.keys(initialDataArray[0]);
 				}
 				for(var b=0;b<tableKeys.length;b++){
 					var cellAdd = row.insertCell(b);
@@ -464,6 +496,18 @@ class ReportCard extends React.Component {
 								}
 							}  
 
+	/*changeUnit(){
+			console.log("changeUnit");
+			var unitArraySize = this.state.distinctUnits.length;
+			console.log("unitArraySize", unitArraySize);
+			var newunit = this.state.testIndex + 1;
+			if(newunit>=unitArraySize){
+				newunit = 0;
+			}
+			document.getElementById("chooseUnit").innerHTML = newunit;
+			window.testIndex = newunit;
+			this.setState({testIndex: newunit});
+	}*/
   render() {
         return (
         <div {...this.props} className={"card-container"}>{this.props.children}

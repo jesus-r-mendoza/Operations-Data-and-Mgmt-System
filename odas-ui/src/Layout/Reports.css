@@ -73,6 +73,8 @@ html, body {
 .card {
     width: 800px;
     height: 450px;
+	/*width: 82vw;
+	height: 500px;*/
     margin-top: 20px;
     margin-left: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
@@ -83,6 +85,7 @@ html, body {
     width: 100vw;
     height: 100vh;
 	z-index: 1;
+	/*overflow-v: scroll;*/
     /*border: solid red 3px;*/
 }
 
