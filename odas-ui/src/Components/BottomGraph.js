@@ -20,7 +20,7 @@ export default class BottomGraph extends React.Component{
 						</tbody>
 						</table>
 					</div>
-				);
+				); 
 		}
 	}
 	

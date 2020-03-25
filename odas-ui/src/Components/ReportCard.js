@@ -360,7 +360,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
-							
+						
 				console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
 				testIndex = document.getElementById("chooseUnit").value;
