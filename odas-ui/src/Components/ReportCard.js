@@ -510,19 +510,6 @@ class ReportCard extends React.Component {
 										}
 								}
 							}  
-
-	/*changeUnit(){
-			console.log("changeUnit");
-			var unitArraySize = this.state.distinctUnits.length;
-			console.log("unitArraySize", unitArraySize);
-			var newunit = this.state.testIndex + 1;
-			if(newunit>=unitArraySize){
-				newunit = 0;
-			}
-			document.getElementById("chooseUnit").innerHTML = newunit;
-			window.testIndex = newunit;
-			this.setState({testIndex: newunit});
-	}*/
   render() {
         return (
         <div {...this.props} className={"card-container"}>{this.props.children}
