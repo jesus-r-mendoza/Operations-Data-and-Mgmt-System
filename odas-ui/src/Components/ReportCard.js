@@ -389,7 +389,7 @@ class ReportCard extends React.Component {
 						exampleGraphData = totalGraphsArray[testIndex];//add [testIndex]; if compSpecified =true //example. 3 
 					}
 					else if(validIndexArray.includes(testIndex.toString())===false){
-						var error = "Invalid Input Test Index - Please type a Valid Index or, if unknown, use 0. Graph will now default to index 0."
+						var error = " Invalid Input Test Index: "+testIndex.toString()+"\n Please type a Valid Index or, if unknown, use 0. \n Graph will now default to index 0."
 						window.alert(error);
 						document.getElementById("chooseUnit").value = "0";
 						exampleGraphData = totalGraphsArray[0];
