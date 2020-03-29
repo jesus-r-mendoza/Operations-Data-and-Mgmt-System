@@ -9,11 +9,11 @@ export default class BottomGraph extends React.Component{
 					<p id="tablechart">Table Chart</p>
 					<button id="pause" onClick={this.props.pause}>Stop Graph</button>
 					<div>
-						<label for="fname">Input Test Index(must be valid, check Valid Indices and type here; if not known, put 0): </label>
+						<label for="fname" id="chooseUnitLabel"><b> Input Test Index (must be valid, check Valid Indices and type here; if not known, put 0) :  </b></label>
 						<input type="text" id="chooseUnit" name="fname" defaultValue="0"></input>
 					</div>
 					<div>
-						<label for="validIndices">Valid Indices:</label>
+						<label for="validIndices" id="validIndicesLabel"><b> Valid Indices: </b></label>
 						<select id="validIndices"></select>
 					</div>
 					<table style={{width:'100%'}} id = "traces">
