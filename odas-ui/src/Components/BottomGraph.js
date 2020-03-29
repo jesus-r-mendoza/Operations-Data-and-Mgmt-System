@@ -13,7 +13,7 @@ export default class BottomGraph extends React.Component{
 						<select id="validIndices"></select>
 					</div>
 					<div>
-						<label for="fname" id="chooseUnitLabel"><b> Input Test Index (must be valid, check Valid Indices and type here; if not known, put 0) :  </b></label>
+						<label for="fname" id="chooseUnitLabel"><b> Input Test Index (must be valid, check Valid Indices and type the index number here; if not known, put 0) :  </b></label>
 						<input type="text" id="chooseUnit" name="fname" defaultValue="0"></input>
 					</div>
 					<table style={{width:'100%'}} id = "traces">
