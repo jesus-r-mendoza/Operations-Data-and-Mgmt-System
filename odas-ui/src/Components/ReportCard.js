@@ -353,23 +353,27 @@ class ReportCard extends React.Component {
 				}
 				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
 				var newOption;
+				var validIndexArray = [];
 				for(var b=0;b<totalGraphsArray.length;b++){
 					if(totalGraphsArray[b].length!==0){
 						if(compSpecified===false){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].units;
+							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}
 						else if(compSpecified===true){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].component_name+" - "+totalGraphsArray[b][0].units;
+							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}
 					}
 				}
-				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
+				console.log("Test ValidIndexArray: ",validIndexArray);
+				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray);
 			}
-			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
+			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray) => {
 				var altcurrentData = [];
 				for(var a=0;a<totalNumGraphs;a++){
 					if (totalGraphsArray[a].length!==0&&totalGraphsArray[a].length!==null){
@@ -384,14 +388,14 @@ class ReportCard extends React.Component {
 				testIndex = document.getElementById("chooseUnit").value;
 				console.log("Test TestIndex: ", testIndex);
 				var exampleGraphData = [];
-				if(compSpecified===true){
-					//testIndex = 0; //example.
-					exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
-				}
-				else{
-					//testIndex = 0;
-					exampleGraphData = totalGraphsArray[testIndex];//[testIndex]; //example. 3 
-				}
+					if(validIndexArray.includes(testIndex.toString())===true){
+						exampleGraphData = totalGraphsArray[testIndex];//add [testIndex]; if compSpecified =true //example. 3 
+					}
+					else if(validIndexArray.includes(testIndex.toString())===false){
+						var error = "Invalid Input Test Index - Please type a Valid Index or, if unknown, use 0. Graph will now default to index 0."
+						window.alert(error);
+						exampleGraphData = totalGraphsArray[0];
+					}
 				console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
