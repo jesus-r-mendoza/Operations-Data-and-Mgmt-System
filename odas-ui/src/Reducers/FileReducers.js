@@ -11,7 +11,7 @@ export const postFileReducer = (fileState = [], action) => {
             return false;
 
         default:
-            return false;
+            return fileState;
     }
 };
 

@@ -11,14 +11,14 @@ import {
     Form,
     Toast,
     DropdownButton,
-    Alert
+    Alert, Spinner
 } from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login, logout } from "../Actions/AuthActions";
+import { login, logout, loginLogoutToast } from "../Actions/AuthActions";
 // Definitions
-import {cookie, authToken, invCode, userName} from "../Definitions/BrowserCookie";
+import {cookie, authToken, invCode} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -43,8 +43,6 @@ class Header extends React.Component {
                 })
             }
         });
-
-        console.log(authToken, invCode, userName)
     };
 
     setElementStates(element, state) {
@@ -72,14 +70,40 @@ class Header extends React.Component {
         e.preventDefault();
         this.props.logout();
 
+        if (this.props.userLogout.error === false) {
+            window.location.reload()
+        }
+    };
+
+    showModalButton = () => {
+        if (this.props.userLogin.isLoading) {
+            return (
+                <Button
+                    variant={"info"}
+                    disabled
+                >
+                    <Spinner animation={"border"}/>
+                </Button>
+            )
+        }
+        return (
+            <Button
+                variant={"info"}
+                onClick={this.handleLogin}
+                className={"modal-btn"}
+                type={"submit"}
+            >
+                Login
+            </Button>
+        );
     };
 
     showLoginToast = () => {
-        if (this.props.userLogin) {
+        if (this.props.userLogin.showToast) {
             return (
                 <Toast
-                    onClose={() => this.setElementStates('toastState', false)}
-                    show={this.state.toastState}
+                    onClose={() => this.props.loginLogoutToast(false)}
+                    show={this.props.toastMessage}
                     delay={3000} autohide
                     className={"login-toast"}
                 >
@@ -143,7 +167,7 @@ class Header extends React.Component {
     };
 
     render() {
-        console.log();
+        console.log(this.props.toastMessage);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -199,14 +223,7 @@ class Header extends React.Component {
                             </div>
                             <Modal.Footer className={"modal-footer"}>
                                 {this.showLoginFailAlert()}
-                                <Button
-                                    variant={"info"}
-                                    onClick={this.handleLogin}
-                                    className={"modal-btn"}
-                                    type={"submit"}
-                                >
-                                    Login
-                                </Button>
+                                {this.showModalButton()}
                                 <div>
                                     <Link
                                         to={"/register"}
@@ -228,8 +245,9 @@ class Header extends React.Component {
 const mapStateToProps = userState => {
     return {
         userLogin: userState.login,
-        userLogout: userState.logout
+        userLogout: userState.logout,
+        toastMessage: userState.loginLogoutToast
     };
 };
 
-export default connect(mapStateToProps, { login, logout })(Header);
+export default connect(mapStateToProps, { login, logout, loginLogoutToast })(Header);

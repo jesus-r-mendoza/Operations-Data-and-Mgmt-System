@@ -110,3 +110,10 @@ export const joinOrg = inviteCode => async dispatch => {
         .then(response => dispatch({type: 'JOIN_ORG', payload: response}))
         .catch(error => dispatch({type: 'JOIN_ORG_FAIL', payload: error}));
 };
+
+export const loginLogoutToast = willShow => {
+    return {
+        type: 'SHOW_TOAST',
+        payload: willShow
+    }
+};
