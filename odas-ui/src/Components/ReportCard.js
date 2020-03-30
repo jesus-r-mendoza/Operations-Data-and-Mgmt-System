@@ -293,9 +293,6 @@ class ReportCard extends React.Component {
 				console.log('Test NumUniqueUnits: ',numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
 				console.log('Test DistinctNames: ',distinctNames);
-				//this.setState({distinctUnits: [...this.state.distinctUnits, distinctUnits]});
-				//console.log('Test State DistinctUnits: ', this.state.distinctUnits);
-				//document.getElementById("unitdescription").innerHTML=this.state.distinctUnits[document.getElementById("chooseUnit").innerHTML];
 				var numUniqueNames = distinctNames.length;
 				console.log('Test NumUniqueNames: ',numUniqueNames);
 				
@@ -353,23 +350,27 @@ class ReportCard extends React.Component {
 				}
 				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
 				var newOption;
+				var validIndexArray = [];
 				for(var b=0;b<totalGraphsArray.length;b++){
 					if(totalGraphsArray[b].length!==0){
 						if(compSpecified===false){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].units;
+							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}
 						else if(compSpecified===true){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].component_name+" - "+totalGraphsArray[b][0].units;
+							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}
 					}
 				}
-				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified);
+				console.log("Test ValidIndexArray: ",validIndexArray);
+				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray);
 			}
-			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified) => {
+			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray) => {
 				var altcurrentData = [];
 				for(var a=0;a<totalNumGraphs;a++){
 					if (totalGraphsArray[a].length!==0&&totalGraphsArray[a].length!==null){
@@ -384,14 +385,15 @@ class ReportCard extends React.Component {
 				testIndex = document.getElementById("chooseUnit").value;
 				console.log("Test TestIndex: ", testIndex);
 				var exampleGraphData = [];
-				if(compSpecified===true){
-					//testIndex = 0; //example.
-					exampleGraphData = totalGraphsArray[testIndex]; //example. 3 
-				}
-				else{
-					//testIndex = 0;
-					exampleGraphData = totalGraphsArray[testIndex];//[testIndex]; //example. 3 
-				}
+					if(validIndexArray.includes(testIndex.toString())===true){
+						exampleGraphData = totalGraphsArray[testIndex];//add [testIndex]; if compSpecified =true //example. 3 
+					}
+					else if(validIndexArray.includes(testIndex.toString())===false){
+						var error = " Invalid Input Test Index: "+testIndex.toString()+"\n Please type a Valid Index or, if unknown, use 0. \n Graph will now default to index 0."
+						window.alert(error);
+						document.getElementById("chooseUnit").value = "0";
+						exampleGraphData = totalGraphsArray[0];
+					}
 				console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
@@ -405,18 +407,14 @@ class ReportCard extends React.Component {
 				var table = document.getElementById("tracesbody");
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
-				var tableKeys = [];
-				if(compSpecified===false){
-					//for(var a=0;a<initialDataArray[0].length;a++){
-					var keysHold = (Object.keys(initialDataArray[0]));
-					//}
-					tableKeys = keysHold;
-				}
-				else{
-					tableKeys = Object.keys(initialDataArray[0]);
-				}
+				var tableKeys = (Object.keys(initialDataArray[0]));
+				console.log("Test TableKeys: ", tableKeys);
 				for(var b=0;b<tableKeys.length;b++){
 					var cellAdd = row.insertCell(b);
+					tableKeys[b] = tableKeys[b].replace(/_/g, ' ');
+					tableKeys[b] = tableKeys[b].charAt(0).toUpperCase() + tableKeys[b].slice(1);
+					tableKeys[b] = tableKeys[b].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+					tableKeys[b] = tableKeys[b].bold();
 					var toChart = tableKeys[b];
 					cellAdd.innerHTML = (toChart);
 				}
@@ -510,19 +508,6 @@ class ReportCard extends React.Component {
 										}
 								}
 							}  
-
-	/*changeUnit(){
-			console.log("changeUnit");
-			var unitArraySize = this.state.distinctUnits.length;
-			console.log("unitArraySize", unitArraySize);
-			var newunit = this.state.testIndex + 1;
-			if(newunit>=unitArraySize){
-				newunit = 0;
-			}
-			document.getElementById("chooseUnit").innerHTML = newunit;
-			window.testIndex = newunit;
-			this.setState({testIndex: newunit});
-	}*/
   render() {
         return (
         <div {...this.props} className={"card-container"}>{this.props.children}
