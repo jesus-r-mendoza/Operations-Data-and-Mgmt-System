@@ -9,14 +9,16 @@ import {
     Button,
     Modal,
     Form,
-    Toast, DropdownButton, Alert
+    Toast,
+    DropdownButton,
+    Alert
 } from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
 import { login, logout } from "../Actions/AuthActions";
 // Definitions
-import {authToken} from "../Definitions/BrowserCookie";
+import {cookie, authToken, invCode, userName} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
@@ -34,11 +36,15 @@ class Header extends React.Component {
     };
 
     componentDidMount() {
-        if (authToken) {
-            this.setState({
-                signedIn: true
-            })
-        }
+        cookie.addChangeListener(() => {
+            if (authToken !== undefined && invCode !== undefined) {
+                this.setState({
+                    toastState: true
+                })
+            }
+        });
+
+        console.log(authToken, invCode, userName)
     };
 
     setElementStates(element, state) {
@@ -66,23 +72,6 @@ class Header extends React.Component {
         e.preventDefault();
         this.props.logout();
 
-    };
-
-    setToastState = (result) => {
-        if (result === "userLogin") {
-            this.setElementStates('modalState', false);
-            this.setElementStates('signedIn', true);
-            this.setElementStates('toastState', true);
-
-        } else if (result === "userFail") {
-            this.setElementStates('username', '');
-            this.setElementStates('password', '');
-            this.setElementStates('signedIn', false);
-            this.setElementStates('toastState', true);
-
-        } else {
-            console.log("error");
-        }
     };
 
     showLoginToast = () => {

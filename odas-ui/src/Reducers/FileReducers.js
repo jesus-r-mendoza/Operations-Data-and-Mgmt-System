@@ -56,7 +56,7 @@ export const deleteFileReducer = (deleteState = [], action) => {
             return deleteState;
 
         default:
-            return [...deleteState];
+            return deleteState;
     }
 };
 
