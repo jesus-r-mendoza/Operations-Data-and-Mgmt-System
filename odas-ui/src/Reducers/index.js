@@ -38,7 +38,8 @@ import {
     logoutReducer,
     createOrgReducer,
     joinOrgReducer,
-    loginLogoutToastReducer
+    loginLogoutToastReducer,
+    loginModalReducer
 } from "./AuthReducers";
 
 export default combineReducers({
@@ -60,6 +61,7 @@ export default combineReducers({
     createOrg: createOrgReducer,
     joinOrg: joinOrgReducer,
     loginLogoutToast: loginLogoutToastReducer,
+    loginModal: loginModalReducer,
 
     // Files
     postFile: postFileReducer,

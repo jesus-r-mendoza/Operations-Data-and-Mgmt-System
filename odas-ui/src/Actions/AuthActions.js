@@ -117,3 +117,10 @@ export const loginLogoutToast = willShow => {
         payload: willShow
     }
 };
+
+export const loginModal = willShow => {
+    return {
+        type: 'SHOW_MODAL',
+        payload: willShow
+    }
+};

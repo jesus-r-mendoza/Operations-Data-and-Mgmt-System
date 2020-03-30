@@ -82,9 +82,19 @@ export const joinOrgReducer = (orgState = [], action) => {
 export const loginLogoutToastReducer = (state = [], action) => {
     if (action.type === "SHOW_TOAST") {
         return action.payload;
-    } else if (typeof action.payload === "object") {
+    } else if (typeof action.payload !== "object") {
         return true;
     }
 
-    return action.payload || false;
+    return state || false;
+};
+
+export const loginModalReducer = (state = [], action) => {
+    if (action.type === "SHOW_MODAL") {
+        return action.payload;
+    } else if (typeof action.payload !== "boolean") {
+        return false;
+    }
+
+    return state || false;
 };

@@ -16,7 +16,7 @@ import {
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login, logout, loginLogoutToast } from "../Actions/AuthActions";
+import { login, logout, loginLogoutToast, loginModal } from "../Actions/AuthActions";
 // Definitions
 import {cookie, authToken, invCode} from "../Definitions/BrowserCookie";
 
@@ -24,7 +24,6 @@ class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            modalState: false,
             toastState: false,
             signedIn: false,
             username: '',
@@ -45,7 +44,7 @@ class Header extends React.Component {
         });
     };
 
-    setElementStates(element, state) {
+    setElementStates = (element, state) => {
         this.setState({
             [element]: state
         })
@@ -80,6 +79,7 @@ class Header extends React.Component {
             return (
                 <Button
                     variant={"info"}
+                    className={"modal-btn"}
                     disabled
                 >
                     <Spinner animation={"border"}/>
@@ -100,6 +100,7 @@ class Header extends React.Component {
 
     showLoginToast = () => {
         if (this.props.userLogin.showToast) {
+            this.props.loginModal(false);
             return (
                 <Toast
                     onClose={() => this.props.loginLogoutToast(false)}
@@ -134,7 +135,7 @@ class Header extends React.Component {
         if (!authToken) {
             return (
                 <Button
-                    onClick={() => this.setElementStates('modalState', true)}
+                    onClick={() => this.props.loginModal(true)}
                     variant={"info"}
                 >
                     Sign in
@@ -167,7 +168,6 @@ class Header extends React.Component {
     };
 
     render() {
-        console.log(this.props.toastMessage);
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -192,8 +192,8 @@ class Header extends React.Component {
                 </Navbar>
                 <Modal
                     size={"med"}
-                    show={this.state.modalState}
-                    onHide={() => this.setElementStates('modalState', false)}
+                    show={this.props.modalState}
+                    onHide={() => this.props.loginModal(false)}
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -246,8 +246,9 @@ const mapStateToProps = userState => {
     return {
         userLogin: userState.login,
         userLogout: userState.logout,
-        toastMessage: userState.loginLogoutToast
+        toastMessage: userState.loginLogoutToast,
+        modalState: userState.loginModal
     };
 };
 
-export default connect(mapStateToProps, { login, logout, loginLogoutToast })(Header);
+export default connect(mapStateToProps, { login, logout, loginLogoutToast, loginModal })(Header);

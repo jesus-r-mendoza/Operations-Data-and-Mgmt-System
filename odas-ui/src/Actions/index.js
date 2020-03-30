@@ -27,7 +27,8 @@ import {
     logout,
     createOrg,
     joinOrg,
-    loginLogoutToast
+    loginLogoutToast,
+    loginModal
 } from "./AuthActions";
 
 // Files
@@ -59,6 +60,7 @@ export {
     joinOrg,
     createOrg,
     loginLogoutToast,
+    loginModal,
 
     // Files
     postFile,
