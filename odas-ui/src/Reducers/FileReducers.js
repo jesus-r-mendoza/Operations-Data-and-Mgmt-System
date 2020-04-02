@@ -1,3 +1,5 @@
+import {authToken} from "../Definitions/BrowserCookie";
+
 export const postFileReducer = (fileState = [], action) => {
     switch (action.type) {
         case 'REQUEST_STARTED':
@@ -24,7 +26,11 @@ export const fileListReducer = (fileState = [], action) => {
             return {files: action.payload, isLoading: action.isLoading};
 
         case "FILE_LIST_FAIL":
-            return {files: [], errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
+            if (authToken) {
+                return {files: [], errorMessage: action.payload.response.data.detail, isLoading: action.isLoading};
+            } else {
+                return {files: [], errorMessage: 'Something went wrong', isLoading: false}
+            }
 
         default:
             return {files: fileState.files || []}
