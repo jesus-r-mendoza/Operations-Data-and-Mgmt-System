@@ -201,7 +201,7 @@ class UploadData extends React.Component {
                     <div className={"files-table"}>
                         <div>
                             <span className={"file-table-text"}>Recent Files</span>
-                            <Table>
+                            <Table className={'file-list-table-rows'}>
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell>File Name</Table.HeaderCell>

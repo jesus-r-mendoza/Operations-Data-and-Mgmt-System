@@ -1,33 +1,23 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
 /*Reports*/
 .report-container {
     display: flex;
     flex-direction: row;
-    position: absolute;
     width: 100vw;
-    overflow-x: hidden;
-    height: 100vh;
+    height: 100%;
     /*border: solid green 3px;*/
 }
 
 .report-body {
     display: flex;
     flex-direction: column;
-    width: 100vw;
+    width: inherit;
+	height: inherit;
     /*border: solid black 3px;*/
 }
 
 /*Header*/
 .report-header {
-    width: 100vw;
+    width: 100%;
     height: 60px;
     position: sticky;
     background-color: #f4f3f1;
@@ -71,41 +61,29 @@ html, body {
 
 /*Card formatting*/
 .card {
-    width: 950px;
-    height: 450px;
-	/*width: 82vw;
-	height: 500px;*/
+    width: inherit;
+    height: inherit;
     margin-top: 20px;
     margin-left: 30px;
     margin-right: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
-}
-
-.card-container {
-    width: 100vw;
-    height: 100vh;
-	z-index: 1;
-	/*overflow-v: scroll;
-    overflow-y: scroll;*/
-    /*border: solid red 3px;*/
+	border-radius: 8px;;
 }
 
 .graph-report {
     position: relative;
-    overflow: hidden;
 	z-index: 0;
-	overflow-y: scroll;
-    overflow-x: scroll;
 }
 
 #toptitle{
 	font-weight: bold;
 	font-size: 20px;
     box-shadow: 0 2px 3px 0 darkgray;
-	background-color: #000000;
-	color: #f4f3f1;
+	background-color: #FFFFFF;
+	color: #141e28;
 	width: 100%;
+	border-radius: 8px;
 }
 
 #toptitle2{
@@ -120,8 +98,8 @@ html, body {
 	font-weight: bold;
 	font-size: 20px;
 	box-shadow: 0 2px 3px 0 darkgray;
-	background-color: #000000;
-	color: #f4f3f1;
+	background-color: #FFFFFF;
+	color: #000000;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }

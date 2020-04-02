@@ -55,9 +55,7 @@ html, body {
     border-radius: 10px;
     width: 29em;
     height: 20em;
-    padding-left: 30px;
     margin-top: 30px;
-    box-shadow: 0 4px 5px darkgray inset;
 }
 
 .main-form {
