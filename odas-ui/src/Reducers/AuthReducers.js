@@ -9,19 +9,19 @@ export const loginReducer = (loginState = [], action) => {
             cookie.set('org', action.payload.organization);
             cookie.set('invCode', action.payload.code);
          // Message is user info object on success; Status is true
-         return {message: action.payload, isLoading: action.isLoading};
+         return {message: action.payload, isLoading: action.isLoading, showToast: true};
 
         case 'LOGIN_FAIL':
             // Message is the error message on failure; Status is false
             if (action.payload.response) {
-                return {message: action.payload.response.data.error, status: action.payload.response.data.data};
+                return {message: action.payload.response.data.error, status: action.payload.response.data.data, isLoading: action.isLoading, showToast: false};
             } else {
                 // Prevents the front end from crashing if there is no backend server
-                return {message: "Something went wrong", loginStatus: null}
+                return {message: "Something went wrong", loginStatus: null, isLoading: action.isLoading}
             }
 
         case 'LOGGING_IN':
-            return {message: "Loading", isLoading: action.isLoading};
+            return {message: "Loading", isLoading: action.isLoading, showToast: false};
 
         default:
             return loginState;
@@ -77,4 +77,24 @@ export const joinOrgReducer = (orgState = [], action) => {
         default:
             return orgState;
     }
+};
+
+export const loginLogoutToastReducer = (state = [], action) => {
+    if (action.type === "SHOW_TOAST") {
+        return action.payload;
+    } else if (typeof action.payload !== "object") {
+        return true;
+    }
+
+    return state || false;
+};
+
+export const loginModalReducer = (state = [], action) => {
+    if (action.type === "SHOW_MODAL") {
+        return action.payload;
+    } else if (typeof action.payload !== "boolean") {
+        return false;
+    }
+
+    return state || false;
 };

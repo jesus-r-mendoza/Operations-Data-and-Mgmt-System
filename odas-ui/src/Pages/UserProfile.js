@@ -12,7 +12,7 @@ import {SegmentGroup, Segment, Header, Divider, Button} from "semantic-ui-react"
 // Stylesheets
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Layout/UserProfile.css";
-import { orgName, userName, invCode } from "../Definitions/BrowserCookie";
+import {orgName, userName, invCode, authToken} from "../Definitions/BrowserCookie";
 
 class UserProfile extends React.Component {
     constructor(props) {
@@ -55,25 +55,41 @@ class UserProfile extends React.Component {
     };
 
     showSatList = satellites => {
-        return satellites.map(satellite => {
-            console.log(satellite.name);
+        if (!(satellites.error === true || satellites === [])) {
+            return satellites.map(satellite => {
+                console.log(satellite.name);
+                return (
+                    <ul key={satellite.id} className={"list-items"}>{satellite.name}</ul>
+                )
+            });
+        } else {
+            return <div>{'\xa0'}</div>
+        }
+    };
+
+    displayUsername = () => {
+        if (authToken) {
             return (
-                <ul key={satellite.id} className={"list-items"}>{satellite.name}</ul>
-            )
-        });
+                <div>
+                    <h1>Hello, {userName}</h1>
+                    <h4>Welcome back</h4>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <h4>Sign in to continue</h4>
+                </div>
+            );
+        }
     };
 
     render() {
-        console.log(this.props.orgCreate);
-        console.log(this.props.orgJoin);
-        console.log(this.props.satellites);
-
         return (
             <div className={"user-container"}>
                 <div className={"jumbo-container"}>
                     <Jumbotron>
-                        <h1>Hello, {userName}</h1>
-                        <h4>Welcome back</h4>
+                        {this.displayUsername()}
                     </Jumbotron>
                 </div>
                 <div className={"section-container"}>

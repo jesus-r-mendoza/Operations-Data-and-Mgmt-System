@@ -11,7 +11,7 @@ export const postFileReducer = (fileState = [], action) => {
             return false;
 
         default:
-            return false;
+            return fileState;
     }
 };
 
@@ -56,7 +56,7 @@ export const deleteFileReducer = (deleteState = [], action) => {
             return deleteState;
 
         default:
-            return [...deleteState];
+            return deleteState;
     }
 };
 

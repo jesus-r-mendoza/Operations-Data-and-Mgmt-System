@@ -60,20 +60,25 @@ export const deleteFile = (fileId) => async dispatch => {
 export const analyzeFile = (satId, fileId, unitIds) => async dispatch => {
     let unitIdString = '';
 
-    for (let id in unitIds) {
-        if (id === "0") {
-            unitIdString += unitIds[id]
-        } else {
-            unitIdString += `+${unitIds[id]}`
-        }
+
+    if (unitIds.length !== "0") {
+        unitIdString += unitIds[0]
+    } else {
+        unitIdString += unitIds[0]
     }
 
-    console.log(unitIdString);
-    await SatApi.post(`/api/sat/${satId}/file/${fileId}/units/${unitIdString}/`, {
-        headers: {
-            'Authorization': `Token ${authToken}`
-        }
-    })
-        .then(response => dispatch({type: 'ANALYZE_FILE', payload: response}))
-        .catch(error => dispatch({type: 'ANALYZE_FILE_FAIL', payload: error}))
+    const myHeaders = new Headers();
+    console.log("????", authToken);
+    myHeaders.append("Authorization", `Token ${authToken}`);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    fetch(`${apiURL}api/sat/${satId}/file/${fileId}/units/${unitIdString}/`, requestOptions)
+        .then(response => response.text())
+        .then(result => dispatch({type: 'ANALYZE_FILE', payload: result}))
+        .catch(error => dispatch({type: 'ANALYZE_FILE_FAIL', payload: error.response}));
 };

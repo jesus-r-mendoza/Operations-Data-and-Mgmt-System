@@ -62,7 +62,6 @@ class Sidebar extends React.Component {
             });
 
             await this.props.getRecentMeasurements(satId, filteredItems, this.props.recent)
-
         } else {
             await this.props.getMeasurementsByTime(satId, compIds, this.props.startDate, this.props.endDate)
         }

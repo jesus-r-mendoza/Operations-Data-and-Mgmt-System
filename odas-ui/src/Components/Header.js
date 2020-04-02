@@ -9,20 +9,21 @@ import {
     Button,
     Modal,
     Form,
-    Toast, DropdownButton, Alert
+    Toast,
+    DropdownButton,
+    Alert, Spinner
 } from "react-bootstrap";
 import "../Layout/Main.css";
 // Redux
 import { connect } from "react-redux";
-import { login, logout } from "../Actions/AuthActions";
+import { login, logout, loginLogoutToast, loginModal } from "../Actions/AuthActions";
 // Definitions
-import {authToken} from "../Definitions/BrowserCookie";
+import {cookie, authToken, invCode} from "../Definitions/BrowserCookie";
 
 class Header extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            modalState: false,
             toastState: false,
             signedIn: false,
             username: '',
@@ -34,14 +35,16 @@ class Header extends React.Component {
     };
 
     componentDidMount() {
-        if (authToken) {
-            this.setState({
-                signedIn: true
-            })
-        }
+        cookie.addChangeListener(() => {
+            if (authToken !== undefined && invCode !== undefined) {
+                this.setState({
+                    toastState: true
+                })
+            }
+        });
     };
 
-    setElementStates(element, state) {
+    setElementStates = (element, state) => {
         this.setState({
             [element]: state
         })
@@ -66,31 +69,42 @@ class Header extends React.Component {
         e.preventDefault();
         this.props.logout();
 
-    };
-
-    setToastState = (result) => {
-        if (result === "userLogin") {
-            this.setElementStates('modalState', false);
-            this.setElementStates('signedIn', true);
-            this.setElementStates('toastState', true);
-
-        } else if (result === "userFail") {
-            this.setElementStates('username', '');
-            this.setElementStates('password', '');
-            this.setElementStates('signedIn', false);
-            this.setElementStates('toastState', true);
-
-        } else {
-            console.log("error");
+        if (this.props.userLogout.error === false) {
+            window.location.reload()
         }
     };
 
+    showModalButton = () => {
+        if (this.props.userLogin.isLoading) {
+            return (
+                <Button
+                    variant={"info"}
+                    className={"modal-btn"}
+                    disabled
+                >
+                    <Spinner animation={"border"}/>
+                </Button>
+            )
+        }
+        return (
+            <Button
+                variant={"info"}
+                onClick={this.handleLogin}
+                className={"modal-btn"}
+                type={"submit"}
+            >
+                Login
+            </Button>
+        );
+    };
+
     showLoginToast = () => {
-        if (this.props.userLogin) {
+        if (this.props.userLogin.showToast) {
+            this.props.loginModal(false);
             return (
                 <Toast
-                    onClose={() => this.setElementStates('toastState', false)}
-                    show={this.state.toastState}
+                    onClose={() => this.props.loginLogoutToast(false)}
+                    show={this.props.toastMessage}
                     delay={3000} autohide
                     className={"login-toast"}
                 >
@@ -121,7 +135,7 @@ class Header extends React.Component {
         if (!authToken) {
             return (
                 <Button
-                    onClick={() => this.setElementStates('modalState', true)}
+                    onClick={() => this.props.loginModal(true)}
                     variant={"info"}
                 >
                     Sign in
@@ -154,7 +168,6 @@ class Header extends React.Component {
     };
 
     render() {
-        console.log();
         return (
             <div>
                 <Navbar sticky={"top"} expand={"lg"} className={"nav-bar"}>
@@ -179,8 +192,8 @@ class Header extends React.Component {
                 </Navbar>
                 <Modal
                     size={"med"}
-                    show={this.state.modalState}
-                    onHide={() => this.setElementStates('modalState', false)}
+                    show={this.props.modalState}
+                    onHide={() => this.props.loginModal(false)}
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -210,14 +223,7 @@ class Header extends React.Component {
                             </div>
                             <Modal.Footer className={"modal-footer"}>
                                 {this.showLoginFailAlert()}
-                                <Button
-                                    variant={"info"}
-                                    onClick={this.handleLogin}
-                                    className={"modal-btn"}
-                                    type={"submit"}
-                                >
-                                    Login
-                                </Button>
+                                {this.showModalButton()}
                                 <div>
                                     <Link
                                         to={"/register"}
@@ -239,8 +245,10 @@ class Header extends React.Component {
 const mapStateToProps = userState => {
     return {
         userLogin: userState.login,
-        userLogout: userState.logout
+        userLogout: userState.logout,
+        toastMessage: userState.loginLogoutToast,
+        modalState: userState.loginModal
     };
 };
 
-export default connect(mapStateToProps, { login, logout })(Header);
+export default connect(mapStateToProps, { login, logout, loginLogoutToast, loginModal })(Header);
