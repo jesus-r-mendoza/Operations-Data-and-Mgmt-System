@@ -113,7 +113,7 @@
 	box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #f4f3f1;
 	color: #000000;
-	border: 1px solid black;
+	border: 1px solid white;
 	width: 100%;
 	height: 100%;
 	padding: 15px;
@@ -121,20 +121,20 @@
 }
 
 #tracesbody{
-	border: 1px solid black;
+	border: 1px solid grey;
 	padding: 15px;
 	border-spacing: 5px;
 }
 
 #tracesbody tr:first-child {
-	border: 3px solid black;
+	border: 1px solid grey;
 	padding: 15px;
 	border-spacing: 5px;
 	text-align: center;
 }
 
 #tracesbody tr:first-child td {
-	border: 3px solid black;
+	border: 3px solid grey;
 	padding: 5px;
 	border-spacing: 5px;
 }

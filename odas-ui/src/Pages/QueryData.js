@@ -37,9 +37,7 @@ export default class QueryData extends React.Component {
                         Query a Dataset
                     </Sidebar>
                     <div className={"report-body"}>
-                        <div>
                             <ReportHeader />
-                        </div>
 						<ReportCard />
                     </div>
                 </div>
