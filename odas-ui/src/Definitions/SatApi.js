@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const apiURL = "http://localhost:8080/";
+// const apiURL = "http://localhost:8080/";
+const apiURL = 'http://ecst-csproj2.calstatela.edu:6338/';
 
 // Can be used for generic API calls such as get requests
 export default axios.create({

@@ -9,10 +9,12 @@ export const loginReducer = (loginState = [], action) => {
             cookie.set('org', action.payload.organization);
             cookie.set('invCode', action.payload.code);
          // Message is user info object on success; Status is true
-         return {message: action.payload, isLoading: action.isLoading, showToast: true};
+            console.log(action.payload);
+            return {message: action.payload, isLoading: action.isLoading, showToast: true};
 
         case 'LOGIN_FAIL':
             // Message is the error message on failure; Status is false
+            console.log(action.payload.response);
             if (action.payload.response) {
                 return {message: action.payload.response.data.error, status: action.payload.response.data.data, isLoading: action.isLoading, showToast: false};
             } else {
@@ -21,6 +23,7 @@ export const loginReducer = (loginState = [], action) => {
             }
 
         case 'LOGGING_IN':
+            console.log(action.type);
             return {message: "Loading", isLoading: action.isLoading, showToast: false};
 
         default:

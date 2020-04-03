@@ -41,6 +41,7 @@ export const login = (username, pass) => async dispatch => {
 
     console.log("Username", loginData.get("username"));
     console.log("Password", loginData.get("pass"));
+    console.log(apiURL);
 
     await axios({
         method: 'POST',
