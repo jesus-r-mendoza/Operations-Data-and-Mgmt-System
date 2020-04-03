@@ -1,8 +1,6 @@
 /*File selection*/
 .file-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    width: auto;
     padding-top: 4%;
     padding-left: 6%;
 }
@@ -75,11 +73,16 @@
 }
 
 .files-table {
-    width: 70%;
+    width: 80%;
+    max-height: 100px;
     margin-top: 3%;
 }
 
 .file-table-text {
     font-size: xx-large;
     color: black;
+}
+
+.file-list-table-rows {
+    overflow-y: scroll;
 }

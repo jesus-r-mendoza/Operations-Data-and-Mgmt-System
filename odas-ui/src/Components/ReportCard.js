@@ -13,7 +13,7 @@ import {
     getRecentMeasurements
 } from "../Actions";
 //import {authToken} from "../Definitions/BrowserCookie";
-// TODO Bootstrap modals for the logs
+
 class ReportCard extends React.Component {
 	constructor(props){
 		super(props);
