@@ -61,8 +61,8 @@
 
 /*Card formatting*/
 .card {
-    width: inherit;
-    height: inherit;
+    width: 950px;/*inherit;*/
+    height: 450px;/*inherit;*/
     margin-top: 20px;
     margin-left: 30px;
     margin-right: 20px;
@@ -71,9 +71,21 @@
 	border-radius: 8px;;
 }
 
+.card-container {
+    width: 100vw;
+    height: 100vh;
+	z-index: 1;
+	/*overflow-v: scroll;
+    overflow-y: scroll;*/
+    /*border: solid red 3px;*/
+}
+
 .graph-report {
     position: relative;
+    overflow: hidden;
 	z-index: 0;
+	overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 #toptitle{
