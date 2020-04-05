@@ -78,9 +78,6 @@ class ReportCard extends React.Component {
 		exampleValue: [],
 		tableKeys: [],
 		update: false,
-		//changeUnit: [],
-		//testIndex: 0,
-		//distinctUnits: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
@@ -132,7 +129,6 @@ class ReportCard extends React.Component {
 		}
 		document.getElementById("pause").innerHTML = "Stop Graph";
 		var tracesDiv = document.getElementById("tracesbody");
-		var tracesDivCount = 0;
 		while(tracesDiv.childNodes[1]){
 			tracesDiv.removeChild(tracesDiv.childNodes[0]);
 		}
@@ -509,9 +505,10 @@ class ReportCard extends React.Component {
 								}
 							}  
   render() {
+	  const { fetchComponents, fetchSatellites, fetchUnits, getRecentMeasurements, recentMeasurements, ...rest } = this.props
         return (
-        <div {...this.props} className={"card-container"}>{this.props.children}
-            <div {...this.props} className={"card"}>{this.props.children}
+        <div {...rest} className={"card-container"}>{this.props.children}
+            <div {...rest} className={"card"}>{this.props.children}
                 <div className={"graph-report"}>{this.props.children}
 				          <TitleBar></TitleBar>
 					         <Plot 
