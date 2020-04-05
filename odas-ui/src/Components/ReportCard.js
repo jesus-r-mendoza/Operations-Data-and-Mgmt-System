@@ -12,12 +12,10 @@ import {
     fetchUnits,
     getRecentMeasurements
 } from "../Actions";
-//import {authToken} from "../Definitions/BrowserCookie";
 
 class ReportCard extends React.Component {
 	constructor(props){
 		super(props);
-//		this.onClick = this.handleClick.bind(this);
        this.state = {
 		line1:{
 			x: [], 
@@ -77,7 +75,6 @@ class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
-		update: false,
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
@@ -98,7 +95,6 @@ class ReportCard extends React.Component {
 			window.alreadyStopped = this.state.alreadyStopped;
 			window.exampleValue = this.state.exampleValue;
 			window.tableKeys = this.state.tableKeys;
-			//	var response = require('./testapi.json');
 			var response = this.props.recentMeasurements;
 			console.log('update start');
 			console.log('response:', response);
