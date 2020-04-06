@@ -61,8 +61,8 @@
 
 /*Card formatting*/
 .card {
-    width: 950px;/*inherit;*/
-    height: 450px;/*inherit;*/
+    width: inherit;/*950px;*/
+    height: inherit;/*450px;*/
     margin-top: 20px;
     margin-left: 30px;
     margin-right: 20px;
@@ -72,8 +72,8 @@
 }
 
 .card-container {
-    width: 100vw;
-    height: 100vh;
+    width: 98%;/*100%;*/
+    height: 85%;/*100%;*/
 	z-index: 1;
 	/*overflow-v: scroll;
     overflow-y: scroll;*/
@@ -230,6 +230,10 @@
 }
 
 #toptitle{
+	border: 1px solid black;
+}
+
+#toptitle2{
 	border: 1px solid black;
 }
 

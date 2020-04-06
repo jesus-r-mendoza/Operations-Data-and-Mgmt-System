@@ -79,13 +79,13 @@ class ReportCard extends React.Component {
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
 	componentDidUpdate(nextProps, nextState) {
-		console.log('Test Update: ', nextProps.recentMeasurements);
-		console.log('thisProps', this.props);
-		console.log('nextProps', nextProps);
+		//console.log('Test Update: ', nextProps.recentMeasurements);
+		//console.log('thisProps', this.props);
+		//console.log('nextProps', nextProps);
 		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)||(nextProps.recentMeasurements.comp_specified===true&&(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite))||(nextProps.recentMeasurements.comp_specified===true&&(this.props.components.data!==nextProps.components.data))){
 			//more effective if given a value to differentiate between report 
 			//if this is a different query
-			console.log('State change!');
+			//console.log('State change!');
 			this.clearTitleSpecs();
 			this.pause = this.pause.bind(this);
 			window.cnt = this.state.cnt;
@@ -96,16 +96,16 @@ class ReportCard extends React.Component {
 			window.exampleValue = this.state.exampleValue;
 			window.tableKeys = this.state.tableKeys;
 			var response = this.props.recentMeasurements;
-			console.log('update start');
-			console.log('response:', response);
+			//console.log('update start');
+			//console.log('response:', response);
 			this.initial(response);
 			window.interval = setInterval(this.increasePlot,1000);
-			console.log('update finish');
+			//console.log('update finish');
 		}
 	}
 	
 	clearTitleSpecs = ()  => {
-		console.log('Clear Title Specs');
+		//console.log('Clear Title Specs');
 		clearInterval(window.interval);
 		var mydiv = document.getElementById("toptitle");
 		var mydiv2 = document.getElementById("toptitle2");
@@ -147,7 +147,7 @@ class ReportCard extends React.Component {
 	}	
 	
 	componentDidMount() {
-		console.log('Component did Mount');
+		//console.log('Component did Mount');
 	} 
 	
 	initial = (response) => {
@@ -182,7 +182,7 @@ class ReportCard extends React.Component {
 	}
 	checkCompSpecified = (out, compSpecified) => {
 		compSpecified = out.comp_specified;
-		console.log('Test 2: Component Specified?: ', compSpecified);
+		//console.log('Test 2: Component Specified?: ', compSpecified);
 		return compSpecified;
 	}
 	checkQuantitiesMatch = (quantity, realQuantity, checkQuantities)  => {
@@ -191,11 +191,11 @@ class ReportCard extends React.Component {
 			return checkQuantities;
 			//window.checkQuantities = true;
 		}
-		console.log('Quantity: ', quantity);
-		console.log('Real Quantity: ', realQuantity);
-		console.log('Test : Quantities Match? : ', checkQuantities);
+		//console.log('Quantity: ', quantity);
+		//console.log('Real Quantity: ', realQuantity);
+		//console.log('Test : Quantities Match? : ', checkQuantities);
 		if(quantity===realQuantity===0){
-			console.log('Error: No Data');
+			//console.log('Error: No Data');
 		}
 		return checkQuantities;
 	}
@@ -217,13 +217,13 @@ class ReportCard extends React.Component {
 		}
 	
 	checkData = (out, compSpecified) => {
-		console.log('Test CheckData: ', out);
+		//console.log('Test CheckData: ', out);
 				var error;
 				if(out.data===true){//this.plotData.data===true){
 					this.titleSpecs(out);
 					//compSpecified = false;
 					compSpecified = this.checkCompSpecified(out, compSpecified);
-					console.log('Test CompSpecified: ', compSpecified);
+					//console.log('Test CompSpecified: ', compSpecified);
 					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
 					realQuantity = out.Measurements.length;
@@ -255,7 +255,7 @@ class ReportCard extends React.Component {
 						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
-					console.log('Test DataUnit: ',dataUnit);
+					//console.log('Test DataUnit: ',dataUnit);
 					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
@@ -272,7 +272,7 @@ class ReportCard extends React.Component {
 							allNames.push(outSort.Measurements[a].component_name[0]);
 						}
 					}
-				console.log('Test SortedMeasurements: ',sortedMeasurements);
+				//console.log('Test SortedMeasurements: ',sortedMeasurements);
 				this.makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 	makeParameters = (allUnits, allNames, realQuantity, sortedMeasurements, compSpecified) => {
@@ -280,13 +280,13 @@ class ReportCard extends React.Component {
 					return self.indexOf(value) === index;
 				}
 				var distinctUnits = allUnits.filter(distinct);
-				console.log('Test DistinctUnits: ',distinctUnits);
+				//console.log('Test DistinctUnits: ',distinctUnits);
 				var numUniqueUnits = distinctUnits.length;
-				console.log('Test NumUniqueUnits: ',numUniqueUnits);
+				//console.log('Test NumUniqueUnits: ',numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
-				console.log('Test DistinctNames: ',distinctNames);
+				//console.log('Test DistinctNames: ',distinctNames);
 				var numUniqueNames = distinctNames.length;
-				console.log('Test NumUniqueNames: ',numUniqueNames);
+				//console.log('Test NumUniqueNames: ',numUniqueNames);
 				
 				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified === false){
@@ -302,7 +302,7 @@ class ReportCard extends React.Component {
 					var dummyGraph = [];
 					totalGraphsArray.push(dummyGraph);
 				}
-				console.log('Test TotalGraphsArray: ',totalGraphsArray);			
+				//console.log('Test TotalGraphsArray: ',totalGraphsArray);			
 							
 				if(compSpecified === false){
 					numUniqueNames = 1;
@@ -340,7 +340,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
+				//console.log('Test ReorderedGraphArray: ',totalGraphsArray);
 				var newOption;
 				var validIndexArray = [];
 				for(var b=0;b<totalGraphsArray.length;b++){
@@ -359,7 +359,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log("Test ValidIndexArray: ",validIndexArray);
+				//console.log("Test ValidIndexArray: ",validIndexArray);
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray) => {
@@ -372,10 +372,10 @@ class ReportCard extends React.Component {
 					}
 				}
 						
-				console.log('Test AltCurrentData: ',altcurrentData);
+				//console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
 				testIndex = document.getElementById("chooseUnit").value;
-				console.log("Test TestIndex: ", testIndex);
+				//console.log("Test TestIndex: ", testIndex);
 				var exampleGraphData = [];
 					if(validIndexArray.includes(testIndex.toString())===true){
 						exampleGraphData = totalGraphsArray[testIndex];//add [testIndex]; if compSpecified =true //example. 3 
@@ -386,7 +386,7 @@ class ReportCard extends React.Component {
 						document.getElementById("chooseUnit").value = validIndexArray[0].toString();
 						exampleGraphData = totalGraphsArray[validIndexArray[0]];
 					}
-				console.log('Test ExampleGraphData: ',exampleGraphData);
+				//console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
 			plotGraph = (compSpecified, exampleGraphData) => {
@@ -400,7 +400,7 @@ class ReportCard extends React.Component {
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
 				var tableKeys = (Object.keys(initialDataArray[0]));
-				console.log("Test TableKeys: ", tableKeys);
+				//console.log("Test TableKeys: ", tableKeys);
 				for(var b=0;b<tableKeys.length;b++){
 					var cellAdd = row.insertCell(b);
 					tableKeys[b] = tableKeys[b].replace(/_/g, ' ');
@@ -473,7 +473,7 @@ class ReportCard extends React.Component {
 					layout.datarevision = this.state.revision + 1;
 				}
 				else{
-					console.log("increasePlot Stop");
+					//console.log("increasePlot Stop");
 					document.getElementById("pause").style.backgroundColor="#f44336";
 					document.getElementById("pause").innerHTML = "STOPPED";//Date();
 					document.getElementById("pauseLabel").style.color="black";
@@ -493,7 +493,7 @@ class ReportCard extends React.Component {
 				}
 				else{
 					if(alreadyStopped===false){
-						console.log('getX else');
+						//console.log('getX else');
 						window.paused = true;
 						clearInterval(window.interval);
 						window.alreadyStopped=true;
@@ -508,7 +508,7 @@ class ReportCard extends React.Component {
 				}
 				else{
 					if(alreadyStopped===false){
-						console.log('getY else');
+						//console.log('getY else');
 						window.paused = true;
 						clearInterval(window.interval);
 						window.alreadyStopped = true;
