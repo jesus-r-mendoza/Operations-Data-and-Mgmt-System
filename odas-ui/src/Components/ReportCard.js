@@ -419,118 +419,115 @@ class ReportCard extends React.Component {
 				window.alreadyStopped = alreadyStopped;
 				window.exampleValue = exampleValue;
 				window.tableKeys = tableKeys;
-						}
+				document.getElementById("pauseLabel").style.color="black";
+				document.getElementById("pauseLabel").innerHTML = "Plotting Graph".bold();
+			}
 
-					pause = () => {
-						console.log("Pause");
-						if(window.alreadyStopped===false){
-							console.log("Paused");
-							document.getElementById("pause").style.backgroundColor="red";
-							window.paused = true;
-							this.setState({paused: true});
-							clearInterval(window.interval);
-							document.getElementById("pause").innerHTML = "PAUSED";//Date();
-							document.getElementById("pause").removeEventListener('click', this.pause, false);
-							document.getElementById("pause").addEventListener('click', this.unpause, false);
-						}
-					}	
-						
-					unpause = () => {
-						console.log("Unpause");
-						if(window.alreadyStopped===false){
-							console.log("Unpaused");
-							document.getElementById("pause").style.backgroundColor="green";
-							document.getElementById("pause").innerHTML = "Resumed";
-							window.paused = false;
-							this.setState({paused: false});
-							window.interval = setInterval(this.increasePlot,1000);
-							document.getElementById("pause").removeEventListener('click', this.unpause, false);
-							document.getElementById("pause").addEventListener('click', this.pause, false);
-						}
-					}	
+			pause = () => {
+				if(window.alreadyStopped===false){
+					window.paused = true;
+					this.setState({paused: true});
+					document.getElementById("pauseLabel").style.color="red";
+					document.getElementById("pauseLabel").innerHTML = "Graph PAUSED".bold();
+					document.getElementById("pause").style.backgroundColor="blue";
+					document.getElementById("pause").innerHTML = "RESUME Graph";
+					clearInterval(window.interval);
+					document.getElementById("pause").removeEventListener('click', this.pause, false);
+					document.getElementById("pause").addEventListener('click', this.unpause, false);
+				}
+			}				
+			
+			unpause = () => {
+				if(window.alreadyStopped===false){
+					window.paused = false;
+					this.setState({paused: false});
+					document.getElementById("pauseLabel").style.color="black";
+					document.getElementById("pauseLabel").innerHTML = "Graph Resumed".bold();
+					document.getElementById("pause").style.backgroundColor="red";
+					document.getElementById("pause").innerHTML = "Pause Graph";
+					window.interval = setInterval(this.increasePlot,1000);
+					document.getElementById("pause").removeEventListener('click', this.unpause, false);
+					document.getElementById("pause").addEventListener('click', this.pause, false);
+				}
+			}	
 
-					increasePlot = () => {
-								var initialDataArray = window.initialDataArray;
-								var cnt = this.state.cnt;
-								var paused = window.paused;//this.state.paused; 
-								var exampleTime = window.exampleTime;
-								var alreadyStopped = this.state.alreadyStopped;
-								var exampleValue = window.exampleValue;   
-								var tableKeys = window.tableKeys;
-								if(paused === true){
-									console.log("increasePlot Paused.1 paused true");
-	//								document.getElementById("pause").innerHTML = "PAUSED";//Date();
-	//								clearInterval(window.interval);
-	//								document.getElementById("pause").addEventListener('click', this.unpause, true);
-								}
-								else{
-									console.log("increasePlot Paused.1 else");
-	//								document.getElementById("pause").addEventListener('click', this.pause, true);
-								}
-								if(cnt<initialDataArray.length){
-								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
-								var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
-								const { line1, layout } = this.state;
-								line1.x.push(initialX);
-								line1.y.push(initialY);
-								if (line1.x.length >= 500) {
-									line1.x.shift();
-									line1.y.shift();
-								} 
-								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
-								layout.datarevision = this.state.revision + 1;
-								}
-								else{
-									console.log("increasePlot Stop");
-									document.getElementById("pause").style.backgroundColor="#f44336";
-									document.getElementById("pause").innerHTML = "STOPPED";//Date();
-									clearInterval(window.interval);
-									window.alreadyStopped = true;
-									document.getElementById("pause").addEventListener('click', function(){}, false);
-								}
-							}
+			increasePlot = () => {
+				var initialDataArray = window.initialDataArray;
+				var cnt = this.state.cnt;
+				var paused = window.paused;//this.state.paused; 
+				var exampleTime = window.exampleTime;
+				var alreadyStopped = this.state.alreadyStopped;
+				var exampleValue = window.exampleValue;   
+				var tableKeys = window.tableKeys;
+				if(cnt<initialDataArray.length){
+					var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
+					var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
+					const { line1, layout } = this.state;
+					line1.x.push(initialX);
+					line1.y.push(initialY);
+					if (line1.x.length >= 500) {
+						line1.x.shift();
+						line1.y.shift();
+					} 
+					this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
+					layout.datarevision = this.state.revision + 1;
+				}
+				else{
+					console.log("increasePlot Stop");
+					document.getElementById("pause").style.backgroundColor="#f44336";
+					document.getElementById("pause").innerHTML = "STOPPED";//Date();
+					document.getElementById("pauseLabel").style.color="black";
+					document.getElementById("pauseLabel").innerHTML = "Graph Finished Plotting".bold();
+					clearInterval(window.interval);
+					window.alreadyStopped = true;
+					//document.getElementById("pause").addEventListener('click', function(){}, false);
+					document.getElementById("pause").removeEventListener('click', this.unpause, false);
+					document.getElementById("pause").removeEventListener('click', this.pause, false);
+				
+				}
+			}
 
-							getX = (count, exampleTime, alreadyStopped, paused) => {
-								if(exampleTime[count]!==null){
-									return exampleTime[count];
-								}
-								else{
-									if(alreadyStopped===false){
-										console.log('getX else');
-										window.paused = true;
-										clearInterval(window.interval);
-										window.alreadyStopped=true;
-									}
-								}
-							}
+			getX = (count, exampleTime, alreadyStopped, paused) => {
+				if(exampleTime[count]!==null){
+					return exampleTime[count];
+				}
+				else{
+					if(alreadyStopped===false){
+						console.log('getX else');
+						window.paused = true;
+						clearInterval(window.interval);
+						window.alreadyStopped=true;
+					}
+				}
+			}
 							
-							getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
-								if(exampleValue[count]!==null){
-									this.getData(count, initialDataArray, tableKeys);
-									return exampleValue[count];
-								}
-								else{
-									if(alreadyStopped===false){
-										console.log('getY else');
-										window.paused = true;
-										clearInterval(window.interval);
-										window.alreadyStopped = true;
-									}
-								}
-							}
+			getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
+				if(exampleValue[count]!==null){
+					this.getData(count, initialDataArray, tableKeys);
+					return exampleValue[count];
+				}
+				else{
+					if(alreadyStopped===false){
+						console.log('getY else');
+						window.paused = true;
+						clearInterval(window.interval);
+						window.alreadyStopped = true;
+					}
+				}
+			}
 							
-						getData = (cnt, initialDataArray, tableKeys) => {
-								var table = document.getElementById("tracesbody");
-								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-								if(initialDataArray[cnt]!==null){		
-									tableKeys = Object.values(initialDataArray[cnt]);
-									for(var a=0;a<tableKeys.length;a++){
-										var cellAdd = row.insertCell(a);
-										var toChart = tableKeys[a];
-										cellAdd.innerHTML = (toChart);
-										}
-								}
-							}  
+			getData = (cnt, initialDataArray, tableKeys) => {
+				var table = document.getElementById("tracesbody");
+				var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+				if(initialDataArray[cnt]!==null){		
+					tableKeys = Object.values(initialDataArray[cnt]);
+					for(var a=0;a<tableKeys.length;a++){
+						var cellAdd = row.insertCell(a);
+						var toChart = tableKeys[a];
+						cellAdd.innerHTML = (toChart);
+						}
+				}
+			}  
   render() {
 	  const { fetchComponents, fetchSatellites, fetchUnits, getRecentMeasurements, recentMeasurements, ...rest } = this.props
         return (

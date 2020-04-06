@@ -114,6 +114,7 @@
 	color: #000000;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	border: 1px solid black;
 }
 
 #fieldnames2{
@@ -230,4 +231,9 @@
 
 #toptitle{
 	border: 1px solid black;
+}
+
+#pauseLabel{
+	margin-left: 15px; 
+	color: black;
 }

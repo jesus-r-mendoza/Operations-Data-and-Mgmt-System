@@ -7,7 +7,10 @@ export default class BottomGraph extends React.Component{
 				return(
 					<div id = "bottomchart">
 					<p id="tablechart">Table Chart</p>
-					<button id="pause">Stop Graph</button>
+					<div>
+						<button id="pause">Pause Graph</button>
+						<label htmlFor="pause" id="pauseLabel"><b>To Start Graph: Enter Input Test Index Below then Query Dataset to the Left</b></label>
+					</div>
 					<div>
 						<label htmlFor="validIndices" id="validIndicesLabel"><b> Valid Indices: </b></label>
 						<select id="validIndices"></select>
