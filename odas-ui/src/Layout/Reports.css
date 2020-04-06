@@ -61,19 +61,31 @@
 
 /*Card formatting*/
 .card {
-    width: inherit;
-    height: inherit;
+    width: inherit;/*950px;*/
+    height: inherit;/*450px;*/
     margin-top: 20px;
     margin-left: 30px;
     margin-right: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
-	border-radius: 8px;;
+	border-radius: 8px;
+}
+
+.card-container {
+    width: 98%;/*100%;*/
+    height: 85%;/*100%;*/
+	z-index: 1;
+	/*overflow-v: scroll;
+    overflow-y: scroll;*/
+    /*border: solid red 3px;*/
 }
 
 .graph-report {
     position: relative;
+    overflow: hidden;
 	z-index: 0;
+	overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 #toptitle{
@@ -102,6 +114,7 @@
 	color: #000000;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	border: 1px solid black;
 }
 
 #fieldnames2{
@@ -157,7 +170,7 @@
 	box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #000000;
 	border: 1px solid black;
-	margin-top: 15px;	 
+	margin-top: 15px;
 }
 
 #data{
@@ -179,7 +192,7 @@
 	font-size: 15px;
 	margin-left: 15px;
 	margin-bottom: 15px;
-	background-color: #f44336; /* Red */ 
+	background-color: #f44336;/*Red*/
 	color: white;
 	border-radius: 5px;
 	padding: 5px;
@@ -188,7 +201,7 @@
 #chooseUnitLabel{
 	margin-left: 15px;
 	padding: 5px;
-	background-color: #00868B; /* Teal */ 
+	background-color: #00868B;/*Teal*/
 	color: white;
 	border-radius: 5px;
 }
@@ -196,7 +209,7 @@
 #validIndicesLabel{
 	margin-left: 15px;
 	padding: 5px;
-	background-color: #00868B; /* Teal */ 
+	background-color: #00868B;/*Teal*/
 	color: white;
 	border-radius: 5px;
 }
@@ -218,4 +231,13 @@
 
 #toptitle{
 	border: 1px solid black;
+}
+
+#toptitle2{
+	border: 1px solid black;
+}
+
+#pauseLabel{
+	margin-left: 15px; 
+	color: black;
 }

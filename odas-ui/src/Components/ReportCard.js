@@ -12,12 +12,10 @@ import {
     fetchUnits,
     getRecentMeasurements
 } from "../Actions";
-//import {authToken} from "../Definitions/BrowserCookie";
 
 class ReportCard extends React.Component {
 	constructor(props){
 		super(props);
-//		this.onClick = this.handleClick.bind(this);
        this.state = {
 		line1:{
 			x: [], 
@@ -77,21 +75,17 @@ class ReportCard extends React.Component {
 		alreadyStopped: false,
 		exampleValue: [],
 		tableKeys: [],
-		update: false,
-		//changeUnit: [],
-		//testIndex: 0,
-		//distinctUnits: [],
 	}
 //	  this.onToggleLoop = this.onToggleLoop.bind(this);
 	}		
 	componentDidUpdate(nextProps, nextState) {
-		console.log('Test Update: ', nextProps.recentMeasurements);
-		console.log('thisProps', this.props);
-		console.log('nextProps', nextProps);
+		//console.log('Test Update: ', nextProps.recentMeasurements);
+		//console.log('thisProps', this.props);
+		//console.log('nextProps', nextProps);
 		if((this.props.recentMeasurements.Component!==nextProps.recentMeasurements.Component&&this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite)||(nextProps.recentMeasurements.comp_specified===true&&(this.props.recentMeasurements.Quantities!==nextProps.recentMeasurements.Quantities&&this.props.recentMeasurements.Measurements!==nextProps.recentMeasurements.Measurements&&this.props.recentMeasurements.Satellite!==nextProps.recentMeasurements.Satellite))||(nextProps.recentMeasurements.comp_specified===true&&(this.props.components.data!==nextProps.components.data))){
 			//more effective if given a value to differentiate between report 
 			//if this is a different query
-			console.log('State change!');
+			//console.log('State change!');
 			this.clearTitleSpecs();
 			this.pause = this.pause.bind(this);
 			window.cnt = this.state.cnt;
@@ -101,18 +95,17 @@ class ReportCard extends React.Component {
 			window.alreadyStopped = this.state.alreadyStopped;
 			window.exampleValue = this.state.exampleValue;
 			window.tableKeys = this.state.tableKeys;
-			//	var response = require('./testapi.json');
 			var response = this.props.recentMeasurements;
-			console.log('update start');
-			console.log('response:', response);
+			//console.log('update start');
+			//console.log('response:', response);
 			this.initial(response);
 			window.interval = setInterval(this.increasePlot,1000);
-			console.log('update finish');
+			//console.log('update finish');
 		}
 	}
 	
 	clearTitleSpecs = ()  => {
-		console.log('Clear Title Specs');
+		//console.log('Clear Title Specs');
 		clearInterval(window.interval);
 		var mydiv = document.getElementById("toptitle");
 		var mydiv2 = document.getElementById("toptitle2");
@@ -132,7 +125,6 @@ class ReportCard extends React.Component {
 		}
 		document.getElementById("pause").innerHTML = "Stop Graph";
 		var tracesDiv = document.getElementById("tracesbody");
-		var tracesDivCount = 0;
 		while(tracesDiv.childNodes[1]){
 			tracesDiv.removeChild(tracesDiv.childNodes[0]);
 		}
@@ -155,7 +147,7 @@ class ReportCard extends React.Component {
 	}	
 	
 	componentDidMount() {
-		console.log('Component did Mount');
+		//console.log('Component did Mount');
 	} 
 	
 	initial = (response) => {
@@ -190,7 +182,7 @@ class ReportCard extends React.Component {
 	}
 	checkCompSpecified = (out, compSpecified) => {
 		compSpecified = out.comp_specified;
-		console.log('Test 2: Component Specified?: ', compSpecified);
+		//console.log('Test 2: Component Specified?: ', compSpecified);
 		return compSpecified;
 	}
 	checkQuantitiesMatch = (quantity, realQuantity, checkQuantities)  => {
@@ -199,11 +191,11 @@ class ReportCard extends React.Component {
 			return checkQuantities;
 			//window.checkQuantities = true;
 		}
-		console.log('Quantity: ', quantity);
-		console.log('Real Quantity: ', realQuantity);
-		console.log('Test : Quantities Match? : ', checkQuantities);
+		//console.log('Quantity: ', quantity);
+		//console.log('Real Quantity: ', realQuantity);
+		//console.log('Test : Quantities Match? : ', checkQuantities);
 		if(quantity===realQuantity===0){
-			console.log('Error: No Data');
+			//console.log('Error: No Data');
 		}
 		return checkQuantities;
 	}
@@ -225,13 +217,13 @@ class ReportCard extends React.Component {
 		}
 	
 	checkData = (out, compSpecified) => {
-		console.log('Test CheckData: ', out);
+		//console.log('Test CheckData: ', out);
 				var error;
 				if(out.data===true){//this.plotData.data===true){
 					this.titleSpecs(out);
 					//compSpecified = false;
 					compSpecified = this.checkCompSpecified(out, compSpecified);
-					console.log('Test CompSpecified: ', compSpecified);
+					//console.log('Test CompSpecified: ', compSpecified);
 					var quantity = out.Quantities.CPU; //Quantity has been replaced; therefore, quantity test should always fail.
 					var realQuantity = 0;
 					realQuantity = out.Measurements.length;
@@ -263,7 +255,7 @@ class ReportCard extends React.Component {
 						dataUnit.push(out.Measurements[c].value);
 						data.push(dataUnit);
 				}
-					console.log('Test DataUnit: ',dataUnit);
+					//console.log('Test DataUnit: ',dataUnit);
 					var outSort = out;
 					this.sortMeasurements(outSort, realQuantity, compSpecified);
 			}
@@ -280,7 +272,7 @@ class ReportCard extends React.Component {
 							allNames.push(outSort.Measurements[a].component_name[0]);
 						}
 					}
-				console.log('Test SortedMeasurements: ',sortedMeasurements);
+				//console.log('Test SortedMeasurements: ',sortedMeasurements);
 				this.makeParameters(allUnits, allNames, realQuantity, sortedMeasurements, compSpecified);				
 			}
 	makeParameters = (allUnits, allNames, realQuantity, sortedMeasurements, compSpecified) => {
@@ -288,13 +280,13 @@ class ReportCard extends React.Component {
 					return self.indexOf(value) === index;
 				}
 				var distinctUnits = allUnits.filter(distinct);
-				console.log('Test DistinctUnits: ',distinctUnits);
+				//console.log('Test DistinctUnits: ',distinctUnits);
 				var numUniqueUnits = distinctUnits.length;
-				console.log('Test NumUniqueUnits: ',numUniqueUnits);
+				//console.log('Test NumUniqueUnits: ',numUniqueUnits);
 				var distinctNames = allNames.filter(distinct);
-				console.log('Test DistinctNames: ',distinctNames);
+				//console.log('Test DistinctNames: ',distinctNames);
 				var numUniqueNames = distinctNames.length;
-				console.log('Test NumUniqueNames: ',numUniqueNames);
+				//console.log('Test NumUniqueNames: ',numUniqueNames);
 				
 				var totalNumGraphs = numUniqueUnits*numUniqueNames;
 				if(compSpecified === false){
@@ -310,7 +302,7 @@ class ReportCard extends React.Component {
 					var dummyGraph = [];
 					totalGraphsArray.push(dummyGraph);
 				}
-				console.log('Test TotalGraphsArray: ',totalGraphsArray);			
+				//console.log('Test TotalGraphsArray: ',totalGraphsArray);			
 							
 				if(compSpecified === false){
 					numUniqueNames = 1;
@@ -348,7 +340,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log('Test ReorderedGraphArray: ',totalGraphsArray);
+				//console.log('Test ReorderedGraphArray: ',totalGraphsArray);
 				var newOption;
 				var validIndexArray = [];
 				for(var b=0;b<totalGraphsArray.length;b++){
@@ -367,7 +359,7 @@ class ReportCard extends React.Component {
 						}
 					}
 				}
-				console.log("Test ValidIndexArray: ",validIndexArray);
+				//console.log("Test ValidIndexArray: ",validIndexArray);
 				this.setGraphType(totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray);
 			}
 			setGraphType = (totalGraphsArray, totalNumGraphs, compSpecified, validIndexArray) => {
@@ -380,10 +372,10 @@ class ReportCard extends React.Component {
 					}
 				}
 						
-				console.log('Test AltCurrentData: ',altcurrentData);
+				//console.log('Test AltCurrentData: ',altcurrentData);
 				var testIndex;
 				testIndex = document.getElementById("chooseUnit").value;
-				console.log("Test TestIndex: ", testIndex);
+				//console.log("Test TestIndex: ", testIndex);
 				var exampleGraphData = [];
 					if(validIndexArray.includes(testIndex.toString())===true){
 						exampleGraphData = totalGraphsArray[testIndex];//add [testIndex]; if compSpecified =true //example. 3 
@@ -394,7 +386,7 @@ class ReportCard extends React.Component {
 						document.getElementById("chooseUnit").value = validIndexArray[0].toString();
 						exampleGraphData = totalGraphsArray[validIndexArray[0]];
 					}
-				console.log('Test ExampleGraphData: ',exampleGraphData);
+				//console.log('Test ExampleGraphData: ',exampleGraphData);
 				this.plotGraph(compSpecified, exampleGraphData);
 			}
 			plotGraph = (compSpecified, exampleGraphData) => {
@@ -408,7 +400,7 @@ class ReportCard extends React.Component {
 				var row = table.insertRow(table.rows.length-1); //insert row at bottom
 				var initialDataArray = exampleGraphData;//totalGraphsArray[0];//[testIndex];
 				var tableKeys = (Object.keys(initialDataArray[0]));
-				console.log("Test TableKeys: ", tableKeys);
+				//console.log("Test TableKeys: ", tableKeys);
 				for(var b=0;b<tableKeys.length;b++){
 					var cellAdd = row.insertCell(b);
 					tableKeys[b] = tableKeys[b].replace(/_/g, ' ');
@@ -420,98 +412,127 @@ class ReportCard extends React.Component {
 				}
 				var paused = false;
 				var alreadyStopped = false;
-				document.getElementById("pause").addEventListener('click', this.pause);
+				document.getElementById("pause").addEventListener('click', this.pause, true);
 				window.initialDataArray = initialDataArray;
 				window.paused = paused;
 				window.exampleTime = exampleTime;
 				window.alreadyStopped = alreadyStopped;
 				window.exampleValue = exampleValue;
 				window.tableKeys = tableKeys;
+				document.getElementById("pauseLabel").style.color="black";
+				document.getElementById("pauseLabel").innerHTML = "Plotting Graph".bold();
+			}
+
+			pause = () => {
+				if(window.alreadyStopped===false){
+					window.paused = true;
+					this.setState({paused: true});
+					document.getElementById("pauseLabel").style.color="red";
+					document.getElementById("pauseLabel").innerHTML = "Graph PAUSED".bold();
+					document.getElementById("pause").style.backgroundColor="blue";
+					document.getElementById("pause").innerHTML = "RESUME Graph";
+					clearInterval(window.interval);
+					document.getElementById("pause").removeEventListener('click', this.pause, false);
+					document.getElementById("pause").addEventListener('click', this.unpause, false);
+				}
+			}				
+			
+			unpause = () => {
+				if(window.alreadyStopped===false){
+					window.paused = false;
+					this.setState({paused: false});
+					document.getElementById("pauseLabel").style.color="black";
+					document.getElementById("pauseLabel").innerHTML = "Graph Resumed".bold();
+					document.getElementById("pause").style.backgroundColor="red";
+					document.getElementById("pause").innerHTML = "Pause Graph";
+					window.interval = setInterval(this.increasePlot,1000);
+					document.getElementById("pause").removeEventListener('click', this.unpause, false);
+					document.getElementById("pause").addEventListener('click', this.pause, false);
+				}
+			}	
+
+			increasePlot = () => {
+				var initialDataArray = window.initialDataArray;
+				var cnt = this.state.cnt;
+				var paused = window.paused;//this.state.paused; 
+				var exampleTime = window.exampleTime;
+				var alreadyStopped = this.state.alreadyStopped;
+				var exampleValue = window.exampleValue;   
+				var tableKeys = window.tableKeys;
+				if(cnt<initialDataArray.length){
+					var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
+					var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
+					const { line1, layout } = this.state;
+					line1.x.push(initialX);
+					line1.y.push(initialY);
+					if (line1.x.length >= 500) {
+						line1.x.shift();
+						line1.y.shift();
+					} 
+					this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
+					layout.datarevision = this.state.revision + 1;
+				}
+				else{
+					//console.log("increasePlot Stop");
+					document.getElementById("pause").style.backgroundColor="#f44336";
+					document.getElementById("pause").innerHTML = "STOPPED";//Date();
+					document.getElementById("pauseLabel").style.color="black";
+					document.getElementById("pauseLabel").innerHTML = "Graph Finished Plotting".bold();
+					clearInterval(window.interval);
+					window.alreadyStopped = true;
+					//document.getElementById("pause").addEventListener('click', function(){}, false);
+					document.getElementById("pause").removeEventListener('click', this.unpause, false);
+					document.getElementById("pause").removeEventListener('click', this.pause, false);
+				
+				}
+			}
+
+			getX = (count, exampleTime, alreadyStopped, paused) => {
+				if(exampleTime[count]!==null){
+					return exampleTime[count];
+				}
+				else{
+					if(alreadyStopped===false){
+						//console.log('getX else');
+						window.paused = true;
+						clearInterval(window.interval);
+						window.alreadyStopped=true;
+					}
+				}
+			}
+							
+			getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
+				if(exampleValue[count]!==null){
+					this.getData(count, initialDataArray, tableKeys);
+					return exampleValue[count];
+				}
+				else{
+					if(alreadyStopped===false){
+						//console.log('getY else');
+						window.paused = true;
+						clearInterval(window.interval);
+						window.alreadyStopped = true;
+					}
+				}
+			}
+							
+			getData = (cnt, initialDataArray, tableKeys) => {
+				var table = document.getElementById("tracesbody");
+				var row = table.insertRow(table.rows.length-1); //insert row at bottom	
+				if(initialDataArray[cnt]!==null){		
+					tableKeys = Object.values(initialDataArray[cnt]);
+					for(var a=0;a<tableKeys.length;a++){
+						var cellAdd = row.insertCell(a);
+						var toChart = tableKeys[a];
+						cellAdd.innerHTML = (toChart);
 						}
-
-					pause = () => {
-							window.paused = true;
-							this.setState({paused: true});
-						}	
-
-					increasePlot = () => {
-								var initialDataArray = window.initialDataArray;
-								var cnt = this.state.cnt;
-								var paused = this.state.paused; 
-								var exampleTime = window.exampleTime;
-								var alreadyStopped = this.state.alreadyStopped;
-								var exampleValue = window.exampleValue;   
-								var tableKeys = window.tableKeys;
-								if(paused === true){
-									document.getElementById("pause").innerHTML = "PAUSED";//Date();
-									clearInterval(window.interval);
-								}
-								if(cnt<initialDataArray.length){
-								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
-								var initialX = this.getX(cnt, exampleTime, alreadyStopped, paused);
-								const { line1, layout } = this.state;
-								line1.x.push(initialX);
-								line1.y.push(initialY);
-								if (line1.x.length >= 500) {
-									line1.x.shift();
-									line1.y.shift();
-								} 
-								if(paused === true){
-									document.getElementById("pause").innerHTML = "PAUSED";//Date();
-									clearInterval(window.interval);
-								}
-								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
-								layout.datarevision = this.state.revision + 1;
-								}
-								else{
-									document.getElementById("pause").innerHTML = "STOPPED";//Date();
-									clearInterval(window.interval);
-								}
-							}
-
-							getX = (count, exampleTime, alreadyStopped, paused) => {
-								if(exampleTime[count]!==null){
-									return exampleTime[count];
-								}
-								else{
-									if(alreadyStopped===false){
-										window.paused = true;
-										clearInterval(window.interval);
-										window.alreadyStopped=true;
-									}
-								}
-							}
-							
-							getY = (count, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys) => {
-								if(exampleValue[count]!==null){
-									this.getData(count, initialDataArray, tableKeys);
-									return exampleValue[count];
-								}
-								else{
-									if(alreadyStopped===false){
-										window.paused = true;
-										clearInterval(window.interval);
-										window.alreadyStopped = true;
-									}
-								}
-							}
-							
-						getData = (cnt, initialDataArray, tableKeys) => {
-								var table = document.getElementById("tracesbody");
-								var row = table.insertRow(table.rows.length-1); //insert row at bottom	
-								if(initialDataArray[cnt]!==null){		
-									tableKeys = Object.values(initialDataArray[cnt]);
-									for(var a=0;a<tableKeys.length;a++){
-										var cellAdd = row.insertCell(a);
-										var toChart = tableKeys[a];
-										cellAdd.innerHTML = (toChart);
-										}
-								}
-							}  
+				}
+			}  
   render() {
+	  const { fetchComponents, fetchSatellites, fetchUnits, getRecentMeasurements, recentMeasurements, ...rest } = this.props
         return (
-        <div {...this.props} className={"card-container"}>{this.props.children}
-            <div {...this.props} className={"card"}>{this.props.children}
+        <div {...rest} className={"card-container"}>{this.props.children}
+            <div {...rest} className={"card"}>{this.props.children}
                 <div className={"graph-report"}>{this.props.children}
 				          <TitleBar></TitleBar>
 					         <Plot 
