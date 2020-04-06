@@ -58,8 +58,8 @@ class Register extends React.Component {
             );
         } else if (registerStatus === true) {
             setInterval(function () {
-                history.push('/');
-            }, 8000);
+                history.push('/profile');
+            }, 6000);
 
             return (
                 <Alert

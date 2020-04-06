@@ -66,7 +66,7 @@ class Main extends React.Component {
                                             size={"lg"}
                                             onClick={this.handleLogin}
                                         >
-                                            Login
+                                            Sign in
                                         </Button>
                                     </div>
                                 </div>

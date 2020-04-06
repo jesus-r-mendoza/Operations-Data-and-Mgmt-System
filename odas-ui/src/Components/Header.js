@@ -42,6 +42,8 @@ class Header extends React.Component {
                 })
             }
         });
+
+        this.props.loginModal(false);
     };
 
     setElementStates = (element, state) => {
@@ -86,6 +88,7 @@ class Header extends React.Component {
                 </Button>
             )
         }
+
         return (
             <Button
                 variant={"info"}
@@ -100,12 +103,12 @@ class Header extends React.Component {
 
     showLoginToast = () => {
         if (this.props.userLogin.showToast) {
-            this.props.loginModal(false);
+            // this.props.loginModal(true);
             return (
                 <Toast
                     onClose={() => this.props.loginLogoutToast(false)}
                     show={this.props.toastMessage}
-                    delay={3000} autohide
+                    delay={5000} autohide
                     className={"login-toast"}
                 >
                     <Toast.Header>

@@ -26,8 +26,8 @@ export const register = (username, email, pass, inviteCode = '') => async dispat
         header: {'Content-type': 'application/json'},
         data: registerData
     })
-        .then(response => dispatch({ type: "REGISTER_SUCCESS", payload: response.data.username }))
-        .catch(error => dispatch({ type: "REGISTER_FAIL", payload: error.response.data.error }))
+        .then(response => dispatch({ type: "REGISTER_SUCCESS", status: true, payload: response.data.username }))
+        .catch(error => dispatch({ type: "REGISTER_FAIL", status: false, payload: error.response.data.error }))
 };
 
 // Log the user in and obtain an Auth token
