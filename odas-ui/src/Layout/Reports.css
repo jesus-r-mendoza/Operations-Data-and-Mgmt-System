@@ -68,7 +68,7 @@
     margin-right: 20px;
     box-shadow: 0 4px 8px 0 darkgray;
     z-index: -1;
-	border-radius: 8px;;
+	border-radius: 8px;
 }
 
 .card-container {
@@ -169,7 +169,7 @@
 	box-shadow: 0 2px 3px 0 darkgray;
 	background-color: #000000;
 	border: 1px solid black;
-	margin-top: 15px;	 
+	margin-top: 15px;
 }
 
 #data{
@@ -191,7 +191,7 @@
 	font-size: 15px;
 	margin-left: 15px;
 	margin-bottom: 15px;
-	background-color: #f44336; /* Red */ 
+	background-color: #f44336;/*Red*/
 	color: white;
 	border-radius: 5px;
 	padding: 5px;
@@ -200,7 +200,7 @@
 #chooseUnitLabel{
 	margin-left: 15px;
 	padding: 5px;
-	background-color: #00868B; /* Teal */ 
+	background-color: #00868B;/*Teal*/
 	color: white;
 	border-radius: 5px;
 }
@@ -208,7 +208,7 @@
 #validIndicesLabel{
 	margin-left: 15px;
 	padding: 5px;
-	background-color: #00868B; /* Teal */ 
+	background-color: #00868B;/*Teal*/
 	color: white;
 	border-radius: 5px;
 }

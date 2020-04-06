@@ -412,7 +412,7 @@ class ReportCard extends React.Component {
 				}
 				var paused = false;
 				var alreadyStopped = false;
-				document.getElementById("pause").addEventListener('click', this.pause);
+				document.getElementById("pause").addEventListener('click', this.pause, true);
 				window.initialDataArray = initialDataArray;
 				window.paused = paused;
 				window.exampleTime = exampleTime;
@@ -422,21 +422,50 @@ class ReportCard extends React.Component {
 						}
 
 					pause = () => {
+						console.log("Pause");
+						if(window.alreadyStopped===false){
+							console.log("Paused");
+							document.getElementById("pause").style.backgroundColor="red";
 							window.paused = true;
 							this.setState({paused: true});
-						}	
+							clearInterval(window.interval);
+							document.getElementById("pause").innerHTML = "PAUSED";//Date();
+							document.getElementById("pause").removeEventListener('click', this.pause, false);
+							document.getElementById("pause").addEventListener('click', this.unpause, false);
+						}
+					}	
+						
+					unpause = () => {
+						console.log("Unpause");
+						if(window.alreadyStopped===false){
+							console.log("Unpaused");
+							document.getElementById("pause").style.backgroundColor="green";
+							document.getElementById("pause").innerHTML = "Resumed";
+							window.paused = false;
+							this.setState({paused: false});
+							window.interval = setInterval(this.increasePlot,1000);
+							document.getElementById("pause").removeEventListener('click', this.unpause, false);
+							document.getElementById("pause").addEventListener('click', this.pause, false);
+						}
+					}	
 
 					increasePlot = () => {
 								var initialDataArray = window.initialDataArray;
 								var cnt = this.state.cnt;
-								var paused = this.state.paused; 
+								var paused = window.paused;//this.state.paused; 
 								var exampleTime = window.exampleTime;
 								var alreadyStopped = this.state.alreadyStopped;
 								var exampleValue = window.exampleValue;   
 								var tableKeys = window.tableKeys;
 								if(paused === true){
-									document.getElementById("pause").innerHTML = "PAUSED";//Date();
-									clearInterval(window.interval);
+									console.log("increasePlot Paused.1 paused true");
+	//								document.getElementById("pause").innerHTML = "PAUSED";//Date();
+	//								clearInterval(window.interval);
+	//								document.getElementById("pause").addEventListener('click', this.unpause, true);
+								}
+								else{
+									console.log("increasePlot Paused.1 else");
+	//								document.getElementById("pause").addEventListener('click', this.pause, true);
 								}
 								if(cnt<initialDataArray.length){
 								var initialY = this.getY(cnt, initialDataArray, exampleValue, alreadyStopped, paused, tableKeys);
@@ -448,16 +477,16 @@ class ReportCard extends React.Component {
 									line1.x.shift();
 									line1.y.shift();
 								} 
-								if(paused === true){
-									document.getElementById("pause").innerHTML = "PAUSED";//Date();
-									clearInterval(window.interval);
-								}
 								this.setState({ revision: this.state.revision + 1 , cnt: this.state.cnt + 1, paused: window.paused, initialDataArray: window.initialDataArray, exampleTime: window.exampleTime, exampleValue: window.exampleValue, tableKeys: window.tableKeys});
 								layout.datarevision = this.state.revision + 1;
 								}
 								else{
+									console.log("increasePlot Stop");
+									document.getElementById("pause").style.backgroundColor="#f44336";
 									document.getElementById("pause").innerHTML = "STOPPED";//Date();
 									clearInterval(window.interval);
+									window.alreadyStopped = true;
+									document.getElementById("pause").addEventListener('click', function(){}, false);
 								}
 							}
 
@@ -467,6 +496,7 @@ class ReportCard extends React.Component {
 								}
 								else{
 									if(alreadyStopped===false){
+										console.log('getX else');
 										window.paused = true;
 										clearInterval(window.interval);
 										window.alreadyStopped=true;
@@ -481,6 +511,7 @@ class ReportCard extends React.Component {
 								}
 								else{
 									if(alreadyStopped===false){
+										console.log('getY else');
 										window.paused = true;
 										clearInterval(window.interval);
 										window.alreadyStopped = true;

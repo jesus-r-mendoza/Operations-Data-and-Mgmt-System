@@ -1,13 +1,13 @@
 import React from 'react';
 //Stylesheets
 import "../Layout/Reports.css"
-// TODO Bootstrap modals for the logs
+
 export default class BottomGraph extends React.Component{
 		render(){
 				return(
 					<div id = "bottomchart">
 					<p id="tablechart">Table Chart</p>
-					<button id="pause" onClick={this.props.pause}>Stop Graph</button>
+					<button id="pause">Stop Graph</button>
 					<div>
 						<label htmlFor="validIndices" id="validIndicesLabel"><b> Valid Indices: </b></label>
 						<select id="validIndices"></select>
