@@ -132,7 +132,6 @@ class ReportCard extends React.Component {
 		}
 		document.getElementById("pause").innerHTML = "Stop Graph";
 		var tracesDiv = document.getElementById("tracesbody");
-		var tracesDivCount = 0;
 		while(tracesDiv.childNodes[1]){
 			tracesDiv.removeChild(tracesDiv.childNodes[0]);
 		}
