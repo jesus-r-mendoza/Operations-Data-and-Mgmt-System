@@ -113,7 +113,7 @@ class ReportCard extends React.Component {
 		for(var k = document.getElementById("validIndices").length-1;k>=0; k--){
 			document.getElementById("validIndices").remove(k);//currentValidIndices
 		}
-		if(mydiv.childNodes[1]){
+		while(mydiv.childNodes[1]){
 			mydiv.removeChild(mydiv.childNodes[2]);
 			mydiv.removeChild(mydiv.childNodes[1]);
 		}
@@ -219,7 +219,7 @@ class ReportCard extends React.Component {
 	checkData = (out, compSpecified) => {
 		//console.log('Test CheckData: ', out);
 				var error;
-				if(out.data===true){//this.plotData.data===true){
+				if(out.data===true&&out.Measurements.length!==0){//this.plotData.data===true){
 					this.titleSpecs(out);
 					//compSpecified = false;
 					compSpecified = this.checkCompSpecified(out, compSpecified);
@@ -231,12 +231,17 @@ class ReportCard extends React.Component {
 					this.checkQuantitiesMatch(quantity, realQuantity, checkQuantities);
 					this.createDataUnit(out, realQuantity, compSpecified);
 				}
+				else if(out.data===true&&out.Measurements.length===0){
+					this.titleSpecs(out);
+					error = "Error: Graph is Empty: No Measurements to Plot";
+					this.errorOutput(error);
+				}
 				else if(out.data===false){//||this.plotData.data===true){
 					error = out.error;
 					this.errorOutput(error);
 				}
 				else{
-					error = "Error: The API is not in the correct JSON format. Please check again."
+					error = "Error: The API is not in the correct JSON format. Please check again.";
 					this.errorOutput(error);
 				}		
 	}
