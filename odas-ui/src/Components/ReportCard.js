@@ -353,12 +353,14 @@ class ReportCard extends React.Component {
 						if(compSpecified===false){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].units;
+							newOption.setAttribute('value', b.toString());
 							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}
 						else if(compSpecified===true){
 							newOption = document.createElement("option");
 							newOption.text = b+": "+totalGraphsArray[b][0].component_name+" - "+totalGraphsArray[b][0].units;
+							newOption.setAttribute('value', b.toString());
 							validIndexArray.push(b.toString());
 							document.getElementById("validIndices").add(newOption);//currentValidIndices
 						}

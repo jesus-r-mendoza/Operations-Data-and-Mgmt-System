@@ -3,6 +3,10 @@ import React from 'react';
 import "../Layout/Reports.css"
 
 export default class BottomGraph extends React.Component{
+		fillField(event){
+			var fill = document.getElementById("validIndices").value;
+			document.getElementById("chooseUnit").value=fill;
+		}
 		render(){
 				return(
 					<div id = "bottomchart">
@@ -13,7 +17,7 @@ export default class BottomGraph extends React.Component{
 					</div>
 					<div>
 						<label htmlFor="validIndices" id="validIndicesLabel"><b> Valid Indices: </b></label>
-						<select id="validIndices"></select>
+						<select id="validIndices" onChange={this.fillField}></select>
 					</div>
 					<div>
 						<label htmlFor="fname" id="chooseUnitLabel"><b> Input Test Index (must be valid, check Valid Indices and type the index number here; if not known, put 0) :  </b></label>
