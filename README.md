@@ -118,3 +118,26 @@ This will run both the frontend and backend containers.
 For testing purposes, the backend container is accessible through your container's ip or localhost at port 8080; and the frontend container is accessible through your container's ip or localhost at port 3000.
 
 Once the containers are running on your local machine, you should be able to see the running application via this link [http://localhost:3000/](http://localhost:3000)
+
+### Step 6
+
+Now that ODAS is running on your local machine using the default configuration settings, you can use some of the functionality with the example user we provided. Because the public configurations require that you connect to a database on your local machine, we have also provided a `db.sqlite3` file to get you started with sample data, users, and organizations.
+
+You can Sign In with the following pre-registered User:
+
+```
+username:  joe
+password:  password123
+```
+
+The User `joe` is part of the `CSULA` organization, which has one satellite to its name: `CubeSat`. `CubeSat` has two existing components that you'll be able to query data from to see the graphing functionality. They are the `Battery` and `CPU` components.
+
+Feel free to create new Users and join the `CSULA` organization using the invite code: `3MbRJyt26Kyu>`
+
+Or additionally, you can create new Organizations (for active Users that have not joined any organization yet). To create a new Organizaiton (and automatically join it), you'll be prompted to provide a password. This was a feature we included to restrict who could create Organizations during the time that ODAS was available to the public. Since you're using the default public configuration, simply provide the following when creating a new Organization:
+```
+organization name:  <your org name>
+password:           password123
+```
+
+Now, you should have access to most of the features provided by ODAS. Obviously, some features are not available because they require the FULL configuration file that is only available to the original ODAS developers. Nonetheless, it should give you a good sense of ODAS' capabalities.
