@@ -14,7 +14,14 @@ import os
 
 from .config import get_creds
 
-credentials = get_creds()
+try:
+    default_config = False
+    credentials = get_creds()
+except:
+    from .default_public_config import CREDENTIALS, MESSAGE
+    credentials = CREDENTIALS
+    default_config = True
+    print(MESSAGE)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,19 +97,24 @@ WSGI_APPLICATION = 'odas_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE':   'django.db.backends.mysql',
-        'NAME':     credentials['name'],
-        'USER':     credentials['user'],
-        'PASSWORD': credentials['pswd'],
-        'HOST':     credentials['host'],
-        'PORT':     credentials['port'],
+if not default_config:
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.mysql',
+            'NAME':     credentials['name'],
+            'USER':     credentials['user'],
+            'PASSWORD': credentials['pswd'],
+            'HOST':     credentials['host'],
+            'PORT':     credentials['port'],
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

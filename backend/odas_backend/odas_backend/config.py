@@ -10,7 +10,7 @@ def get_creds():
                 parts = line[:-1].split('::')
                 creds[parts[0]] = parts[1]
         return creds
-    except FileNotFoundError:
+    except FileNotFoundError as err:
         print("""
         ***********************************
         ** ERROR: config file not found. **
@@ -24,8 +24,8 @@ def get_creds():
           have the most recent config file, and place it into
           the correct directory. Then restart to get started!
         """)
-        exit(1)
-    except IndexError:
+        raise err
+    except IndexError as err:
         print("""
         *********************************************************
         ** ERROR: index out of bounds. If you have this error, **
@@ -57,4 +57,4 @@ def get_creds():
         Note that the new line char was removed, and a junk char
         (in this case x) was appended to the end of the last line
         """)
-        exit(1)
+        raise err
