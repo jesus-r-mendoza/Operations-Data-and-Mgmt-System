@@ -132,7 +132,7 @@ password:  password123
 
 The User `joe` is part of the `CSULA` organization, which has one satellite to its name: `CubeSat`. `CubeSat` has two existing components that you'll be able to query data from to see the graphing functionality. They are the `Battery` and `CPU` components.
 
-Feel free to create new Users and join the `CSULA` organization using the invite code: `3MbRJyt26Kyu>`
+Feel free to create new Users and join the `CSULA` organization using the invite code: `3MbRJyt26Kyu`
 
 Or additionally, you can create new Organizations (for active Users that have not joined any organization yet). To create a new Organizaiton (and automatically join it), you'll be prompted to provide a password. This was a feature we included to restrict who could create Organizations during the time that ODAS was available to the public. Since you're using the default public configuration, simply provide the following when creating a new Organization:
 ```
