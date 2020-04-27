@@ -1,10 +1,4 @@
-# Operations Data Analysis and Mgmt System ( ODAS )
-
-<div style="display: flex; justify-content: space-around; align-items: center;">
-    <img src="resources/imgs/csula-sm.png" />
-    <h2>Senior Design Project sponsored by</h2>
-    <img src="resources/imgs/boeing-sm.png" />
-</div>
+![title](resources/imgs/header.png)
 
 ### Team
 
@@ -56,25 +50,71 @@ As more and more satellites are launched into orbit, it is important to track of
 
 ---
 
-## Running ODAS with Docker
+### Clone our project repository
+If you don't have the ODAS repository, clone it using:
+```
+$ git clone https://github.com/jesus-r-mendoza/Operations-Data-and-Mgmt-System.git
+```
+then, change directory into the repository's base directory using:
+```
+$ cd Operations-Data-and-Mgmt-System
+```
+
+## Running ODAS ( Linux : Ubuntu )
+
+Because we often worked with Linux throughout the development of this project, we have written some convinient scripts to install all the dependencies, and run ODAS.
+
+### Step 1
+Make the launch script executable using this command:
+```
+chmod +x linux-install-and-run.sh
+```
+This will allow you to run this script via the terminal.
+
+### Step 2
+Run the script using this command:
+```
+./linux-install-and-run.sh
+```
+
+Now continue to **Step 5** of the next section to see details about accessing the running application.
+
+
+## Running ODAS ( Windows / Mac )
 
 ### Step 1
 Install Docker. To learn how to install docker click [here](https://www.docker.com/products/docker-desktop). You'll see a button to install Docker Desktop; you'll need to create an account with Docker Hub if you don't already have one. Also make sure you have docker-compose installed with it.
 
 ### Step 2
-If you don't have the ODAS repository, clone it using:
-
-> `$ git clone https://github.com/jesus-r-mendoza/Operations-Data-and-Mgmt-System.git`
-
-then, change directory into the repository's base directory using:
-
-> `$ cd Operations-Data-and-Mgmt-System`
+Install NodeJS for your system [here](https://nodejs.org/en/). Once the installation is complete, verify that you have access to the `npm` command on your terminal.
 
 ### Step 3
-Once your in the base directory, simply run:
+Install the `npm` package dependencies needed to run the ODAS frontend, using the following commands:
 
-> `$ docker-compose up`
+First, move to the `odas-ui/` directory using:
+```
+cd odas-ui/
+```
+Then install the dependencies with:
+```
+npm install
+```
+
+Once all the packages are installed, you're ready to run ODAS using the `docker-compose` command.
+
+### Step 4
+Once your in the base directory (`Operations-Data-and-Mgmt-System/`), simply run:
+```
+$ docker-compose up
+```
+NOTE: The first time you run this command, it will need to download the containers, this may take several minutes. Afterwards, the containers will automatically run since they have already been downloaded.
 
 This will run both the frontend and backend containers.
 
+---
+
+### Step 5
+
 For testing purposes, the backend container is accessible through your container's ip or localhost at port 8080; and the frontend container is accessible through your container's ip or localhost at port 3000.
+
+Once the containers are running on your local machine, you should be able to see the running application via this link [http://localhost:3000/](http://localhost:3000)

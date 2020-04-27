@@ -23,7 +23,7 @@ else
     echo
     echo Git not found. Installing....
     echo
-    sudo apt-get install git
+    sudo apt-get install git -y
     if [ $? -eq 0 ]; then
         echo
         echo [ OK ] Git Successfully installed
@@ -46,7 +46,7 @@ echo
 di=0
 
 echo Step 1 / 3: Installing package from apt-get...
-sudo apt-get install docker.io
+sudo apt-get install docker.io -y
 if [ $? -eq 0 ]; then ((di++)); echo; echo [ OK ] Step 1/3 complete; else echo; echo [ ! ] Step 1/3 failed. Continuing...; fi
 
 echo
