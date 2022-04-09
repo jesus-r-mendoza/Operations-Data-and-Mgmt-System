@@ -10,7 +10,7 @@
     "history": "^4.10.1",
     "http-proxy-middleware": "^0.20.0",
     "js-file-download": "^0.4.10",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "office-ui-fabric-react": "^7.53.1",
     "plotly.js": "^1.52.2",
     "react": "^16.10.1",
